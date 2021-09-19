@@ -1,6 +1,18 @@
 (ns typesense.core-test
   (:require [typesense.core :as sut]
-            [clojure.test :refer [deftest are]]))
+            [clojure.test :as test :refer [deftest are use-fixtures]]))
+
+(defn setup-test-collection [f]
+  (sut/create-collection {:name "test_collection"
+                          :fields [{:name "test_name"
+                                    :type "string"}
+                                   {:name "test_count"
+                                    :type "int32"}]
+                          :default_sorting_field "test_count"})
+  (f)
+  (sut/drop-collection "test_collection"))
+
+(use-fixtures :each setup-test-collection)
 
 (deftest create-collection
   (let [collection {:name "companies"
@@ -31,6 +43,29 @@
                             :optional false}]
                   :default_sorting_field "num_employees"}
         response (sut/create-collection collection)]
+    (are [x y] (= x y)
+      (:name expected) (:name response)
+      (:fields expected) (:fields response)
+      (:num_documents expected) (:num_documents response)
+      (:default_sorting_field expected) (:default_sorting_field response)))
+  ;; TODO move to fixture - cleanup
+  (sut/drop-collection "companies"))
+
+(deftest drop-collection
+  (let [response (sut/drop-collection "test_collection")
+        expected {:name "test_collection"
+                  :num_documents 0
+                  :fields [{:name "test_name"
+                            :type "string"
+                            :facet false
+                            :optional false
+                            :index true}
+                           {:name "test_count"
+                            :type "int32"
+                            :facet false
+                            :optional false
+                            :index true}]
+                  :default_sorting_field "test_count"}]
     (are [x y] (= x y)
       (:name expected) (:name response)
       (:fields expected) (:fields response)
