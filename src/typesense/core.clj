@@ -11,13 +11,13 @@
 (def delete-request-options {:headers {"X-TYPESENSE-API-KEY" typesense-api-key}})
 
 (defn create-collection
-  "Create collection."
+  "Create collection on the supplied schema."
   [collection]
-  (let [create-collection-url (str typesense-api-url "/collections")
+  (let [url (str typesense-api-url "/collections")
         req-map (assoc post-request-options
                        :body
                        (json/generate-string collection))]
-    (-> (http/post create-collection-url req-map)
+    (-> (http/post url req-map)
         :body
         (json/parse-string true))))
 
@@ -25,8 +25,8 @@
   "Permanently drops a collection. This action cannot be undone.
   For large collections, this might have an impact on read latencies."
   [collection-name]
-  (let [drop-collection-url (str typesense-api-url "/collections/" collection-name)]
-    (-> (http/delete drop-collection-url delete-request-options)
+  (let [url (str typesense-api-url "/collections/" collection-name)]
+    (-> (http/delete url delete-request-options)
         :body
         (json/parse-string true))))
 
@@ -35,7 +35,15 @@
   The collections are returned sorted by creation date,
   with the most recent collections appearing first."
   []
-  (let [list-collections-url (str typesense-api-url "/collections")]
-    (-> (http/get list-collections-url get-request-options)
+  (let [url (str typesense-api-url "/collections")]
+    (-> (http/get url get-request-options)
+        :body
+        (json/parse-string true))))
+
+(defn retrieve-collection
+  "Retrieves collection on collection name."
+  [collection-name]
+  (let [url (str typesense-api-url "/collections/" collection-name)]
+    (-> (http/get url get-request-options)
         :body
         (json/parse-string true))))
