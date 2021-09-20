@@ -1,6 +1,6 @@
 (ns typesense.core-test
   (:require [typesense.core :as sut]
-            [clojure.test :as test :refer [deftest are use-fixtures]]))
+            [clojure.test :as test :refer [deftest is are use-fixtures]]))
 
 (defn setup-test-collection [f]
   (sut/create-collection {:name "test_collection"
@@ -113,3 +113,10 @@
       (:fields expected) (:fields response)
       (:default_sorting_field expected) (:default_sorting_field response)
       (:num_documents expected) (:num_documents response))))
+
+(deftest index-document
+  (let [document {:test_name "test1234"
+                  :test_count 10
+                  :id "0"}
+        response (sut/index-document "test_collection" document)]
+    (is (= response document))))
