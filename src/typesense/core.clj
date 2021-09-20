@@ -62,3 +62,9 @@
                        :body
                        (json/generate-string document))]
     (handle-response (http/post url req-map))))
+
+(defn retrieve-document
+  "Retrieves the document on id and collection-name."
+  [id collection-name]
+  (let [url (str typesense-url "/collections/" collection-name "/documents/" id)]
+    (handle-response (http/get url get-req-map))))
