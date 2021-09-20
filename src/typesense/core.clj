@@ -39,11 +39,9 @@
 (defn- json-lines
   "Take a vector of maps and returns json-line format."
   [maps]
-  (let [jsonlines
-        (reduce (fn [acc x] (str acc (json/generate-string x) "\n"))
-                ""
-                (butlast maps))]
-    (str jsonlines (json/generate-string (last maps)))))
+  (reduce (fn [acc x] (str acc (json/generate-string x) "\n"))
+          ""
+          maps))
 
 (defn settings
   [typesense-uri typesense-key]
