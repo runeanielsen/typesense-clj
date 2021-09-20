@@ -114,9 +114,16 @@
       (:default_sorting_field expected) (:default_sorting_field response)
       (:num_documents expected) (:num_documents response))))
 
-(deftest index-document
+(deftest create-document
   (let [document {:test_name "test1234"
                   :test_count 10
                   :id "0"}
-        response (sut/index-document "test_collection" document)]
+        response (sut/create-document "test_collection" document)]
+    (is (= response document))))
+
+(deftest upsert-document
+  (let [document {:test_name "test1234"
+                  :test_count 10
+                  :id "0"}
+        response (sut/upsert-document "test_collection" document)]
     (is (= response document))))

@@ -45,10 +45,19 @@
   (let [url (str typesense-url "/collections/" collection-name)]
     (handle-response (http/get url get-req-map))))
 
-(defn index-document
+(defn create-document
   "Indexes the document."
   [collection-name document]
   (let [url (str typesense-url "/collections/" collection-name "/documents")
+        req-map (assoc post-req-map
+                       :body
+                       (json/generate-string document))]
+    (handle-response (http/post url req-map))))
+
+(defn upsert-document
+  "Indexes the document."
+  [collection-name document]
+  (let [url (str typesense-url "/collections/" collection-name "/documents?action=upsert")
         req-map (assoc post-req-map
                        :body
                        (json/generate-string document))]
