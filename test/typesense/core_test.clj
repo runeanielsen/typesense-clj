@@ -146,5 +146,12 @@
   (let [expected {:test_name "test_document_one"
                   :test_count 1
                   :id "0"}
-        response (sut/retrieve-document test-settings 0 "test_collection")]
+        response (sut/retrieve-document test-settings "test_collection" 0)]
+    (is (= expected response))))
+
+(deftest delete-document
+  (let [expected {:test_name "test_document_one"
+                  :test_count 1
+                  :id "0"}
+        response (sut/delete-document test-settings "test_collection" 0)]
     (is (= expected response))))

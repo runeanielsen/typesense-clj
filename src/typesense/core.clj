@@ -73,7 +73,13 @@
     (handle-response (typesense-post settings uri document))))
 
 (defn retrieve-document
-  "Retrieves the document on id and collection-name."
-  [settings id collection-name]
+  "Retrieves the document on id in the specified collection."
+  [settings collection-name id]
   (let [uri (str (:api-uri settings) "/collections/" collection-name "/documents/" id)]
     (handle-response (typesense-get settings uri))))
+
+(defn delete-document
+  "Deletes the document on id in the specified collection."
+  [settings collection-name id]
+  (let [uri (str (:api-uri settings) "/collections/" collection-name "/documents/" id)]
+    (handle-response (typesense-delete settings uri))))
