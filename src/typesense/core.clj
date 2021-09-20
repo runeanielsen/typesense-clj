@@ -1,13 +1,14 @@
 (ns typesense.core
   (:require [java-http-clj.core :as http]
-            [cheshire.core :as json]))
+            [cheshire.core :as json]
+            [clojure.string :as str]))
 
 (defn- typesense-post
   "Calls http-post with default Typesense headers."
   [settings uri data]
   (let [req-map {:headers {"Content-Type" "application/json"
                            "X-TYPESENSE-API-KEY" (:api-key settings)}
-                 :body (json/generate-string data)}]
+                 :body data}]
     (http/post uri req-map)))
 
 (defn- typesense-get
@@ -28,6 +29,22 @@
       :body
       (json/parse-string true)))
 
+(defn- handle-jsonline-response
+  [response]
+  (->> response
+       :body
+       (str/split-lines)
+       (into [] (map #(json/parse-string % true)))))
+
+(defn- json-lines
+  "Take a vector of maps and returns json-line format."
+  [maps]
+  (let [jsonlines
+        (reduce (fn [acc x] (str acc (json/generate-string x) "\n"))
+                ""
+                (butlast maps))]
+    (str jsonlines (json/generate-string (last maps)))))
+
 (defn settings
   [typesense-uri typesense-key]
   {:api-uri typesense-uri
@@ -36,8 +53,9 @@
 (defn create-collection
   "Create collection using the supplied collection schema."
   [settings collection]
-  (let [uri (str (:api-uri settings) "/collections")]
-    (handle-response (typesense-post settings uri collection))))
+  (let [uri (str (:api-uri settings) "/collections")
+        data (json/generate-string collection)]
+    (handle-response (typesense-post settings uri data))))
 
 (defn drop-collection
   "Permanently drops a collection. This action cannot be undone.
@@ -63,14 +81,16 @@
 (defn create-document
   "Indexes the document."
   [settings collection-name document]
-  (let [url (str (:api-uri settings) "/collections/" collection-name "/documents")]
-    (handle-response (typesense-post settings url document))))
+  (let [url (str (:api-uri settings) "/collections/" collection-name "/documents")
+        data (json/generate-string document)]
+    (handle-response (typesense-post settings url data))))
 
 (defn upsert-document
   "Indexes the document."
   [settings collection-name document]
-  (let [uri (str (:api-uri settings) "/collections/" collection-name "/documents?action=upsert")]
-    (handle-response (typesense-post settings uri document))))
+  (let [uri (str (:api-uri settings) "/collections/" collection-name "/documents?action=upsert")
+        data (json/generate-string document)]
+    (handle-response (typesense-post settings uri data))))
 
 (defn retrieve-document
   "Retrieves the document on id in the specified collection."
@@ -83,3 +103,10 @@
   [settings collection-name id]
   (let [uri (str (:api-uri settings) "/collections/" collection-name "/documents/" id)]
     (handle-response (typesense-delete settings uri))))
+
+(defn import-documents
+  "Imports documents on in the specified collection."
+  [settings collection-name documents]
+  (let [uri (str (:api-uri settings) "/collections/" collection-name "/documents/import?action=create")
+        data (json-lines documents)]
+    (handle-jsonline-response (typesense-post settings uri data))))

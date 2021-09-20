@@ -155,3 +155,16 @@
                   :id "0"}
         response (sut/delete-document test-settings "test_collection" 0)]
     (is (= expected response))))
+
+(deftest import-documents
+  (let [expected [{:success true}
+                  {:success true}
+                  {:success true}]
+        documents [{:test_name "test_document_two"
+                    :test_count 2}
+                   {:test_name "test_document_three"
+                    :test_count 3}
+                   {:test_name "test_document_four"
+                    :test_count 4}]
+        response (sut/import-documents test-settings "test_collection" documents)]
+    (is (= expected response))))
