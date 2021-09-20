@@ -2,22 +2,32 @@
   (:require [typesense.core :as sut]
             [clojure.test :as test :refer [deftest is are use-fixtures]]))
 
+(def ^:private test-settings  (sut/settings "http://localhost:8108" "key"))
+
 (defn setup-test-collection [f]
-  (sut/create-collection {:name "test_collection"
+  (sut/create-collection test-settings
+                         {:name "test_collection"
                           :fields [{:name "test_name"
                                     :type "string"}
                                    {:name "test_count"
                                     :type "int32"}]
                           :default_sorting_field "test_count"})
-  (sut/create-document "test_collection"
+  (sut/create-document test-settings
+                       "test_collection"
                        {:test_name "test_document_one"
                         :test_count 1
                         :id "0"})
   (f)
-  (doseq [x (sut/list-collections)]
-    (sut/drop-collection (:name x))))
+  (doseq [x (sut/list-collections test-settings)]
+    (sut/drop-collection test-settings (:name x))))
 
 (use-fixtures :each setup-test-collection)
+
+(deftest settings
+  (let [expected {:api-uri "http://localhost:8108"
+                  :api-key "key"}
+        conn (sut/settings "http://localhost:8108" "key")]
+    (is (= expected conn))))
 
 (deftest create-collection
   (let [collection {:name "companies"
@@ -47,7 +57,7 @@
                             :index true
                             :optional false}]
                   :default_sorting_field "num_employees"}
-        response (sut/create-collection collection)]
+        response (sut/create-collection test-settings collection)]
     (are [x y] (= x y)
       (:name expected) (:name response)
       (:fields expected) (:fields response)
@@ -55,7 +65,7 @@
       (:default_sorting_field expected) (:default_sorting_field response))))
 
 (deftest drop-collection
-  (let [response (sut/drop-collection "test_collection")
+  (let [response (sut/drop-collection test-settings "test_collection")
         expected {:name "test_collection"
                   :num_documents 1
                   :fields [{:name "test_name"
@@ -76,7 +86,7 @@
       (:default_sorting_field expected) (:default_sorting_field response))))
 
 (deftest list-collections
-  (let [response (sut/list-collections)
+  (let [response (sut/list-collections test-settings)
         expected {:name "test_collection"
                   :num_documents 1
                   :fields [{:name "test_name"
@@ -98,7 +108,7 @@
       (:num_documents expected) (-> response first :num_documents))))
 
 (deftest retrieve-collection
-  (let [response (sut/retrieve-collection "test_collection")
+  (let [response (sut/retrieve-collection test-settings "test_collection")
         expected {:name "test_collection"
                   :num_documents 1
                   :fields [{:name "test_name"
@@ -122,19 +132,19 @@
   (let [document {:test_name "test_document_two"
                   :test_count 2
                   :id "1"}
-        response (sut/create-document "test_collection" document)]
+        response (sut/create-document test-settings "test_collection" document)]
     (is (= response document))))
 
 (deftest upsert-document
-  (let [document {:test_name "test1234"
+  (let [document {:test_name "test_name"
                   :test_count 10
                   :id "0"}
-        response (sut/upsert-document "test_collection" document)]
+        response (sut/upsert-document test-settings "test_collection" document)]
     (is (= response document))))
 
 (deftest retrieve-document
   (let [expected {:test_name "test_document_one"
                   :test_count 1
                   :id "0"}
-        response (sut/retrieve-document 0 "test_collection")]
+        response (sut/retrieve-document test-settings 0 "test_collection")]
     (is (= expected response))))
