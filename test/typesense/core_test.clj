@@ -10,7 +10,8 @@
                                     :type "int32"}]
                           :default_sorting_field "test_count"})
   (f)
-  (sut/drop-collection "test_collection"))
+  (doseq [x (sut/list-collections)]
+    (sut/drop-collection (:name x))))
 
 (use-fixtures :each setup-test-collection)
 
@@ -47,9 +48,7 @@
       (:name expected) (:name response)
       (:fields expected) (:fields response)
       (:num_documents expected) (:num_documents response)
-      (:default_sorting_field expected) (:default_sorting_field response)))
-  ;; TODO move to fixture - cleanup
-  (sut/drop-collection "companies"))
+      (:default_sorting_field expected) (:default_sorting_field response))))
 
 (deftest drop-collection
   (let [response (sut/drop-collection "test_collection")
