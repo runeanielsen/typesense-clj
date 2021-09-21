@@ -43,6 +43,18 @@
           ""
           maps))
 
+(defn- collection-uri
+  "Returns the collection uri resource path."
+  ([settings]
+   (str (:api-uri settings) "/collections"))
+  ([settings collection-name]
+   (str (collection-uri settings) "/" collection-name)))
+
+(defn- document-uri
+  "Returns the document uri resource path."
+  [settings collection-name]
+  (str (:api-uri settings) "/collections/" collection-name "/documents"))
+
 (defn settings
   [typesense-uri typesense-key]
   {:api-uri typesense-uri
@@ -51,7 +63,7 @@
 (defn create-collection
   "Create collection using the supplied collection schema."
   [settings collection]
-  (let [uri (str (:api-uri settings) "/collections")
+  (let [uri (collection-uri settings)
         data (json/generate-string collection)]
     (handle-response (typesense-post settings uri data))))
 
@@ -59,7 +71,7 @@
   "Permanently drops a collection. This action cannot be undone.
   For large collections, this might have an impact on read latencies."
   [settings collection-name]
-  (let [uri (str (:api-uri settings) "/collections/" collection-name)]
+  (let [uri (collection-uri settings collection-name)]
     (handle-response (typesense-delete settings uri))))
 
 (defn list-collections
@@ -67,44 +79,47 @@
   The collections are returned sorted by creation date,
   with the most recent collections appearing first."
   [settings]
-  (let [uri (str (:api-uri settings) "/collections")]
+  (let [uri (collection-uri settings)]
     (handle-response (typesense-get settings uri))))
 
 (defn retrieve-collection
   "Retrieves collection on collection name."
   [settings collection-name]
-  (let [url (str (:api-uri settings) "/collections/" collection-name)]
+  (let [url (collection-uri settings collection-name)]
     (handle-response (typesense-get settings url))))
 
 (defn create-document
   "Indexes the document."
   [settings collection-name document]
-  (let [url (str (:api-uri settings) "/collections/" collection-name "/documents")
+  (let [url (document-uri settings collection-name)
         data (json/generate-string document)]
     (handle-response (typesense-post settings url data))))
 
 (defn upsert-document
   "Indexes the document."
   [settings collection-name document]
-  (let [uri (str (:api-uri settings) "/collections/" collection-name "/documents?action=upsert")
+  (let [uri (str (document-uri settings collection-name) "/?action=upsert")
         data (json/generate-string document)]
     (handle-response (typesense-post settings uri data))))
 
 (defn retrieve-document
   "Retrieves the document on id in the specified collection."
   [settings collection-name id]
-  (let [uri (str (:api-uri settings) "/collections/" collection-name "/documents/" id)]
+  (let [uri (str (document-uri settings collection-name) "/" id)]
     (handle-response (typesense-get settings uri))))
 
 (defn delete-document
   "Deletes the document on id in the specified collection."
   [settings collection-name id]
-  (let [uri (str (:api-uri settings) "/collections/" collection-name "/documents/" id)]
+  (let [uri (str (document-uri settings collection-name) "/" id)]
     (handle-response (typesense-delete settings uri))))
 
 (defn import-documents
   "Imports documents on in the specified collection."
-  [settings collection-name documents]
-  (let [uri (str (:api-uri settings) "/collections/" collection-name "/documents/import?action=create")
-        data (json-lines documents)]
-    (handle-jsonline-response (typesense-post settings uri data))))
+  ([settings collection-name documents]
+   (import-documents settings collection-name documents :create))
+  ([settings collection-name documents action]
+   (let [actions {:create "create" :upsert "upsert" :update "update"}
+         uri (str (document-uri settings collection-name) "/import?action=" (action actions))
+         data (json-lines documents)]
+     (handle-jsonline-response (typesense-post settings uri data)))))
