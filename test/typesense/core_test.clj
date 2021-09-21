@@ -2,7 +2,7 @@
   (:require [typesense.core :as sut]
             [clojure.test :as test :refer [deftest is are use-fixtures]]))
 
-(def ^:private test-settings  (sut/settings "http://localhost:8108" "key"))
+(def ^:private test-settings  {:api-uri "http://localhost:8108" :api-key "key"})
 
 (defn setup-test-collection [f]
   (sut/create-collection test-settings
@@ -22,12 +22,6 @@
     (sut/drop-collection test-settings (:name x))))
 
 (use-fixtures :each setup-test-collection)
-
-(deftest settings
-  (let [expected {:api-uri "http://localhost:8108"
-                  :api-key "key"}
-        conn (sut/settings "http://localhost:8108" "key")]
-    (is (= expected conn))))
 
 (deftest create-collection
   (let [collection {:name "companies"
