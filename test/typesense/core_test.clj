@@ -150,7 +150,7 @@
         response (sut/delete-document test-settings "test_collection" 0)]
     (is (= expected response))))
 
-(deftest import-documents
+(deftest import-documents-create
   (let [expected [{:success true}
                   {:success true}
                   {:success true}]
@@ -161,4 +161,28 @@
                    {:test_name "test_document_four"
                     :test_count 4}]
         response (sut/import-documents test-settings "test_collection" documents)]
+    (is (= expected response))))
+
+(deftest import-documents-upsert
+  (let [expected [{:success true}
+                  {:success true}
+                  {:success true}]
+        documents [{:test_name "upsert_document_one"
+                    :test_count 1
+                    :id "0"}
+                   {:test_name "test_document_two"
+                    :test_count 2
+                    :id "1"}
+                   {:test_name "test_document_three"
+                    :test_count 3
+                    :id "2"}]
+        response (sut/import-documents test-settings "test_collection" documents :upsert)]
+    (is (= expected response))))
+
+(deftest import-documents-update
+  (let [expected [{:success true}]
+        documents [{:test_name "upsert_document_one"
+                    :test_count 1
+                    :id "0"}]
+        response (sut/import-documents test-settings "test_collection" documents :update)]
     (is (= expected response))))
