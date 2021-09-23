@@ -210,17 +210,26 @@
                                        {:action "update"})]
     (is (= expected response))))
 
+(deftest export-documents
+  (let [expected [{:id "0"
+                   :test_count 1
+                   :test_name "test_document_one"}]
+        response (sut/export-documents test-settings
+                                       "test_collection"
+                                       {})]
+    (is (= expected response))))
+
 (deftest search
   (let [expected [[{:facet_counts [],
                     :found 1
-                    :hits [{:document {:id "0", :test_count 1
-                                       :test_name "test_document_one"},
-                            :highlights
-                            [{:field "test_name",
-                              :matched_tokens ["test_document_one"],
-                              :snippet "<mark>test_document_one</mark>"}],
-                            :text_match 33514500}],
-                    :request_params {:collection_name "test_collection",
+                    :hits [{:document {:id "0"
+                                       :test_count 1
+                                       :test_name "test_document_one"}
+                            :highlights [{:field "test_name",
+                                          :matched_tokens ["test_document_one"]
+                                          :snippet "<mark>test_document_one</mark>"}]
+                            :text_match 33514500}]
+                    :request_params {:collection_name "test_collection"
                                      :per_page 10,
                                      :q "test_document_one"}}]]
         response (sut/search test-settings

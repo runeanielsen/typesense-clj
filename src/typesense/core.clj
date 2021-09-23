@@ -139,6 +139,14 @@
          data (json-lines documents)]
      (handle-jsonline-response (typesense-post settings uri data)))))
 
+(defn export-documents
+  "Exports documents in the specified collection."
+  [settings collection-name options]
+  (let [uri (str (document-uri settings collection-name)
+                 "/export"
+                 (build-query options))]
+    (handle-jsonline-response (typesense-get settings uri))))
+
 (defn search
   "Search for documents using the specified query parameters."
   [settings collection-name search-parameters]
