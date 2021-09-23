@@ -1,7 +1,8 @@
 (ns typesense.core
   (:require [java-http-clj.core :as http]
             [cheshire.core :as json]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.walk :as walk]))
 
 (defn- typesense-post
   "Calls http-post with default Typesense headers."
@@ -54,6 +55,17 @@
   "Returns the document uri resource path."
   [settings collection-name]
   (str (:api-uri settings) "/collections/" collection-name "/documents"))
+
+(defn- build-query
+  "Convert param pairs into a valid query string."
+  [query-params]
+  (if (= (count query-params) 0)
+    ""
+    (->> query-params
+         walk/stringify-keys
+         (map #(str (key %) "=" (val %)))
+         (str/join \&)
+         (str "?"))))
 
 (defn settings
   [typesense-uri typesense-key]
@@ -115,11 +127,20 @@
     (handle-response (typesense-delete settings uri))))
 
 (defn import-documents
-  "Imports documents on in the specified collection."
+  "Imports documents in the specified collection."
   ([settings collection-name documents]
-   (import-documents settings collection-name documents :create))
-  ([settings collection-name documents action]
-   (let [actions {:create "create" :upsert "upsert" :update "update"}
-         uri (str (document-uri settings collection-name) "/import?action=" (action actions))
+   (import-documents settings collection-name documents {:action "create"}))
+  ([settings collection-name documents options]
+   (let [uri (str (document-uri settings collection-name)
+                  "/import"
+                  (build-query options))
          data (json-lines documents)]
      (handle-jsonline-response (typesense-post settings uri data)))))
+
+(defn search
+  "Search for documents using the specified query parameters."
+  [settings collection-name search-parameters]
+  (let [uri (str (document-uri settings collection-name)
+                 "/search"
+                 (build-query search-parameters))]
+    (handle-jsonline-response (typesense-get settings uri))))

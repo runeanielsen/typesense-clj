@@ -2,7 +2,8 @@
   (:require [typesense.core :as sut]
             [clojure.test :as test :refer [deftest is are use-fixtures]]))
 
-(def ^:private test-settings  {:api-uri "http://localhost:8108" :api-key "key"})
+(def ^:private test-settings
+  {:api-uri "http://localhost:8108" :api-key "key"})
 
 (defn setup-test-collection [f]
   (sut/create-collection test-settings
@@ -163,6 +164,22 @@
         response (sut/import-documents test-settings "test_collection" documents)]
     (is (= expected response))))
 
+(deftest import-documents-create-batch-size
+  (let [expected [{:success true}
+                  {:success true}
+                  {:success true}]
+        documents [{:test_name "test_document_two"
+                    :test_count 2}
+                   {:test_name "test_document_three"
+                    :test_count 3}
+                   {:test_name "test_document_four"
+                    :test_count 4}]
+        response (sut/import-documents test-settings
+                                       "test_collection"
+                                       documents
+                                       {:batch_size 40})]
+    (is (= expected response))))
+
 (deftest import-documents-upsert
   (let [expected [{:success true}
                   {:success true}
@@ -176,7 +193,10 @@
                    {:test_name "test_document_three"
                     :test_count 3
                     :id "2"}]
-        response (sut/import-documents test-settings "test_collection" documents :upsert)]
+        response (sut/import-documents test-settings
+                                       "test_collection"
+                                       documents
+                                       {:action "upsert"})]
     (is (= expected response))))
 
 (deftest import-documents-update
@@ -184,5 +204,30 @@
         documents [{:test_name "upsert_document_one"
                     :test_count 1
                     :id "0"}]
-        response (sut/import-documents test-settings "test_collection" documents :update)]
+        response (sut/import-documents test-settings
+                                       "test_collection"
+                                       documents
+                                       {:action "update"})]
     (is (= expected response))))
+
+(deftest search
+  (let [expected [[{:facet_counts [],
+                    :found 1
+                    :hits [{:document {:id "0", :test_count 1
+                                       :test_name "test_document_one"},
+                            :highlights
+                            [{:field "test_name",
+                              :matched_tokens ["test_document_one"],
+                              :snippet "<mark>test_document_one</mark>"}],
+                            :text_match 33514500}],
+                    :request_params {:collection_name "test_collection",
+                                     :per_page 10,
+                                     :q "test_document_one"}}]]
+        response (sut/search test-settings
+                             "test_collection"
+                             {:q "test_document_one" :query_by "test_name"})]
+    (are [x y] (= x y)
+      (:found expected) (:found response)
+      (:hits expected) (:hits response)
+      (:request_params expected) (:request_params response)
+      (:facet_counts expected) (:facet_counts response))))
