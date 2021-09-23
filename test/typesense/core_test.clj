@@ -3,7 +3,7 @@
             [clojure.test :as test :refer [deftest is are use-fixtures]]))
 
 (def ^:private test-settings
-  {:api-uri "http://localhost:8108" :api-key "key"})
+  {:uri "http://localhost:8108" :key "key"})
 
 (defn setup-test-collection [f]
   (sut/create-collection test-settings

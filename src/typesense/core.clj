@@ -4,24 +4,26 @@
             [clojure.string :as str]
             [clojure.walk :as walk]))
 
+(def ^:private api-key-header-name "X-TYPESENSE-API-KEY")
+
 (defn- typesense-post
   "Calls http-post with default Typesense headers."
   [settings uri data]
   (let [req-map {:headers {"Content-Type" "application/json"
-                           "X-TYPESENSE-API-KEY" (:api-key settings)}
+                           api-key-header-name (:key settings)}
                  :body data}]
     (http/post uri req-map)))
 
 (defn- typesense-get
   "Calls http-get with default Typesense headers."
   [settings uri]
-  (let [req-map {:headers {"X-TYPESENSE-API-KEY" (:api-key settings)}}]
+  (let [req-map {:headers {api-key-header-name (:key settings)}}]
     (http/get uri req-map)))
 
 (defn- typesense-delete
   "Calls http-delete with default Typesense headers."
   [settings uri]
-  (let [req-map {:headers {"X-TYPESENSE-API-KEY" (:api-key settings)}}]
+  (let [req-map {:headers {api-key-header-name (:key settings)}}]
     (http/delete uri req-map)))
 
 (defn- handle-response
@@ -47,14 +49,14 @@
 (defn- collection-uri
   "Returns the collection uri resource path."
   ([settings]
-   (str (:api-uri settings) "/collections"))
+   (str (:uri settings) "/collections"))
   ([settings collection-name]
    (str (collection-uri settings) "/" collection-name)))
 
 (defn- document-uri
   "Returns the document uri resource path."
   [settings collection-name]
-  (str (:api-uri settings) "/collections/" collection-name "/documents"))
+  (str (:uri settings) "/collections/" collection-name "/documents"))
 
 (defn- build-query
   "Convert param pairs into a valid query string."
@@ -69,7 +71,7 @@
 
 (defn settings
   [typesense-uri typesense-key]
-  {:api-uri typesense-uri
+  {:uri typesense-uri
    :api-key typesense-key})
 
 (defn create-collection
