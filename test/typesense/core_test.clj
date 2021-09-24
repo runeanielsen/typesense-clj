@@ -151,6 +151,16 @@
         response (sut/delete-document test-settings "test_collection" 0)]
     (is (= expected response))))
 
+(deftest update-document
+  (let [expected {:test_name "updated_test_name"
+                  :test_count 10
+                  :id "0"}
+        response (sut/update-document test-settings
+                                      "test_collection"
+                                      0
+                                      expected)]
+    (is (= expected response))))
+
 (deftest import-documents-create
   (let [expected [{:success true}
                   {:success true}

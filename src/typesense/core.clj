@@ -20,6 +20,14 @@
   (let [req {:headers {api-key-header-name (:key settings)}}]
     (client/get uri req)))
 
+(defn- typesense-patch
+  "Calls http-patch with default Typesense headers."
+  [settings uri data]
+  (let [req {:headers {"Content-Type" "application/json"
+                       api-key-header-name (:key settings)}
+             :body data}]
+    (client/patch uri req)))
+
 (defn- typesense-delete
   "Calls http-delete with default Typesense headers."
   [settings uri]
@@ -105,9 +113,9 @@
 (defn create-document
   "Indexes the document."
   [settings collection-name document]
-  (let [url (document-uri settings collection-name)
+  (let [uri (document-uri settings collection-name)
         data (json/generate-string document)]
-    (handle-json-response (typesense-post settings url data))))
+    (handle-json-response (typesense-post settings uri data))))
 
 (defn upsert-document
   "Indexes the document."
@@ -127,6 +135,15 @@
   [settings collection-name id]
   (let [uri (str (document-uri settings collection-name) "/" id)]
     (handle-json-response (typesense-delete settings uri))))
+
+(defn update-document
+  "Update an individual document from a collection by using its id.
+  The update can be partial"
+  [settings collection-name id document]
+  (let [uri (str (document-uri settings collection-name) "/" id)
+        data (json/generate-string document)]
+    (println "Test: " uri)
+    (handle-json-response (typesense-patch settings uri data))))
 
 (defn import-documents
   "Imports documents in the specified collection."
