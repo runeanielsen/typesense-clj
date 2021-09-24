@@ -12,7 +12,7 @@ Two values are currently required for settings.
 Example of configs:
 
 ```clojure
-(def settings {:uri "http://localhost:8108" :key "key"})
+(def settings {:uri "http://localhost:8108" :key "my-super-secret-api-key"})
 ```
 
 # Collection
