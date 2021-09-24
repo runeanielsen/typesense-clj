@@ -77,11 +77,6 @@
          (str/join \&)
          (str "?"))))
 
-(defn settings
-  [typesense-uri typesense-key]
-  {:uri typesense-uri
-   :api-key typesense-key})
-
 (defn create-collection
   "Create collection using the supplied collection schema."
   [settings collection]
