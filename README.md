@@ -19,7 +19,7 @@ Example of configs:
 
 This section describes how to use the collection part of Typesense-clj.
 
-Further documentation regarding the query-parameters can be found on [Typesense documentation on collections](https://typesense.org/docs/0.21.0/api/collections.html#list-all-collections)
+Further documentation regarding the query-parameters can be found on [Typesense documentation on collections](https://typesense.org/docs/0.21.0/api/collections.html#create-a-collection)
 
 ## Create collection
 
