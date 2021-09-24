@@ -210,6 +210,14 @@
                                        {:action "update"})]
     (is (= expected response))))
 
+(deftest delete-documents
+  (let [expected {:num_deleted 1}
+        response (sut/delete-documents test-settings
+                                       "test_collection"
+                                       {:filter_by "test_count:=>0"
+                                        :batch_size 40})]
+    (is (= expected response))))
+
 (deftest export-documents
   (let [expected [{:id "0"
                    :test_count 1
@@ -230,7 +238,7 @@
                                           :snippet "<mark>test_document_one</mark>"}]
                             :text_match 33514500}]
                     :request_params {:collection_name "test_collection"
-                                     :per_page 10,
+                                     :per_page 10
                                      :q "test_document_one"}}]]
         response (sut/search test-settings
                              "test_collection"

@@ -1,7 +1,7 @@
 {:paths ["src" "classes"]
  :deps {org.clojure/clojure {:mvn/version "1.10.3"}
         cheshire/cheshire {:mvn/version "5.10.1"}
-        java-http-clj/java-http-clj {:mvn/version "0.4.3"}}
+        clj-http/clj-http {:mvn/version "3.12.3"}}
  :aliases {:test    {:extra-paths ["test"]
                      :extra-deps  {lambdaisland/kaocha {:mvn/version "1.0.887"}}
                      :main-opts   ["-m" "kaocha.runner"]}}}
