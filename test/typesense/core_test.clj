@@ -25,15 +25,15 @@
 (use-fixtures :each setup-test-collection)
 
 (deftest create-collection
-  (let [collection {:name "companies"
-                    :fields [{:name "company_name"
-                              :type "string"}
-                             {:name "num_employees"
-                              :type "int32"}
-                             {:name "country"
-                              :type "string"
-                              :facet true}]
-                    :default_sorting_field "num_employees"}
+  (let [schema {:name "companies"
+                :fields [{:name "company_name"
+                          :type "string"}
+                         {:name "num_employees"
+                          :type "int32"}
+                         {:name "country"
+                          :type "string"
+                          :facet true}]
+                :default_sorting_field "num_employees"}
         expected {:name "companies"
                   :num_documents 0
                   :fields [{:name "company_name"
@@ -52,7 +52,7 @@
                             :index true
                             :optional false}]
                   :default_sorting_field "num_employees"}
-        response (sut/create-collection test-settings collection)]
+        response (sut/create-collection test-settings schema)]
     (are [x y] (= x y)
       (:name expected) (:name response)
       (:fields expected) (:fields response)

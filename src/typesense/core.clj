@@ -79,9 +79,9 @@
 
 (defn create-collection
   "Create collection using the supplied collection schema."
-  [settings collection]
+  [settings schema]
   (let [uri (collection-uri settings)
-        data (json/generate-string collection)]
+        data (json/generate-string schema)]
     (handle-json-response (typesense-post settings uri data))))
 
 (defn drop-collection
