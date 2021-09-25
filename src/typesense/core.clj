@@ -143,7 +143,8 @@
 (defn import-documents
   "Imports documents in the specified collection."
   ([settings collection-name documents]
-   (import-documents settings collection-name documents {:action "create"}))
+   (import-documents settings collection-name documents {:action "create"
+                                                         :batch_size 40}))
   ([settings collection-name documents parameters]
    (let [uri (str (document-uri settings collection-name)
                   "/import"
