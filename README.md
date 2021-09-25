@@ -179,3 +179,23 @@ Create with bulk size set to 100.
                     :country Sweden}]
                   {:action "update"})
 ```
+
+## Delete documents
+
+Delete multiple documents on filter, more info can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#delete-documents)
+
+```clojure
+(delete-documents settings
+                  "companies"
+                  {:filter_by "num_employees:>=100"})
+```
+
+## Export documents
+
+Export multiple documents more, more info can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#export-documents)
+
+```clojure
+(delete-documents settings
+                  "companies"
+                  {:filter_by "num_employees:>=100"})
+```
