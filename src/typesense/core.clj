@@ -138,7 +138,6 @@
   [settings collection-name id document]
   (let [uri (str (document-uri settings collection-name) "/" id)
         data (json/generate-string document)]
-    (println "Test: " uri)
     (handle-json-response (typesense-patch settings uri data))))
 
 (defn import-documents
