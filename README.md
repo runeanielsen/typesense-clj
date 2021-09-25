@@ -58,7 +58,7 @@ Returns a summary of all your collections. The collections are returned sorted b
 (list-collections settings)
 ```
 
-## Retrive collection
+## Retrieve collection
 
 Retrieves the collection on the `collection-name`.
 
