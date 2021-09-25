@@ -199,3 +199,13 @@ Export multiple documents more, more info can be found [here.](https://typesense
                   "companies"
                   {:filter_by "num_employees:>=100"})
 ```
+
+## Search
+
+Search for documents in a collection. The query options can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#search)
+
+```clojure
+(search settings
+        "companies"
+        {:q "Stark" :query_by "test_name"})
+```
