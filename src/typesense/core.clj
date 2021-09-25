@@ -45,7 +45,8 @@
   (->> response
        :body
        (str/split-lines)
-       (into [] (map #(json/parse-string % true)))))
+       (map #(json/parse-string % true))
+       (into [])))
 
 (defn- json-lines
   "Take a vector of maps and returns json-line format."
