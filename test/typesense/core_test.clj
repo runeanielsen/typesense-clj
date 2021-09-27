@@ -238,7 +238,7 @@
     (is (= expected response))))
 
 (deftest search
-  (let [expected [[{:facet_counts [],
+  (let [expected [[{:facet_counts []
                     :found 1
                     :hits [{:document {:id "0"
                                        :test_count 1
