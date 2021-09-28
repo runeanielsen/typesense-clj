@@ -30,7 +30,7 @@ The different `types` for the schema can be found [here](https://typesense.org/d
 The examples displays the creation of collection named `companies`.
 
 ```clojure
-(create-collection settings {:name "companies"
+(create-collection! settings {:name "companies"
                     :fields [{:name "company_name"
                               :type "string"}
                               {:name "num_employees"
@@ -47,7 +47,7 @@ Permanently drops a collection on the `collection-name`. This action cannot be u
 For large collections, this might have an impact on read latencies.
 
 ```clojure
-(drop-collection settings "companies")
+(drop-collection! settings "companies")
 ```
 
 ## List collections
@@ -55,7 +55,7 @@ For large collections, this might have an impact on read latencies.
 Returns a summary of all your collections. The collections are returned sorted by creation date, with the most recent collections appearing first.
 
 ```clojure
-(list-collections settings)
+(list-collections! settings)
 ```
 
 ## Retrieve collection
@@ -63,7 +63,7 @@ Returns a summary of all your collections. The collections are returned sorted b
 Retrieves the collection on the `collection-name`.
 
 ```clojure
-(retrieve-collection settings "companies")
+(retrieve-collection! settings "companies")
 ```
 
 # Documents
@@ -77,7 +77,7 @@ Further documentation regarding the query-parameters can be found [here.](https:
 Creates the document in a given collection. The document should comply with the `schema` of the collection.
 
 ```clojure
-(create-document settings "companies" {:company_name "Stark Industries
+(create-document! settings "companies" {:company_name "Stark Industries
                                        :num_employees 5215
                                        :country "USA""})
 ```
@@ -87,7 +87,7 @@ Creates the document in a given collection. The document should comply with the 
 Upserts the document in a given collection. The document will either be created or updated depending on if it already exists.
 
 ```clojure
-(upsert-document settings "companies" {:company_name "Stark Industries
+(upsert-document! settings "companies" {:company_name "Stark Industries
                                        :num_employees 5215
                                        :country "USA""})
 ```
@@ -97,7 +97,7 @@ Upserts the document in a given collection. The document will either be created 
 Retrives document in a collection on `id`.
 
 ```clojure
-(upsert-document settings "companies" 1)
+(upsert-document! settings "companies" 1)
 ```
 
 ## Delete document
@@ -105,7 +105,7 @@ Retrives document in a collection on `id`.
 Deletes document in a collection on `id`.
 
 ```clojure
-(delete-document settings "companies" 1)
+(delete-document! settings "companies" 1)
 ```
 
 ## Update document
@@ -113,7 +113,7 @@ Deletes document in a collection on `id`.
 Update document in a collection on id. The update can be partial.
 
 ```clojure
-(update-document settings "companies" {:company_name "Stark innovation"} 1)
+(update-document! settings "companies" {:company_name "Stark innovation"} 1)
 ```
 
 ## Import documents
@@ -127,7 +127,7 @@ All of the examples has an optional `:bulk_size` that can be set in the `paramet
 Create with default `:bulk_size` of `40`.
 
 ```clojure
-(import-documents settings
+(import-documents! settings
                   "companies"
                   [{:company_name "Innovationsoft A/S"
                     :num_employees 10
@@ -140,7 +140,7 @@ Create with default `:bulk_size` of `40`.
 Create with bulk size set to 100.
 
 ```clojure
-(import-documents settings
+(import-documents! settings
                   "companies"
                   [{:company_name "Innovationsoft A/S"
                     :num_employees 10
@@ -155,7 +155,7 @@ Create with bulk size set to 100.
 ### Upsert
 
 ```clojure
-(import-documents settings
+(import-documents! settings
                   "companies"
                   [{:company_name "Innovationsoft A/S"
                     :num_employees 10
@@ -169,7 +169,7 @@ Create with bulk size set to 100.
 ### Update
 
 ```clojure
-(import-documents settings
+(import-documents! settings
                   "companies"
                   [{:company_name "Innovationsoft A/S"
                     :num_employees 10
@@ -185,7 +185,7 @@ Create with bulk size set to 100.
 Delete multiple documents on filter, more info can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#delete-documents)
 
 ```clojure
-(delete-documents settings
+(delete-documents! settings
                   "companies"
                   {:filter_by "num_employees:>=100"})
 ```
@@ -195,7 +195,7 @@ Delete multiple documents on filter, more info can be found [here.](https://type
 Export multiple documents more, more info can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#export-documents)
 
 ```clojure
-(delete-documents settings
+(delete-documents! settings
                   "companies"
                   {:filter_by "num_employees:>=100"})
 ```
@@ -205,7 +205,7 @@ Export multiple documents more, more info can be found [here.](https://typesense
 Search for documents in a collection. The query options can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#search)
 
 ```clojure
-(search settings
+(search! settings
         "companies"
         {:q "Stark" :query_by "test_name"})
 ```
