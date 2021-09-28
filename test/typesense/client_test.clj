@@ -1,6 +1,6 @@
-(ns typesense.core-test
-  (:require [typesense.core :as sut]
-            [clojure.test :as test :refer [deftest is are use-fixtures]]))
+(ns typesense.client-test
+  (:require [clojure.test :as test :refer [are deftest is use-fixtures]]
+            [typesense.client :as sut]))
 
 (def ^:private test-settings
   {:uri "http://localhost:8108" :key "key"})

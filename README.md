@@ -1,8 +1,10 @@
 # Clojure client for Typesense
 
-The current target support is
+Clojure client for [Typesense 0.21](https://github.com/typesense/typesense)
 
-Still under development - not ready for use.
+*Still under development - not ready for use.*
+
+All of the examples uses the `typesense.client` namespace.
 
 # Settings
 
@@ -16,6 +18,7 @@ Example of configs:
 ```clojure
 (def settings {:uri "http://localhost:8108" :key "my-super-secret-api-key"})
 ```
+
 
 # Collection
 

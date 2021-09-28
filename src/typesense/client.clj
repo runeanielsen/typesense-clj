@@ -1,4 +1,4 @@
-(ns typesense.core
+(ns typesense.client
   (:require [typesense.api :as api]
             [clj-http.client :as client]
             [cheshire.core :as json]
