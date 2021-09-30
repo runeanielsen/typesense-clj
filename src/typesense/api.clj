@@ -17,6 +17,10 @@
   [settings collection-name]
   (str (:uri settings) "/collections/" collection-name "/documents"))
 
+(defn- keys-uri
+  [settings]
+  (str (:uri settings) "/keys"))
+
 (defn- build-query
   "Convert param pairs into a valid query string."
   [query-params]
@@ -121,3 +125,9 @@
              "/search"
              (build-query parameters))
    :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn create-api-key-req
+  [settings parameters]
+  {:uri (keys-uri settings)
+   :req {:headers {api-key-header-name (:key settings)}
+         :body (json/generate-string parameters)}})

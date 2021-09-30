@@ -258,3 +258,13 @@
       (:hits expected) (:hits response)
       (:request_params expected) (:request_params response)
       (:facet_counts expected) (:facet_counts response))))
+
+(deftest create-api-key
+  (let [parameters {:description "Search only companies key."
+                    :actions ["document:search"]
+                    :collections ["companies"]}
+        response (sut/create-api-key! test-settings parameters)]
+    (are [x y] (= x y)
+      (:description parameters) (:description response)
+      (:actions parameters) (:actions response)
+      (:collections parameters) (:collections response))))

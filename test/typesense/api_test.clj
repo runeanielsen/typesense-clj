@@ -157,3 +157,13 @@
         exp {:uri "http://localhost:8108/collections/test_collection/documents/search?q=test_document_one&query_by=test_name"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
+
+(deftest create-api-key-req
+  (let [req (sut/create-api-key-req settings
+                                    {:description "Search only companies key."
+                                     :actions ["document:search"]
+                                     :collections ["companies"]})
+        exp {:uri "http://localhost:8108/keys"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"}
+                   :body "{\"description\":\"Search only companies key.\",\"actions\":[\"document:search\"],\"collections\":[\"companies\"]}"}}]
+    (is (= exp req))))

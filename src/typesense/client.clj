@@ -16,7 +16,7 @@
   [response]
   (->> response
        :body
-       (str/split-lines)
+       str/split-lines
        (map #(json/parse-string % true))
        (into [])))
 
@@ -103,3 +103,9 @@
   [settings collection-name parameters]
   (let [{uri :uri req :req} (api/search-req settings collection-name parameters)]
     (handle-jsonline-response (client/get uri req))))
+
+(defn create-api-key!
+  "Create api-key"
+  [settings parameters]
+  (let [{uri :uri req :req} (api/create-api-key-req settings parameters)]
+    (handle-json-response (client/post uri req))))

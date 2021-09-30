@@ -212,3 +212,19 @@ Search for documents in a collection. The query options can be found [here.](htt
         "companies"
         {:q "Stark" :query_by "test_name"})
 ```
+
+# Api key
+
+Typesense allows you to create API Keys with fine-grain access control. You can restrict access on both a per-collection and per-action level. [Read more here](https://typesense.org/docs/0.19.0/api/api-keys.html#create-an-api-key)
+
+## Create api key
+
+Create an api key, more query options can be found [here.](https://typesense.org/docs/0.21.0/api/api-keys.html#create-an-api-key)
+
+```clojure
+(create-api-key!
+  settings
+  {:description "Search only companies key."
+   :actions ["document:search"]
+   :collections ["companies"]})
+```
