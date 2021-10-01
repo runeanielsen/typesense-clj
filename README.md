@@ -246,7 +246,7 @@ List all api keys, read more here [here.](https://typesense.org/docs/0.21.0/api/
 (list-api-keys! settings
 ```
 
-## Delete api keys
+## Delete api key
 
 Deletes api key on `id`, read more [here.](https://typesense.org/docs/0.21.0/api/api-keys.html#delete-api-key)
 
