@@ -1,8 +1,8 @@
 # Clojure client for Typesense
 
-Clojure client for [Typesense 0.21](https://github.com/typesense/typesense)
+**Still under development - not ready for use.**
 
-*Still under development - not ready for use.*
+Clojure client for [Typesense 0.21](https://github.com/typesense/typesense)
 
 All of the examples uses the `typesense.client` namespace.
 
@@ -16,7 +16,8 @@ Two values are currently required for settings.
 Example of configs:
 
 ```clojure
-(def settings {:uri "http://localhost:8108" :key "my-super-secret-api-key"})
+(def settings {:uri "http://localhost:8108"
+               :key "my-super-secret-api-key"})
 ```
 
 
@@ -33,15 +34,16 @@ The different `types` for the schema can be found [here](https://typesense.org/d
 The examples displays the creation of collection named `companies`.
 
 ```clojure
-(create-collection! settings {:name "companies"
-                    :fields [{:name "company_name"
-                              :type "string"}
+(create-collection! settings
+                    {:name "companies"
+                     :fields [{:name "company_name"
+                               :type "string"}
                               {:name "num_employees"
-                              :type "int32"}
-                             {:name "country"
-                              :type "string"
-                              :facet true}]
-                    :default_sorting_field "num_employees"})
+                               :type "int32"}
+                              {:name "country"
+                               :type "string"
+                               :facet true}]
+                     :default_sorting_field "num_employees"})
 ```
 
 ## Drop collection
