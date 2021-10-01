@@ -222,9 +222,32 @@ Typesense allows you to create API Keys with fine-grain access control. You can 
 Create an api key, more query options can be found [here.](https://typesense.org/docs/0.21.0/api/api-keys.html#create-an-api-key)
 
 ```clojure
-(create-api-key!
-  settings
-  {:description "Search only companies key."
-   :actions ["document:search"]
-   :collections ["companies"]})
+(create-api-key! settings
+                 {:description "Search only companies key."
+                 :actions ["document:search"]
+                 :collections ["companies"]})
+```
+
+## Retrieve api key
+
+Retrieve api key on `id`, read more here [https://typesense.org/docs/0.21.0/api/api-keys.html#retrieve-an-api-key].
+
+```clojure
+(retrieve-api-key! settings 0
+```
+
+## List api keys
+
+List all api keys, read more here [here.](https://typesense.org/docs/0.21.0/api/api-keys.html#list-all-keys)
+
+```clojure
+(list-api-keys! settings
+```
+
+## Delete api keys
+
+Deletes api key on `id`, read more [here.](https://typesense.org/docs/0.21.0/api/api-keys.html#delete-api-key)
+
+```clojure
+(list-api-keys! settings 0
 ```

@@ -131,3 +131,18 @@
   {:uri (keys-uri settings)
    :req {:headers {api-key-header-name (:key settings)}
          :body (json/generate-string parameters)}})
+
+(defn retrieve-api-key-req
+  [settings id]
+  {:uri (str (keys-uri settings) "/" id)
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn list-api-keys-req
+  [settings]
+  {:uri (keys-uri settings)
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn delete-api-key-req
+  [settings id]
+  {:uri (str (keys-uri settings) "/" id)
+   :req {:headers {api-key-header-name (:key settings)}}})
