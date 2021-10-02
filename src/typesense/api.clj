@@ -6,26 +6,33 @@
 (def ^:private api-key-header-name "X-TYPESENSE-API-KEY")
 
 (defn- collection-uri
-  "Returns the collection uri resource path."
+  "Returns the full collection uri resource path."
   ([settings]
    (str (:uri settings) "/collections"))
   ([settings collection-name]
    (str (collection-uri settings) "/" collection-name)))
 
 (defn- document-uri
-  "Returns the document uri resource path."
+  "Returns the full document uri resource path."
   [settings collection-name]
   (str (:uri settings) "/collections/" collection-name "/documents"))
 
 (defn- keys-uri
-  "Return the keys uri resource path."
+  "Return the full keys uri resource path."
   [settings]
   (str (:uri settings) "/keys"))
 
 (defn- overrides-uri
-  "Returns the overrides uri resource path."
+  "Returns the full overrides uri resource path."
   [settings collection-name]
   (str (:uri settings) "/collections/" collection-name "/overrides"))
+
+(defn aliases-uri
+  "Returns the alias uri resource path."
+  ([settings]
+   (str (:uri settings) "/aliases"))
+  ([settings collection-name]
+   (str (:uri settings) "/aliases/" collection-name)))
 
 (defn- build-query
   "Convert param pairs into a valid query string."
@@ -157,7 +164,7 @@
   [settings collection-name override-name override]
   {:uri (str (overrides-uri settings collection-name) "/" override-name)
    :req {:headers {api-key-header-name (:key settings)
-                   "Content-Type" "text/plain"}
+                   "Content-Type" "text/json"}
          :body (json/generate-string override)}})
 
 (defn list-overrides-req
@@ -173,4 +180,26 @@
 (defn delete-override-req
   [settings collection-name override-name]
   {:uri (str (overrides-uri settings collection-name) "/" override-name)
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn upsert-alias-req
+  [settings collection-name alias-collection]
+  {:uri (aliases-uri settings collection-name)
+   :req {:headers {api-key-header-name (:key settings)
+                   "Content-Type" "text/json"}
+         :body (json/generate-string alias-collection)}})
+
+(defn retrieve-alias-req
+  [settings collection-name]
+  {:uri (aliases-uri settings collection-name)
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn list-aliases-req
+  [settings]
+  {:uri (aliases-uri settings)
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn delete-alias-req
+  [settings collection-name]
+  {:uri (str (aliases-uri settings collection-name))
    :req {:headers {api-key-header-name (:key settings)}}})

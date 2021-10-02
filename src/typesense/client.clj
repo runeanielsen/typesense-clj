@@ -186,3 +186,31 @@
                                                      collection-name
                                                      override-name)]
     (handle-json-response (client/delete uri req))))
+
+(defn upsert-alias!
+  "Upsert alias."
+  [settings collection-name alias-collection]
+  (let [{uri :uri req :req} (api/upsert-alias-req settings
+                                                  collection-name
+                                                  alias-collection)]
+    (handle-json-response (client/put uri req))))
+
+(defn list-aliases
+  "List aliases."
+  [settings]
+  (let [{uri :uri req :req} (api/list-aliases settings)]
+    (handle-json-response (client/get uri req))))
+
+(defn retrieve-alias!
+  "Retrieves alias on collection-name."
+  [settings collection-name]
+  (let [{uri :uri req :req} (api/retrieve-alias-req settings
+                                                    collection-name)]
+    (handle-json-response (client/get uri req))))
+
+(defn delete-alias!
+  "Delete alias on collection-name"
+  [settings collection-name]
+  (let [{uri :uri req :req} (api/delete-alias-req settings
+                                                  collection-name)]
+    (handle-json-response (client/delete uri req))))

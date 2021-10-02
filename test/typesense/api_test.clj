@@ -201,14 +201,14 @@
              :req
              {:headers
               {"X-TYPESENSE-API-KEY" "key"
-               "Content-Type" "text/plain"}
+               "Content-Type" "text/json"}
               :body "{\"rule\":{\"query\":\"apple\",\"match\":\"exact\"},\"includes\":[{\"id\":\"422\",\"position\":1},{\"id\":\"54\",\"position\":2}],\"excludes\":[{\"id\":\"287\"}]}"}}]
     (is (= exp req))))
 
 (deftest list-overrides-req-test
   (let [req (sut/list-overrides-req settings
                                     "companies")
-        exp {:uri "http://localhost:8108/collections/companies/overrides",
+        exp {:uri "http://localhost:8108/collections/companies/overrides"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
 
@@ -216,7 +216,7 @@
   (let [req (sut/retrieve-override-req settings
                                        "companies"
                                        "customize-apple")
-        exp {:uri "http://localhost:8108/collections/companies/overrides/customize-apple",
+        exp {:uri "http://localhost:8108/collections/companies/overrides/customize-apple"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
 
@@ -224,6 +224,36 @@
   (let [req (sut/delete-override-req settings
                                      "companies"
                                      "customize-apple")
-        exp {:uri "http://localhost:8108/collections/companies/overrides/customize-apple",
+        exp {:uri "http://localhost:8108/collections/companies/overrides/customize-apple"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
+    (is (= exp req))))
+
+(deftest upsert-alias-req-test
+  (let [req (sut/upsert-alias-req settings
+                                  "companies"
+                                  {:collection_name "companies_june11"})
+        exp {:uri "http://localhost:8108/aliases/companies"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key",
+                             "Content-Type" "text/json"}
+                   :body "{\"collection_name\":\"companies_june11\"}"}}]
+    (is (= exp req))))
+
+(deftest retrieve-alias-req-test
+  (let [req (sut/retrieve-alias-req settings
+                                    "companies")
+        exp {:uri "http://localhost:8108/aliases/companies"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
+    (is (= exp req))))
+
+(deftest list-aliases-req-test
+  (let [req (sut/list-aliases-req settings)
+        exp {:uri "http://localhost:8108/aliases"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
+    (is (= exp req))))
+
+(deftest delete-alias-req-test
+  (let [req (sut/delete-alias-req settings
+                                  "companies")
+        exp {:uri "http://localhost:8108/aliases/companies"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))

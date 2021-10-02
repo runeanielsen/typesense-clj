@@ -301,3 +301,43 @@ Deletes override on name.
                   "companies"
                   "customize-apple")
 ```
+
+# Collection alias
+
+An alias is a virtual collection name that points to a real collection. Read more [here](https://typesense.org/docs/0.21.0/api/collection-alias.html)
+
+## Create or update alias
+
+Create or update alias.
+
+```clojure
+(upsert-alias! settings
+               "companies"
+               {:collection_name "companies_june11"})
+```
+
+## Retrieve alias
+
+Retrieve alias on collection-name.
+
+```clojure
+(retrieve-alias! settings
+                 "companies")
+```
+
+## List aliases
+
+List aliases.
+
+```clojure
+(list-aliases! settings)
+```
+
+## Delete alias
+
+Delete alias
+
+```clojure
+(delete-alias! settings
+               "companies")
+```
