@@ -214,3 +214,35 @@
   (let [{uri :uri req :req} (api/delete-alias-req settings
                                                   collection-name)]
     (handle-json-response (client/delete uri req))))
+
+(defn upsert-synonym!
+  "Upsert synonym."
+  [settings collection-name synonym-name synonyms]
+  (let [{uri :uri req :req} (api/upsert-synonym-req settings
+                                                    collection-name
+                                                    synonym-name
+                                                    synonyms)]
+    (handle-json-response (client/put uri req))))
+
+(defn retrieve-synonym!
+  "Retrieve synonym on synonym-name in collection."
+  [settings collection-name synonym-name]
+  (let [{uri :uri req :req} (api/retrieve-synonym-req settings
+                                                      collection-name
+                                                      synonym-name)]
+    (handle-json-response (client/get uri req))))
+
+(defn list-synonyms!
+  "List synonyms in collection"
+  [settings collection-name]
+  (let [{uri :uri req :req} (api/list-synonyms-req settings
+                                                   collection-name)]
+    (handle-json-response (client/get uri req))))
+
+(defn delete-synonym!
+  "Delete synonym on synonym-name in collection."
+  [settings collection-name synonym-name]
+  (let [{uri :uri req :req} (api/delete-synonym-req settings
+                                                    collection-name
+                                                    synonym-name)]
+    (handle-json-response (client/delete uri req))))

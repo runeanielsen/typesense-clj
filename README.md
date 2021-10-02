@@ -341,3 +341,47 @@ Delete alias
 (delete-alias! settings
                "companies")
 ```
+
+# Synonyms
+
+The synonyms feature allows you to define search terms that should be considered equivalent, read more [here.](https://typesense.org/docs/0.21.0/api/synonyms.html)
+
+## Create or update synonym
+
+Create or update synonym.
+
+```clojure
+(upsert-synonym! settings
+                 "products"
+                 "coat-synonyms"
+                 {:synonyms ["blazer" "coat" "jacket"]})
+```
+
+## Retrieve synonym
+
+Retrieve synonym on synonym name in collection.
+
+```clojure
+(retrieve-synonym! settings
+                  "products"
+                  "coat-synonyms")
+```
+
+## List synonyms
+
+List synonyms in collection.
+
+```clojure
+(list-synonyms! settings
+                "products")
+```
+
+## Delete synonym
+
+Delete synonym on synonym-name in collection.
+
+```clojure
+(delete-synonym! settings
+                "products"
+                "coat-synonyms")
+```

@@ -27,12 +27,19 @@
   [settings collection-name]
   (str (:uri settings) "/collections/" collection-name "/overrides"))
 
-(defn aliases-uri
-  "Returns the alias uri resource path."
+(defn- aliases-uri
+  "Returns the full alias uri resource path."
   ([settings]
    (str (:uri settings) "/aliases"))
   ([settings collection-name]
    (str (:uri settings) "/aliases/" collection-name)))
+
+(defn- synonyms-uri
+  "Returns the full synonyms uri resource path."
+  ([settings collection-name]
+   (str (:uri settings) "/collections/" collection-name "/synonyms"))
+  ([settings collection-name synonym-name]
+   (str (synonyms-uri settings collection-name) "/" synonym-name)))
 
 (defn- build-query
   "Convert param pairs into a valid query string."
@@ -202,4 +209,26 @@
 (defn delete-alias-req
   [settings collection-name]
   {:uri (str (aliases-uri settings collection-name))
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn upsert-synonym-req
+  [settings collection-name synonym-name synonyms]
+  {:uri  (synonyms-uri settings collection-name synonym-name)
+   :req {:headers {api-key-header-name (:key settings)
+                   "Content-Type" "text/json"}
+         :body (json/generate-string synonyms)}})
+
+(defn retrieve-synonym-req
+  [settings collection-name synonym-name]
+  {:uri (synonyms-uri settings collection-name synonym-name)
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn list-synonyms-req
+  [settings collection-name]
+  {:uri (synonyms-uri settings collection-name)
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn delete-synonym-req
+  [settings collection-name synonym-name]
+  {:uri (synonyms-uri settings collection-name synonym-name)
    :req {:headers {api-key-header-name (:key settings)}}})
