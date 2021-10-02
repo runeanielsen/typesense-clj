@@ -18,8 +18,14 @@
   (str (:uri settings) "/collections/" collection-name "/documents"))
 
 (defn- keys-uri
+  "Return the keys uri resource path."
   [settings]
   (str (:uri settings) "/keys"))
+
+(defn- overrides-uri
+  "Returns the overrides uri resource path."
+  [settings collection-name]
+  (str (:uri settings) "/collections/" collection-name "/overrides"))
 
 (defn- build-query
   "Convert param pairs into a valid query string."
@@ -145,4 +151,26 @@
 (defn delete-api-key-req
   [settings id]
   {:uri (str (keys-uri settings) "/" id)
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn upsert-override-req
+  [settings collection-name override-name override]
+  {:uri (str (overrides-uri settings collection-name) "/" override-name)
+   :req {:headers {api-key-header-name (:key settings)
+                   "Content-Type" "text/plain"}
+         :body (json/generate-string override)}})
+
+(defn list-overrides-req
+  [settings collection-name]
+  {:uri (overrides-uri settings collection-name)
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn retrieve-override-req
+  [settings collection-name override-name]
+  {:uri (str (overrides-uri settings collection-name) "/" override-name)
+   :req {:headers {api-key-header-name (:key settings)}}})
+
+(defn delete-override-req
+  [settings collection-name override-name]
+  {:uri (str (overrides-uri settings collection-name) "/" override-name)
    :req {:headers {api-key-header-name (:key settings)}}})

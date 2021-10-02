@@ -136,21 +136,53 @@
     (handle-json-response (client/post uri req))))
 
 (defn retrieve-api-key!
-  "Retrives an api-key on id."
+  "Retrives api-key on id."
   [settings id]
   (let [{uri :uri req :req} (api/retrieve-api-key-req settings
                                                       id)]
     (handle-json-response (client/get uri req))))
 
 (defn list-api-keys!
-  "List all api-keys."
+  "List api-keys."
   [settings]
   (let [{uri :uri req :req} (api/list-api-keys-req settings)]
     (handle-json-response (client/get uri req))))
 
 (defn delete-api-key!
-  "Deletes an api-key on id."
+  "Deletes api-key on id."
   [settings id]
   (let [{uri :uri req :req} (api/delete-api-key-req settings
                                                     id)]
+    (handle-json-response (client/delete uri req))))
+
+(defn upsert-override!
+  "Upsert override."
+  [settings collection-name override-name override]
+  (let [{uri :uri req :req} (api/upsert-override-req settings
+                                                     collection-name
+                                                     override-name
+                                                     override)]
+    (handle-json-response (client/put uri req))))
+
+(defn list-overrides!
+  "Lists overrides."
+  [settings collection-name]
+  (let [{uri :uri req :req} (api/list-overrides-req settings
+                                                    collection-name)]
+    (handle-json-response (client/get uri req))))
+
+(defn retrieve-override!
+  "Retrieve override on name."
+  [settings collection-name override-name]
+  (let [{uri :uri req :req} (api/retrieve-override-req settings
+                                                       collection-name
+                                                       override-name)]
+    (handle-json-response (client/get uri req))))
+
+(defn delete-override!
+  "Delete override on name."
+  [settings collection-name override-name]
+  (let [{uri :uri req :req} (api/delete-override-req settings
+                                                     collection-name
+                                                     override-name)]
     (handle-json-response (client/delete uri req))))

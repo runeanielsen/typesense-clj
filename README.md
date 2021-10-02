@@ -232,7 +232,7 @@ Create an api key, more query options can be found [here.](https://typesense.org
 
 ## Retrieve api key
 
-Retrieve api key on `id`, read more here [https://typesense.org/docs/0.21.0/api/api-keys.html#retrieve-an-api-key].
+Retrieve api key on `id`, read more [here.](https://typesense.org/docs/0.21.0/api/api-keys.html#retrieve-an-api-key)
 
 ```clojure
 (retrieve-api-key! settings 0
@@ -252,4 +252,52 @@ Deletes api key on `id`, read more [here.](https://typesense.org/docs/0.21.0/api
 
 ```clojure
 (list-api-keys! settings 0
+```
+
+# Curation
+
+Using overrides, you can include or exclude specific documents for a given query, read more [here.](https://typesense.org/docs/0.21.0/api/curation.html)
+
+## Create or update an override
+
+Create or update override if already exist.
+
+```clojure
+(upsert-override! settings
+                  "companies"
+                  "customize-apple"
+                  {:rule {:query "apple"
+                          :match "exact"}
+                   :includes [{:id "422" :position 1}
+                              {:id "54" :position 2}]
+                   :excludes [{:id "287"}]})
+```
+
+## List overrides
+
+Lists all overrides.
+
+```clojure
+(list-overrides! settings
+                 "companies")
+```
+
+## Retrieve override
+
+Retrieves override on name.
+
+```clojure
+(retrieve-override! settings
+                    "companies"
+                    "customize-apple")
+```
+
+## Delete override
+
+Deletes override on name.
+
+```clojure
+(delete-override! settings
+                  "companies"
+                  "customize-apple")
 ```

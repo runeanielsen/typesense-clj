@@ -185,3 +185,45 @@
         exp {:uri "http://localhost:8108/keys/0"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
+
+(deftest upsert-override-req-test
+  (let [override {:rule {:query "apple"
+                         :match "exact"}
+                  :includes [{:id "422" :position 1}
+                             {:id "54" :position 2}]
+                  :excludes [{:id "287"}]}
+        req (sut/upsert-override-req settings
+                                     "companies"
+                                     "customize-apple"
+                                     override)
+        exp {:uri
+             "http://localhost:8108/collections/companies/overrides/customize-apple"
+             :req
+             {:headers
+              {"X-TYPESENSE-API-KEY" "key"
+               "Content-Type" "text/plain"}
+              :body "{\"rule\":{\"query\":\"apple\",\"match\":\"exact\"},\"includes\":[{\"id\":\"422\",\"position\":1},{\"id\":\"54\",\"position\":2}],\"excludes\":[{\"id\":\"287\"}]}"}}]
+    (is (= exp req))))
+
+(deftest list-overrides-req-test
+  (let [req (sut/list-overrides-req settings
+                                    "companies")
+        exp {:uri "http://localhost:8108/collections/companies/overrides",
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
+    (is (= exp req))))
+
+(deftest retrieve-override-req-test
+  (let [req (sut/retrieve-override-req settings
+                                       "companies"
+                                       "customize-apple")
+        exp {:uri "http://localhost:8108/collections/companies/overrides/customize-apple",
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
+    (is (= exp req))))
+
+(deftest delete-override-req-test
+  (let [req (sut/delete-override-req settings
+                                     "companies"
+                                     "customize-apple")
+        exp {:uri "http://localhost:8108/collections/companies/overrides/customize-apple",
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
+    (is (= exp req))))
