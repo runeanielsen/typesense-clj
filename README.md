@@ -71,9 +71,7 @@ Retrieves the collection on the `collection-name`.
 
 # Documents
 
-This section describes how to use the document part of Typesense-clj.
-
-Further documentation regarding the query-parameters can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html)
+This section describes how to use the documents, further information can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html)
 
 ## Create document
 
@@ -122,52 +120,53 @@ Update document in a collection on id. The update can be partial.
 ```clojure
 (update-document! settings
                   "companies"
-                  {:company_name "Stark innovation"} 1)
+                  {:company_name "Stark innovation"}
+                  1)
 ```
 
 # Import documents
 
-Create/upsert/update documents more info can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#index-a-document)
+Create/upsert/update documents.
 
 ## Import documents
 
 ```clojure
 (import-documents! settings
-                  "companies"
-                  [{:company_name "Innovationsoft A/S"
-                    :num_employees 10
-                    :country "Finland"}
-                   {:company_name "GoSoftware"
-                    :num_employees 5000
-                    :country Sweden}])
+                   "companies"
+                   [{:company_name "Innovationsoft A/S"
+                     :num_employees 10
+                     :country "Finland"}
+                    {:company_name "GoSoftware"
+                     :num_employees 5000
+                     :country Sweden}])
 ```
 
 ## Upsert documents
 
 ```clojure
 (import-documents! settings
-                  "companies"
-                  [{:company_name "Innovationsoft A/S"
-                    :num_employees 10
-                    :country "Finland"}
-                   {:company_name "GoSoftware"
-                    :num_employees 5000
-                    :country Sweden}]
-                  {:action "upsert"})
+                   "companies"
+                   [{:company_name "Innovationsoft A/S"
+                     :num_employees 10
+                     :country "Finland"}
+                    {:company_name "GoSoftware"
+                     :num_employees 5000
+                     :country Sweden}]
+                   {:action "upsert"})
 ```
 
 ## Update documents
 
 ```clojure
 (import-documents! settings
-                  "companies"
-                  [{:company_name "Innovationsoft A/S"
-                    :num_employees 10
-                    :country "Finland"}
-                   {:company_name "GoSoftware"
-                    :num_employees 5000
-                    :country Sweden}]
-                  {:action "update"})
+                   "companies"
+                   [{:company_name "Innovationsoft A/S"
+                     :num_employees 10
+                     :country "Finland"}
+                    {:company_name "GoSoftware"
+                     :num_employees 5000
+                     :country Sweden}]
+                   {:action "update"})
 ```
 
 ## Delete documents
@@ -176,8 +175,8 @@ Delete multiple documents on filter.
 
 ```clojure
 (delete-documents! settings
-                  "companies"
-                  {:filter_by "num_employees:>=100"})
+                   "companies"
+                   {:filter_by "num_employees:>=100"})
 ```
 
 ## Export documents
@@ -186,8 +185,8 @@ Export documents in collection.
 
 ```clojure
 (delete-documents! settings
-                  "companies"
-                  {:filter_by "num_employees:>=100"})
+                   "companies"
+                   {:filter_by "num_employees:>=100"})
 ```
 
 ## Search
@@ -196,9 +195,9 @@ Search for documents in a collection.
 
 ```clojure
 (search! settings
-        "companies"
-        {:q "Stark"
-         :query_by "test_name"})
+         "companies"
+         {:q "Stark"
+          :query_by "test_name"})
 ```
 
 # Api key
@@ -207,18 +206,16 @@ Typesense allows you to create API Keys with fine-grain access control. You can 
 
 ## Create api key
 
-Create an api key, more query options can be found [here.](https://typesense.org/docs/0.21.0/api/api-keys.html#create-an-api-key)
-
 ```clojure
 (create-api-key! settings
                  {:description "Search only companies key."
-                 :actions ["document:search"]
-                 :collections ["companies"]})
+                  :actions ["document:search"]
+                  :collections ["companies"]})
 ```
 
 ## Retrieve api key
 
-Retrieve api key on `id`, read more [here.](https://typesense.org/docs/0.21.0/api/api-keys.html#retrieve-an-api-key)
+Retrieves api key on `id`.
 
 ```clojure
 (retrieve-api-key! settings 0
@@ -226,7 +223,7 @@ Retrieve api key on `id`, read more [here.](https://typesense.org/docs/0.21.0/ap
 
 ## List api keys
 
-List all api keys, read more here [here.](https://typesense.org/docs/0.21.0/api/api-keys.html#list-all-keys)
+List all api keys.
 
 ```clojure
 (list-api-keys! settings
@@ -234,7 +231,7 @@ List all api keys, read more here [here.](https://typesense.org/docs/0.21.0/api/
 
 ## Delete api key
 
-Deletes api key on `id`, read more [here.](https://typesense.org/docs/0.21.0/api/api-keys.html#delete-api-key)
+Deletes api key on `id`.
 
 ```clojure
 (list-api-keys! settings 0
@@ -349,8 +346,8 @@ Retrieve synonym on synonym name in collection.
 
 ```clojure
 (retrieve-synonym! settings
-                  "products"
-                  "coat-synonyms")
+                   "products"
+                   "coat-synonyms")
 ```
 
 ## List synonyms
@@ -368,6 +365,6 @@ Delete synonym on synonym-name in collection.
 
 ```clojure
 (delete-synonym! settings
-                "products"
-                "coat-synonyms")
+                 "products"
+                 "coat-synonyms")
 ```
