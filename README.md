@@ -80,9 +80,11 @@ Further documentation regarding the query-parameters can be found [here.](https:
 Creates the document in a given collection. The document should comply with the `schema` of the collection.
 
 ```clojure
-(create-document! settings "companies" {:company_name "Stark Industries
-                                       :num_employees 5215
-                                       :country "USA""})
+(create-document! settings
+                  "companies"
+                  {:company_name "Stark Industries"
+                   :num_employees 5215
+                   :country "USA""})
 ```
 
 ## Upsert document
@@ -90,9 +92,11 @@ Creates the document in a given collection. The document should comply with the 
 Upserts the document in a given collection. The document will either be created or updated depending on if it already exists.
 
 ```clojure
-(upsert-document! settings "companies" {:company_name "Stark Industries
-                                       :num_employees 5215
-                                       :country "USA""})
+(upsert-document! settings
+                  "companies"
+                  {:company_name "Stark Industries"
+                   :num_employees 5215
+                   :country "USA""})
 ```
 
 ## Retrieve document
@@ -116,7 +120,9 @@ Deletes document in a collection on `id`.
 Update document in a collection on id. The update can be partial.
 
 ```clojure
-(update-document! settings "companies" {:company_name "Stark innovation"} 1)
+(update-document! settings
+                  "companies"
+                  {:company_name "Stark innovation"} 1)
 ```
 
 # Import documents
@@ -191,7 +197,8 @@ Search for documents in a collection.
 ```clojure
 (search! settings
         "companies"
-        {:q "Stark" :query_by "test_name"})
+        {:q "Stark"
+         :query_by "test_name"})
 ```
 
 # Api key
