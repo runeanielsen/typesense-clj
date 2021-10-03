@@ -119,11 +119,11 @@ Update document in a collection on id. The update can be partial.
 (update-document! settings "companies" {:company_name "Stark innovation"} 1)
 ```
 
-## Import documents
+# Import documents
 
 Create/upsert/update documents more info can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#index-a-document)
 
-### Import documents
+## Import documents
 
 ```clojure
 (import-documents! settings
@@ -136,7 +136,7 @@ Create/upsert/update documents more info can be found [here.](https://typesense.
                     :country Sweden}])
 ```
 
-### Upsert documents
+## Upsert documents
 
 ```clojure
 (import-documents! settings
@@ -150,7 +150,7 @@ Create/upsert/update documents more info can be found [here.](https://typesense.
                   {:action "upsert"})
 ```
 
-### Update documents
+## Update documents
 
 ```clojure
 (import-documents! settings
