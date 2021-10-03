@@ -1,10 +1,10 @@
 # Clojure client for Typesense
 
-**Still under development - not ready for use.**
+**Still under development - API might change a bit in the future until finished**
 
 Clojure client for [Typesense 0.21](https://github.com/typesense/typesense)
 
-All of the examples uses the `typesense.client` namespace.
+All of the examples uses the `typesense.client` namespace. The examples shows the simplest way to get started using the client, but all parameters described on Typesense API documentation should work, if that is not the case, please make a pull-request or open an issue.
 
 # Settings
 
@@ -23,9 +23,7 @@ Example of configs:
 
 # Collection
 
-This section describes how to use the collection part of Typesense-clj.
-
-Further documentation regarding the query-parameters can be found [here.](https://typesense.org/docs/0.21.0/api/collections.html#create-a-collection)
+This section describes how to use the collection, further information can be found [here.](https://typesense.org/docs/0.21.0/api/collections.html#create-a-collection)
 
 ## Create collection
 
@@ -123,13 +121,9 @@ Update document in a collection on id. The update can be partial.
 
 ## Import documents
 
-Create/upsert/update multiple documents in a collection.
+Create/upsert/update documents more info can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#index-a-document)
 
-All of the examples has an optional `:bulk_size` that can be set in the `parameters` map, the default is `40`.
-
-### Create
-
-Create with default `:bulk_size` of `40`.
+### Import documents
 
 ```clojure
 (import-documents! settings
@@ -142,22 +136,7 @@ Create with default `:bulk_size` of `40`.
                     :country Sweden}])
 ```
 
-Create with bulk size set to 100.
-
-```clojure
-(import-documents! settings
-                  "companies"
-                  [{:company_name "Innovationsoft A/S"
-                    :num_employees 10
-                    :country "Finland"}
-                   {:company_name "GoSoftware"
-                    :num_employees 5000
-                    :country Sweden}]
-                  {:bulk_size 100})
-```
-
-
-### Upsert
+### Upsert documents
 
 ```clojure
 (import-documents! settings
@@ -171,7 +150,7 @@ Create with bulk size set to 100.
                   {:action "upsert"})
 ```
 
-### Update
+### Update documents
 
 ```clojure
 (import-documents! settings
@@ -187,7 +166,7 @@ Create with bulk size set to 100.
 
 ## Delete documents
 
-Delete multiple documents on filter, more info can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#delete-documents)
+Delete multiple documents on filter.
 
 ```clojure
 (delete-documents! settings
@@ -197,7 +176,7 @@ Delete multiple documents on filter, more info can be found [here.](https://type
 
 ## Export documents
 
-Export multiple documents more, more info can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#export-documents)
+Export documents in collection.
 
 ```clojure
 (delete-documents! settings
@@ -207,7 +186,7 @@ Export multiple documents more, more info can be found [here.](https://typesense
 
 ## Search
 
-Search for documents in a collection. The query options can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html#search)
+Search for documents in a collection.
 
 ```clojure
 (search! settings
@@ -217,7 +196,7 @@ Search for documents in a collection. The query options can be found [here.](htt
 
 # Api key
 
-Typesense allows you to create API Keys with fine-grain access control. You can restrict access on both a per-collection and per-action level. [Read more here](https://typesense.org/docs/0.19.0/api/api-keys.html#create-an-api-key)
+Typesense allows you to create API Keys with fine-grain access control. You can restrict access on both a per-collection and per-action level, [read more here](https://typesense.org/docs/0.21.0/api/api-keys.html#create-an-api-key)
 
 ## Create api key
 
