@@ -7,39 +7,45 @@
 
 (defn- collection-uri
   "Returns the full collection uri resource path."
-  ([settings]
-   (str (:uri settings) "/collections"))
-  ([settings collection-name]
-   (str (collection-uri settings) "/" collection-name)))
+  ([uri]
+   (str uri "/collections"))
+  ([uri collection-name]
+   (str (collection-uri uri) "/" collection-name)))
 
 (defn- document-uri
   "Returns the full document uri resource path."
-  [settings collection-name]
-  (str (:uri settings) "/collections/" collection-name "/documents"))
+  ([uri collection-name]
+   (str uri "/collections/" collection-name "/documents"))
+  ([uri collection-name id]
+   (str (document-uri uri collection-name) "/" id)))
 
 (defn- keys-uri
   "Return the full keys uri resource path."
-  [settings]
-  (str (:uri settings) "/keys"))
+  ([uri]
+   (str uri "/keys"))
+  ([uri id]
+   (str (keys-uri uri) "/" id)))
 
 (defn- overrides-uri
   "Returns the full overrides uri resource path."
-  [settings collection-name]
-  (str (:uri settings) "/collections/" collection-name "/overrides"))
+  ([uri collection-name]
+   (str uri "/collections/" collection-name "/overrides"))
+  ([uri collection-name override-name]
+   (str (overrides-uri uri collection-name) "/" override-name)))
 
 (defn- aliases-uri
   "Returns the full alias uri resource path."
-  ([settings]
-   (str (:uri settings) "/aliases"))
-  ([settings collection-name]
-   (str (:uri settings) "/aliases/" collection-name)))
+  ([uri]
+   (str uri "/aliases"))
+  ([uri collection-name]
+   (str uri "/aliases/" collection-name)))
 
 (defn- synonyms-uri
   "Returns the full synonyms uri resource path."
-  ([settings collection-name]
-   (str (:uri settings) "/collections/" collection-name "/synonyms"))
-  ([settings collection-name synonym-name]
-   (str (synonyms-uri settings collection-name) "/" synonym-name)))
+  ([uri collection-name]
+   (str uri "/collections/" collection-name "/synonyms"))
+  ([uri collection-name synonym-name]
+   (str (synonyms-uri uri collection-name) "/" synonym-name)))
 
 (defn- build-query
   "Convert param pairs into a valid query string."
@@ -60,55 +66,55 @@
           maps))
 
 (defn create-collection-req
-  [settings schema]
-  {:uri (collection-uri settings)
-   :req {:headers {api-key-header-name (:key settings)
+  [{:keys [uri key]} schema]
+  {:uri (collection-uri uri)
+   :req {:headers {api-key-header-name key
                    "Content-Type" "application/json"}
          :body (json/generate-string schema)}})
 
 (defn drop-collection-req
-  [settings collection-name]
-  {:uri (collection-uri settings collection-name)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name]
+  {:uri (collection-uri uri collection-name)
+   :req {:headers {api-key-header-name key}}})
 
 (defn list-collections-req
-  [settings]
-  {:uri (collection-uri settings)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]}]
+  {:uri (collection-uri uri)
+   :req {:headers {api-key-header-name key}}})
 
 (defn retrieve-collection-req
-  [settings collection-name]
-  {:uri (collection-uri settings collection-name)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name]
+  {:uri (collection-uri uri collection-name)
+   :req {:headers {api-key-header-name key}}})
 
 (defn create-document-req
-  [settings collection-name document]
-  {:uri (document-uri settings collection-name)
-   :req {:headers {api-key-header-name (:key settings)
+  [{:keys [uri key]} collection-name document]
+  {:uri (document-uri uri collection-name)
+   :req {:headers {api-key-header-name key
                    "Content-Type" "application/json"}
          :body (json/generate-string document)}})
 
 (defn upsert-document-req
-  [settings collection-name document]
-  {:uri (str (document-uri settings collection-name) "?action=upsert")
-   :req {:headers {api-key-header-name (:key settings)
+  [{:keys [uri key]} collection-name document]
+  {:uri (str (document-uri uri collection-name) "?action=upsert")
+   :req {:headers {api-key-header-name key
                    "Content-Type" "application/json"}
          :body (json/generate-string document)}})
 
 (defn retrieve-document-req
-  [settings collection-name id]
-  {:uri (str (document-uri settings collection-name) "/" id)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name id]
+  {:uri (document-uri uri collection-name id)
+   :req {:headers {api-key-header-name key}}})
 
 (defn delete-document-req
-  [settings collection-name id]
-  {:uri (str (document-uri settings collection-name) "/" id)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name id]
+  {:uri (document-uri uri collection-name id)
+   :req {:headers {api-key-header-name key}}})
 
 (defn update-document-req
-  [settings collection-name id document]
-  {:uri (str (document-uri settings collection-name) "/" id)
-   :req {:headers {api-key-header-name (:key settings)
+  [{:keys [uri key]} collection-name id document]
+  {:uri (document-uri uri collection-name id)
+   :req {:headers {api-key-header-name key
                    "Content-Type" "application/json"}
          :body (json/generate-string document)}})
 
@@ -118,117 +124,117 @@
                          collection-name
                          documents
                          {}))
-  ([settings collection-name documents parameters]
-   {:uri (str (document-uri settings collection-name)
+  ([{:keys [uri key]} collection-name documents parameters]
+   {:uri (str (document-uri uri collection-name)
               "/import"
               (build-query parameters))
-    :req {:headers {api-key-header-name (:key settings)
+    :req {:headers {api-key-header-name key
                     "Content-Type" "text/plain"}
           :body (json-lines documents)}}))
 
 (defn delete-documents-req
-  [settings collection-name parameters]
-  {:uri (str (document-uri settings collection-name)
+  [{:keys [uri key]} collection-name parameters]
+  {:uri (str (document-uri uri collection-name)
              (build-query parameters))
-   :req {:headers {api-key-header-name (:key settings)}}})
+   :req {:headers {api-key-header-name key}}})
 
 (defn export-documents-req
-  [settings collection-name parameters]
-  {:uri (str (document-uri settings collection-name)
+  [{:keys [uri key]} collection-name parameters]
+  {:uri (str (document-uri uri collection-name)
              "/export"
              (build-query parameters))
-   :req {:headers {api-key-header-name (:key settings)}}})
+   :req {:headers {api-key-header-name key}}})
 
 (defn search-req
-  [settings collection-name parameters]
-  {:uri (str (document-uri settings collection-name)
+  [{:keys [uri key]} collection-name parameters]
+  {:uri (str (document-uri uri collection-name)
              "/search"
              (build-query parameters))
-   :req {:headers {api-key-header-name (:key settings)}}})
+   :req {:headers {api-key-header-name key}}})
 
 (defn create-api-key-req
-  [settings parameters]
-  {:uri (keys-uri settings)
-   :req {:headers {api-key-header-name (:key settings)}
+  [{:keys [uri key]} parameters]
+  {:uri (keys-uri uri)
+   :req {:headers {api-key-header-name key}
          :body (json/generate-string parameters)}})
 
 (defn retrieve-api-key-req
-  [settings id]
-  {:uri (str (keys-uri settings) "/" id)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} id]
+  {:uri (keys-uri uri id)
+   :req {:headers {api-key-header-name key}}})
 
 (defn list-api-keys-req
-  [settings]
-  {:uri (keys-uri settings)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]}]
+  {:uri (keys-uri uri)
+   :req {:headers {api-key-header-name key}}})
 
 (defn delete-api-key-req
-  [settings id]
-  {:uri (str (keys-uri settings) "/" id)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} id]
+  {:uri (keys-uri uri id)
+   :req {:headers {api-key-header-name key}}})
 
 (defn upsert-override-req
-  [settings collection-name override-name override]
-  {:uri (str (overrides-uri settings collection-name) "/" override-name)
-   :req {:headers {api-key-header-name (:key settings)
+  [{:keys [uri key]} collection-name override-name override]
+  {:uri (overrides-uri uri collection-name override-name)
+   :req {:headers {api-key-header-name key
                    "Content-Type" "text/json"}
          :body (json/generate-string override)}})
 
 (defn list-overrides-req
-  [settings collection-name]
-  {:uri (overrides-uri settings collection-name)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name]
+  {:uri (overrides-uri uri collection-name)
+   :req {:headers {api-key-header-name key}}})
 
 (defn retrieve-override-req
-  [settings collection-name override-name]
-  {:uri (str (overrides-uri settings collection-name) "/" override-name)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name override-name]
+  {:uri (overrides-uri uri collection-name override-name)
+   :req {:headers {api-key-header-name key}}})
 
 (defn delete-override-req
-  [settings collection-name override-name]
-  {:uri (str (overrides-uri settings collection-name) "/" override-name)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name override-name]
+  {:uri (overrides-uri uri collection-name override-name)
+   :req {:headers {api-key-header-name key}}})
 
 (defn upsert-alias-req
-  [settings collection-name alias-collection]
-  {:uri (aliases-uri settings collection-name)
-   :req {:headers {api-key-header-name (:key settings)
+  [{:keys [uri key]} collection-name alias-collection]
+  {:uri (aliases-uri uri collection-name)
+   :req {:headers {api-key-header-name key
                    "Content-Type" "text/json"}
          :body (json/generate-string alias-collection)}})
 
 (defn retrieve-alias-req
-  [settings collection-name]
-  {:uri (aliases-uri settings collection-name)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name]
+  {:uri (aliases-uri uri collection-name)
+   :req {:headers {api-key-header-name key}}})
 
 (defn list-aliases-req
-  [settings]
-  {:uri (aliases-uri settings)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]}]
+  {:uri (aliases-uri uri)
+   :req {:headers {api-key-header-name key}}})
 
 (defn delete-alias-req
-  [settings collection-name]
-  {:uri (str (aliases-uri settings collection-name))
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name]
+  {:uri (aliases-uri uri collection-name)
+   :req {:headers {api-key-header-name key}}})
 
 (defn upsert-synonym-req
-  [settings collection-name synonym-name synonyms]
-  {:uri  (synonyms-uri settings collection-name synonym-name)
-   :req {:headers {api-key-header-name (:key settings)
+  [{:keys [uri key]} collection-name synonym-name synonyms]
+  {:uri (synonyms-uri uri collection-name synonym-name)
+   :req {:headers {api-key-header-name key
                    "Content-Type" "text/json"}
          :body (json/generate-string synonyms)}})
 
 (defn retrieve-synonym-req
-  [settings collection-name synonym-name]
-  {:uri (synonyms-uri settings collection-name synonym-name)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name synonym-name]
+  {:uri (synonyms-uri uri collection-name synonym-name)
+   :req {:headers {api-key-header-name key}}})
 
 (defn list-synonyms-req
-  [settings collection-name]
-  {:uri (synonyms-uri settings collection-name)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name]
+  {:uri (synonyms-uri uri collection-name)
+   :req {:headers {api-key-header-name key}}})
 
 (defn delete-synonym-req
-  [settings collection-name synonym-name]
-  {:uri (synonyms-uri settings collection-name synonym-name)
-   :req {:headers {api-key-header-name (:key settings)}}})
+  [{:keys [uri key]} collection-name synonym-name]
+  {:uri (synonyms-uri uri collection-name synonym-name)
+   :req {:headers {api-key-header-name key}}})
