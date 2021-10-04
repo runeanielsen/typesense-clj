@@ -234,7 +234,7 @@ List all api keys.
 Deletes api key on `id`.
 
 ```clojure
-(list-api-keys! settings 0
+(delete-api-key! settings 0
 ```
 
 # Curation
