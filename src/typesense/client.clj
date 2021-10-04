@@ -35,7 +35,7 @@
                                                    collection-name)]
     (handle-json-response (client/delete uri req))))
 
-(defn list-collections!
+(defn list-collections
   "Returns a summary of all your collections.
   The collections are returned sorted by creation date,
   with the most recent collections appearing first."
@@ -45,7 +45,7 @@
     (println req)
     (handle-json-response (client/get uri req))))
 
-(defn retrieve-collection!
+(defn retrieve-collection
   "Retrieves collection on collection name."
   [settings collection-name]
   (let [{:keys [uri req]} (api/retrieve-collection-req settings
@@ -69,7 +69,7 @@
                                                    document)]
     (handle-json-response (client/post uri req))))
 
-(defn retrieve-document!
+(defn retrieve-document
   "Retrieves the document on id in the specified collection."
   [settings collection-name id]
   (let [{:keys [uri req]} (api/retrieve-document-req settings
@@ -114,7 +114,7 @@
                                                     parameters)]
     (handle-json-response (client/delete uri req))))
 
-(defn export-documents!
+(defn export-documents
   "Exports documents in the specified collection."
   [settings collection-name parameters]
   (let [{:keys [uri req]} (api/export-documents-req settings
@@ -122,7 +122,7 @@
                                                     parameters)]
     (handle-jsonline-response (client/get uri req))))
 
-(defn search!
+(defn search
   "Search for documents using the specified query parameters."
   [settings collection-name parameters]
   (let [{:keys [uri req]} (api/search-req settings
@@ -137,14 +137,14 @@
                                                   parameters)]
     (handle-json-response (client/post uri req))))
 
-(defn retrieve-api-key!
+(defn retrieve-api-key
   "Retrives api-key on id."
   [settings id]
   (let [{:keys [uri req]} (api/retrieve-api-key-req settings
                                                     id)]
     (handle-json-response (client/get uri req))))
 
-(defn list-api-keys!
+(defn list-api-keys
   "List api-keys."
   [settings]
   (let [{:keys [uri req]} (api/list-api-keys-req settings)]
@@ -166,14 +166,14 @@
                                                    override)]
     (handle-json-response (client/put uri req))))
 
-(defn list-overrides!
+(defn list-overrides
   "Lists overrides."
   [settings collection-name]
   (let [{:keys [uri req]} (api/list-overrides-req settings
                                                   collection-name)]
     (handle-json-response (client/get uri req))))
 
-(defn retrieve-override!
+(defn retrieve-override
   "Retrieve override on name."
   [settings collection-name override-name]
   (let [{:keys [uri req]} (api/retrieve-override-req settings
@@ -203,7 +203,7 @@
   (let [{:keys [uri req]} (api/list-aliases-req settings)]
     (handle-json-response (client/get uri req))))
 
-(defn retrieve-alias!
+(defn retrieve-alias
   "Retrieves alias on collection-name."
   [settings collection-name]
   (let [{:keys [uri req]} (api/retrieve-alias-req settings
@@ -226,7 +226,7 @@
                                                   synonyms)]
     (handle-json-response (client/put uri req))))
 
-(defn retrieve-synonym!
+(defn retrieve-synonym
   "Retrieve synonym on synonym-name in collection."
   [settings collection-name synonym-name]
   (let [{:keys [uri req]} (api/retrieve-synonym-req settings
@@ -234,7 +234,7 @@
                                                     synonym-name)]
     (handle-json-response (client/get uri req))))
 
-(defn list-synonyms!
+(defn list-synonyms
   "List synonyms in collection"
   [settings collection-name]
   (let [{:keys [uri req]} (api/list-synonyms-req settings

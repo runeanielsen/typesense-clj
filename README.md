@@ -58,7 +58,7 @@ For large collections, this might have an impact on read latencies.
 Returns a summary of all your collections. The collections are returned sorted by creation date, with the most recent collections appearing first.
 
 ```clojure
-(list-collections! settings)
+(list-collections settings)
 ```
 
 ## Retrieve collection
@@ -66,7 +66,7 @@ Returns a summary of all your collections. The collections are returned sorted b
 Retrieves the collection on the `collection-name`.
 
 ```clojure
-(retrieve-collection! settings "companies")
+(retrieve-collection settings "companies")
 ```
 
 # Documents
@@ -102,7 +102,7 @@ Upserts the document in a given collection. The document will either be created 
 Retrives document in a collection on `id`.
 
 ```clojure
-(upsert-document! settings "companies" 1)
+(retrieve-document settings "companies" 1)
 ```
 
 ## Delete document
@@ -184,9 +184,9 @@ Delete multiple documents on filter.
 Export documents in collection.
 
 ```clojure
-(delete-documents! settings
-                   "companies"
-                   {:filter_by "num_employees:>=100"})
+(export-documents settings
+                  "companies"
+                  {:filter_by "num_employees:>=100"})
 ```
 
 ## Search
@@ -194,10 +194,10 @@ Export documents in collection.
 Search for documents in a collection.
 
 ```clojure
-(search! settings
-         "companies"
-         {:q "Stark"
-          :query_by "test_name"})
+(search settings
+        "companies"
+        {:q "Stark"
+         :query_by "test_name"})
 ```
 
 # Api key
@@ -218,7 +218,7 @@ Typesense allows you to create API Keys with fine-grain access control. You can 
 Retrieves api key on `id`.
 
 ```clojure
-(retrieve-api-key! settings 0
+(retrieve-api-key settings 0)
 ```
 
 ## List api keys
@@ -226,7 +226,7 @@ Retrieves api key on `id`.
 List all api keys.
 
 ```clojure
-(list-api-keys! settings
+(list-api-keys settings)
 ```
 
 ## Delete api key
@@ -234,7 +234,7 @@ List all api keys.
 Deletes api key on `id`.
 
 ```clojure
-(delete-api-key! settings 0
+(delete-api-key! settings 0)
 ```
 
 # Curation
@@ -261,8 +261,8 @@ Create or update override if already exist.
 Lists all overrides.
 
 ```clojure
-(list-overrides! settings
-                 "companies")
+(list-overrides settings
+                "companies")
 ```
 
 ## Retrieve override
@@ -270,9 +270,9 @@ Lists all overrides.
 Retrieves override on name.
 
 ```clojure
-(retrieve-override! settings
-                    "companies"
-                    "customize-apple")
+(retrieve-override settings
+                   "companies"
+                   "customize-apple")
 ```
 
 ## Delete override
@@ -304,8 +304,8 @@ Create or update alias.
 Retrieve alias on collection-name.
 
 ```clojure
-(retrieve-alias! settings
-                 "companies")
+(retrieve-alias settings
+                "companies")
 ```
 
 ## List aliases
@@ -313,12 +313,12 @@ Retrieve alias on collection-name.
 List aliases.
 
 ```clojure
-(list-aliases! settings)
+(list-aliases settings)
 ```
 
 ## Delete alias
 
-Delete alias
+Delete alias on collection name.
 
 ```clojure
 (delete-alias! settings
@@ -345,9 +345,9 @@ Create or update synonym.
 Retrieve synonym on synonym name in collection.
 
 ```clojure
-(retrieve-synonym! settings
-                   "products"
-                   "coat-synonyms")
+(retrieve-synonym settings
+                  "products"
+                  "coat-synonyms")
 ```
 
 ## List synonyms
@@ -355,8 +355,8 @@ Retrieve synonym on synonym name in collection.
 List synonyms in collection.
 
 ```clojure
-(list-synonyms! settings
-                "products")
+(list-synonyms settings
+               "products")
 ```
 
 ## Delete synonym
