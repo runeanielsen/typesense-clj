@@ -283,7 +283,7 @@
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
 
-(deftest list-synonyms-req-test
+(deftest delete-synonyms-req-test
   (let [req (sut/delete-synonym-req settings
                                     "products"
                                     "coat-synonyms")
