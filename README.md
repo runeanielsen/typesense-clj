@@ -32,16 +32,15 @@ The different `types` for the schema can be found [here](https://typesense.org/d
 The examples displays the creation of collection named `companies`.
 
 ```clojure
-(create-collection! settings
-                    {:name "companies"
-                     :fields [{:name "company_name"
-                               :type "string"}
-                              {:name "num_employees"
-                               :type "int32"}
-                              {:name "country"
-                               :type "string"
-                               :facet true}]
-                     :default_sorting_field "num_employees"})
+(create-collection! settings {:name "companies"
+                              :fields [{:name "company_name"
+                                        :type "string"}
+                                       {:name "num_employees"
+                                        :type "int32"}
+                                       {:name "country"
+                                        :type "string"
+                                        :facet true}]
+                              :default_sorting_field "num_employees"})
 ```
 
 ## Drop collection
@@ -78,11 +77,8 @@ This section describes how to use the documents, further information can be foun
 Creates the document in a given collection. The document should comply with the `schema` of the collection.
 
 ```clojure
-(create-document! settings
-                  "companies"
-                  {:company_name "Stark Industries"
-                   :num_employees 5215
-                   :country "USA""})
+(create-document! settings "companies" {:company_name "Stark Industries"
+                                        :num_employees 5215 :country "USA""})
 ```
 
 ## Upsert document
@@ -90,11 +86,9 @@ Creates the document in a given collection. The document should comply with the 
 Upserts the document in a given collection. The document will either be created or updated depending on if it already exists.
 
 ```clojure
-(upsert-document! settings
-                  "companies"
-                  {:company_name "Stark Industries"
-                   :num_employees 5215
-                   :country "USA""})
+(upsert-document! settings "companies" {:company_name "Stark Industries"
+                                        :num_employees 5215
+                                        :country "USA""})
 ```
 
 ## Retrieve document
@@ -118,10 +112,7 @@ Deletes document in a collection on `id`.
 Update document in a collection on id. The update can be partial.
 
 ```clojure
-(update-document! settings
-                  "companies"
-                  {:company_name "Stark innovation"}
-                  1)
+(update-document! settings "companies" {:company_name "Stark innovation"} 1)
 ```
 
 # Import documents
@@ -174,9 +165,7 @@ Create/upsert/update documents.
 Delete multiple documents on filter.
 
 ```clojure
-(delete-documents! settings
-                   "companies"
-                   {:filter_by "num_employees:>=100"})
+(delete-documents! settings "companies" {:filter_by "num_employees:>=100"})
 ```
 
 ## Export documents
@@ -184,9 +173,7 @@ Delete multiple documents on filter.
 Export documents in collection.
 
 ```clojure
-(export-documents settings
-                  "companies"
-                  {:filter_by "num_employees:>=100"})
+(export-documents settings "companies" {:filter_by "num_employees:>=100"})
 ```
 
 ## Search
@@ -194,10 +181,8 @@ Export documents in collection.
 Search for documents in a collection.
 
 ```clojure
-(search settings
-        "companies"
-        {:q "Stark"
-         :query_by "test_name"})
+(search settings "companies" {:q "Stark"
+                              :query_by "test_name"})
 ```
 
 # Api key
@@ -207,10 +192,9 @@ Typesense allows you to create API Keys with fine-grain access control. You can 
 ## Create api key
 
 ```clojure
-(create-api-key! settings
-                 {:description "Search only companies key."
-                  :actions ["document:search"]
-                  :collections ["companies"]})
+(create-api-key! settings {:description "Search only companies key."
+                           :actions ["document:search"]
+                           :collections ["companies"]})
 ```
 
 ## Retrieve api key
@@ -261,8 +245,7 @@ Create or update override if already exist.
 Lists all overrides.
 
 ```clojure
-(list-overrides settings
-                "companies")
+(list-overrides settings "companies")
 ```
 
 ## Retrieve override
@@ -270,9 +253,7 @@ Lists all overrides.
 Retrieves override on name.
 
 ```clojure
-(retrieve-override settings
-                   "companies"
-                   "customize-apple")
+(retrieve-override settings "companies" "customize-apple")
 ```
 
 ## Delete override
@@ -280,9 +261,7 @@ Retrieves override on name.
 Deletes override on name.
 
 ```clojure
-(delete-override! settings
-                  "companies"
-                  "customize-apple")
+(delete-override! settings "companies" "customize-apple")
 ```
 
 # Collection alias
@@ -294,9 +273,7 @@ An alias is a virtual collection name that points to a real collection. Read mor
 Create or update alias.
 
 ```clojure
-(upsert-alias! settings
-               "companies"
-               {:collection_name "companies_june11"})
+(upsert-alias! settings "companies" {:collection_name "companies_june11"})
 ```
 
 ## Retrieve alias
@@ -304,8 +281,7 @@ Create or update alias.
 Retrieve alias on collection-name.
 
 ```clojure
-(retrieve-alias settings
-                "companies")
+(retrieve-alias settings "companies")
 ```
 
 ## List aliases
@@ -321,8 +297,7 @@ List aliases.
 Delete alias on collection name.
 
 ```clojure
-(delete-alias! settings
-               "companies")
+(delete-alias! settings "companies")
 ```
 
 # Synonyms
@@ -334,10 +309,7 @@ The synonyms feature allows you to define search terms that should be considered
 Create or update synonym.
 
 ```clojure
-(upsert-synonym! settings
-                 "products"
-                 "coat-synonyms"
-                 {:synonyms ["blazer" "coat" "jacket"]})
+(upsert-synonym! settings "products" "coat-synonyms" {:synonyms ["blazer" "coat" "jacket"]})
 ```
 
 ## Retrieve synonym
@@ -345,9 +317,7 @@ Create or update synonym.
 Retrieve synonym on synonym name in collection.
 
 ```clojure
-(retrieve-synonym settings
-                  "products"
-                  "coat-synonyms")
+(retrieve-synonym settings "products" "coat-synonyms")
 ```
 
 ## List synonyms
@@ -355,8 +325,7 @@ Retrieve synonym on synonym name in collection.
 List synonyms in collection.
 
 ```clojure
-(list-synonyms settings
-               "products")
+(list-synonyms settings "products")
 ```
 
 ## Delete synonym
@@ -364,7 +333,5 @@ List synonyms in collection.
 Delete synonym on synonym-name in collection.
 
 ```clojure
-(delete-synonym! settings
-                 "products"
-                 "coat-synonyms")
+(delete-synonym! settings "products" "coat-synonyms")
 ```
