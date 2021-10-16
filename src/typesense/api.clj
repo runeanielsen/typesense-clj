@@ -102,39 +102,39 @@
 (defn import-documents-req
   ([settings collection-name documents]
    (import-documents-req settings collection-name documents {}))
-  ([{:keys [uri key]} collection-name documents parameters]
+  ([{:keys [uri key]} collection-name documents options]
    {:uri (str (document-uri uri collection-name)
               "/import"
-              (util/build-query parameters))
+              (util/build-query options))
     :req {:headers {api-key-header-name key
                     "Content-Type" "text/plain"}
           :body (util/maps->json-lines documents)}}))
 
 (defn delete-documents-req
-  [{:keys [uri key]} collection-name parameters]
+  [{:keys [uri key]} collection-name options]
   {:uri (str (document-uri uri collection-name)
-             (util/build-query parameters))
+             (util/build-query options))
    :req {:headers {api-key-header-name key}}})
 
 (defn export-documents-req
-  [{:keys [uri key]} collection-name parameters]
+  [{:keys [uri key]} collection-name options]
   {:uri (str (document-uri uri collection-name)
              "/export"
-             (util/build-query parameters))
+             (util/build-query options))
    :req {:headers {api-key-header-name key}}})
 
 (defn search-req
-  [{:keys [uri key]} collection-name parameters]
+  [{:keys [uri key]} collection-name options]
   {:uri (str (document-uri uri collection-name)
              "/search"
-             (util/build-query parameters))
+             (util/build-query options))
    :req {:headers {api-key-header-name key}}})
 
 (defn create-api-key-req
-  [{:keys [uri key]} parameters]
+  [{:keys [uri key]} options]
   {:uri (keys-uri uri)
    :req {:headers {api-key-header-name key}
-         :body (json/generate-string parameters)}})
+         :body (json/generate-string options)}})
 
 (defn retrieve-api-key-req
   [{:keys [uri key]} id]

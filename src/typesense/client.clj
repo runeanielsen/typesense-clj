@@ -65,32 +65,32 @@
   "Imports documents in the specified collection."
   ([settings collection-name documents]
    (import-documents! settings collection-name documents {}))
-  ([settings collection-name documents parameters]
-   (let [{:keys [uri req]} (api/import-documents-req settings collection-name documents parameters)]
+  ([settings collection-name documents options]
+   (let [{:keys [uri req]} (api/import-documents-req settings collection-name documents options)]
      (util/handle-jsonline-response (http/post uri req)))))
 
 (defn delete-documents!
   "Delete documents."
-  [settings collection-name parameters]
-  (let [{:keys [uri req]} (api/delete-documents-req settings collection-name parameters)]
+  [settings collection-name options]
+  (let [{:keys [uri req]} (api/delete-documents-req settings collection-name options)]
     (util/handle-json-response (http/delete uri req))))
 
 (defn export-documents
   "Exports documents in the specified collection."
-  [settings collection-name parameters]
-  (let [{:keys [uri req]} (api/export-documents-req settings collection-name parameters)]
+  [settings collection-name options]
+  (let [{:keys [uri req]} (api/export-documents-req settings collection-name options)]
     (util/handle-jsonline-response (http/get uri req))))
 
 (defn search
-  "Search for documents using the specified query parameters."
-  [settings collection-name parameters]
-  (let [{:keys [uri req]} (api/search-req settings collection-name parameters)]
+  "Search for documents using the specified query options."
+  [settings collection-name options]
+  (let [{:keys [uri req]} (api/search-req settings collection-name options)]
     (util/handle-jsonline-response (http/get uri req))))
 
 (defn create-api-key!
   "Create api-key."
-  [settings parameters]
-  (let [{:keys [uri req]} (api/create-api-key-req settings parameters)]
+  [settings options]
+  (let [{:keys [uri req]} (api/create-api-key-req settings options)]
     (util/handle-json-response (http/post uri req))))
 
 (defn retrieve-api-key
