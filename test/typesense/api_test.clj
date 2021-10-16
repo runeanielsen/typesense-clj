@@ -138,15 +138,15 @@
                                       "test_collection"
                                       {:filter_by "test_count:=>0"
                                        :batch_size 40})
-        exp {:uri "http://localhost:8108/collections/test_collection/documents?filter_by=test_count:=>0&batch_size=40"
+        exp {:uri "http://localhost:8108/collections/test_collection/documents?filter_by=test_count%3A%3D%3E0&batch_size=40"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
 
-(deftest export-doucments-req-test
+(deftest export-documents-req-test
   (let [req (sut/export-documents-req settings
                                       "test_collection"
                                       {:filter_by "test_count:=>0"})
-        exp {:uri "http://localhost:8108/collections/test_collection/documents/export?filter_by=test_count:=>0"
+        exp {:uri "http://localhost:8108/collections/test_collection/documents/export?filter_by=test_count%3A%3D%3E0"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
 

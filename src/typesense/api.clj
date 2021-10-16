@@ -1,7 +1,6 @@
 (ns typesense.api
-  (:require [cheshire.core :as json]
-            [clojure.string :as str]
-            [clojure.walk :as walk]))
+  (:require [typesense.util :as util]
+            [cheshire.core :as json]))
 
 (def ^:private api-key-header-name "X-TYPESENSE-API-KEY")
 
@@ -46,24 +45,6 @@
    (str uri "/collections/" collection-name "/synonyms"))
   ([uri collection-name synonym-name]
    (str (synonyms-uri uri collection-name) "/" synonym-name)))
-
-(defn- build-query
-  "Convert param pairs into a valid query string."
-  [query-params]
-  (if (= (count query-params) 0)
-    ""
-    (->> query-params
-         walk/stringify-keys
-         (map #(str (key %) "=" (val %)))
-         (str/join \&)
-         (str "?"))))
-
-(defn- json-lines
-  "Take a vector of maps and returns json-line format."
-  [maps]
-  (reduce (fn [acc x] (str acc (json/generate-string x) "\n"))
-          ""
-          maps))
 
 (defn create-collection-req
   [{:keys [uri key]} schema]
@@ -120,36 +101,33 @@
 
 (defn import-documents-req
   ([settings collection-name documents]
-   (import-documents-req settings
-                         collection-name
-                         documents
-                         {}))
+   (import-documents-req settings collection-name documents {}))
   ([{:keys [uri key]} collection-name documents parameters]
    {:uri (str (document-uri uri collection-name)
               "/import"
-              (build-query parameters))
+              (util/build-query parameters))
     :req {:headers {api-key-header-name key
                     "Content-Type" "text/plain"}
-          :body (json-lines documents)}}))
+          :body (util/maps->json-lines documents)}}))
 
 (defn delete-documents-req
   [{:keys [uri key]} collection-name parameters]
   {:uri (str (document-uri uri collection-name)
-             (build-query parameters))
+             (util/build-query parameters))
    :req {:headers {api-key-header-name key}}})
 
 (defn export-documents-req
   [{:keys [uri key]} collection-name parameters]
   {:uri (str (document-uri uri collection-name)
              "/export"
-             (build-query parameters))
+             (util/build-query parameters))
    :req {:headers {api-key-header-name key}}})
 
 (defn search-req
   [{:keys [uri key]} collection-name parameters]
   {:uri (str (document-uri uri collection-name)
              "/search"
-             (build-query parameters))
+             (util/build-query parameters))
    :req {:headers {api-key-header-name key}}})
 
 (defn create-api-key-req
