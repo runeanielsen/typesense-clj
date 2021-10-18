@@ -1,5 +1,5 @@
 (ns typesense.util
-  (:require [cheshire.core :as json]
+  (:require [clojure.data.json :as json]
             [clojure.string :as str]
             [clojure.walk :as walk])
   (:import [java.net URLEncoder]))
@@ -20,7 +20,7 @@
 (defn maps->json-lines
   "Take a vector of maps and returns json-line format."
   [ms]
-  (reduce (fn [acc x] (str acc (json/generate-string x) "\n"))
+  (reduce (fn [acc x] (str acc (json/write-str x) "\n"))
           ""
           ms))
 
@@ -29,7 +29,7 @@
   [json-lines]
   (->> json-lines
        str/split-lines
-       (map #(json/parse-string % true))
+       (map #(json/read-str % :key-fn keyword))
        (into [])))
 
 (defn handle-json-response
@@ -37,7 +37,7 @@
   [response]
   (-> response
       :body
-      (json/parse-string true)))
+      (json/read-str :key-fn keyword)))
 
 (defn handle-jsonline-response
   "Handles JSON-line response from Typesense."

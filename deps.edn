@@ -1,6 +1,6 @@
 {:paths ["src" "classes"]
  :deps {org.clojure/clojure {:mvn/version "1.10.3"}
-        cheshire/cheshire {:mvn/version "5.10.1"}
+        org.clojure/data.json {:mvn/version "2.4.0"}
         clj-http/clj-http {:mvn/version "3.12.3"}}
  :aliases {:test    {:extra-paths ["test"]
                      :extra-deps  {lambdaisland/kaocha {:mvn/version "1.0.887"}}

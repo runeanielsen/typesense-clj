@@ -1,6 +1,6 @@
 (ns typesense.api
   (:require [typesense.util :as util]
-            [cheshire.core :as json]))
+            [clojure.data.json :as json]))
 
 (def ^:private api-key-header-name "X-TYPESENSE-API-KEY")
 
@@ -51,7 +51,7 @@
   {:uri (collection-uri uri)
    :req {:headers {api-key-header-name key
                    "Content-Type" "application/json"}
-         :body (json/generate-string schema)}})
+         :body (json/write-str schema)}})
 
 (defn drop-collection-req
   [{:keys [uri key]} collection-name]
@@ -73,14 +73,14 @@
   {:uri (document-uri uri collection-name)
    :req {:headers {api-key-header-name key
                    "Content-Type" "application/json"}
-         :body (json/generate-string document)}})
+         :body (json/write-str document)}})
 
 (defn upsert-document-req
   [{:keys [uri key]} collection-name document]
   {:uri (str (document-uri uri collection-name) "?action=upsert")
    :req {:headers {api-key-header-name key
                    "Content-Type" "application/json"}
-         :body (json/generate-string document)}})
+         :body (json/write-str document)}})
 
 (defn retrieve-document-req
   [{:keys [uri key]} collection-name id]
@@ -97,7 +97,7 @@
   {:uri (document-uri uri collection-name id)
    :req {:headers {api-key-header-name key
                    "Content-Type" "application/json"}
-         :body (json/generate-string document)}})
+         :body (json/write-str document)}})
 
 (defn import-documents-req
   ([settings collection-name documents]
@@ -134,7 +134,7 @@
   [{:keys [uri key]} options]
   {:uri (keys-uri uri)
    :req {:headers {api-key-header-name key}
-         :body (json/generate-string options)}})
+         :body (json/write-str options)}})
 
 (defn retrieve-api-key-req
   [{:keys [uri key]} id]
@@ -156,7 +156,7 @@
   {:uri (overrides-uri uri collection-name override-name)
    :req {:headers {api-key-header-name key
                    "Content-Type" "text/json"}
-         :body (json/generate-string override)}})
+         :body (json/write-str override)}})
 
 (defn list-overrides-req
   [{:keys [uri key]} collection-name]
@@ -178,7 +178,7 @@
   {:uri (aliases-uri uri collection-name)
    :req {:headers {api-key-header-name key
                    "Content-Type" "text/json"}
-         :body (json/generate-string alias-collection)}})
+         :body (json/write-str alias-collection)}})
 
 (defn retrieve-alias-req
   [{:keys [uri key]} collection-name]
@@ -200,7 +200,7 @@
   {:uri (synonyms-uri uri collection-name synonym-name)
    :req {:headers {api-key-header-name key
                    "Content-Type" "text/json"}
-         :body (json/generate-string synonyms)}})
+         :body (json/write-str synonyms)}})
 
 (defn retrieve-synonym-req
   [{:keys [uri key]} collection-name synonym-name]

@@ -1,7 +1,7 @@
 (ns typesense.api-test
   (:require [typesense.api :as sut]
             [clojure.test :refer [deftest is]]
-            [cheshire.core :as json]))
+            [clojure.data.json :as json]))
 
 (def ^:private settings
   {:uri "http://localhost:8108" :key "key"})
@@ -17,7 +17,7 @@
         exp {:uri "http://localhost:8108/collections"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"
                              "Content-Type" "application/json"}
-                   :body (json/generate-string schema)}}]
+                   :body (json/write-str schema)}}]
     (is (= exp req))))
 
 (deftest drop-collection-req-test
@@ -46,7 +46,7 @@
         exp {:uri "http://localhost:8108/collections/test_collection/documents"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"
                              "Content-Type" "application/json"}
-                   :body (json/generate-string document)}}]
+                   :body (json/write-str document)}}]
     (is (= exp req))))
 
 (deftest upsert-document-req-test
@@ -57,7 +57,7 @@
         exp {:uri "http://localhost:8108/collections/test_collection/documents?action=upsert"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"
                              "Content-Type" "application/json"}
-                   :body (json/generate-string document)}}]
+                   :body (json/write-str document)}}]
     (is (= exp req))))
 
 (deftest retrieve-document-req-test
@@ -82,7 +82,7 @@
         exp {:uri "http://localhost:8108/collections/test_collection/documents/0"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"
                              "Content-Type" "application/json"}
-                   :body (json/generate-string document)}}]
+                   :body (json/write-str document)}}]
     (is (= exp req))))
 
 (deftest import-document-req-test
