@@ -1,7 +1,12 @@
 {:paths ["src" "classes"]
  :deps {org.clojure/clojure {:mvn/version "1.10.3"}
         org.clojure/data.json {:mvn/version "2.4.0"}
-        clj-http/clj-http {:mvn/version "3.12.3"}}
+        clj-http/clj-http {:mvn/version "3.12.3"}
+        slingshot/slingshot {:mvn/version "0.12.2"}}
  :aliases {:test    {:extra-paths ["test"]
                      :extra-deps  {lambdaisland/kaocha {:mvn/version "1.0.887"}}
-                     :main-opts   ["-m" "kaocha.runner"]}}}
+                     :main-opts   ["-m" "kaocha.runner"]}
+           :clj-kondo/config
+           {:extra-deps {clj-kondo/config {:git/url "https://github.com/clj-kondo/config"
+                                           :sha "a4139daf79255cf646e0f1b81d47ccfdc05814ce"}}
+            :main-opts ["-m" "clj-kondo.config"]}}}

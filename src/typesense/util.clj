@@ -35,13 +35,9 @@
 (defn handle-json-response
   "Handles JSON response from Typesense."
   [response]
-  (-> response
-      :body
-      (json/read-str :key-fn keyword)))
+  (json/read-str (:body response) :key-fn keyword))
 
 (defn handle-jsonline-response
   "Handles JSON-line response from Typesense."
   [response]
-  (-> response
-      :body
-      json-lines->maps))
+  (json-lines->maps (:body response)))

@@ -335,3 +335,19 @@ Delete synonym on synonym-name in collection.
 ```clojure
 (delete-synonym! settings "products" "coat-synonyms")
 ```
+
+## Exceptions
+
+### API Errors
+
+Typesense API exceptions in the [Typesense-api-errors](https://typesense.org/docs/0.21.0/api/api-errors.html) spec.
+
+| Type                                      | Description                                                                |
+|:------------------------------------------|:---------------------------------------------------------------------------|
+| `:typesense.client/bad-request`           | Bad Request - The request could not be understood due to malformed syntax. |
+| `:typesense.client/unauthorized`          | Unauthorized - Your API key is wrong.                                      |
+| `:typesense.client/not-found`             | Not Found - The requested resource is not found.                           |
+| `:typesense.client/conflict`              | Conflict - When a resource already exists.                                 |
+| `:typesense.client/unprocessable-entity`  | Unprocessable Entity - Request is well-formed, but cannot be processed.    |
+| `:typesense.client/service-unavailable`   | Service Unavailable - We’re temporarily offline. Please try again later.   |
+| `:typesense.client/unspecified-api-error` | If Typesense throws an error that is not specified in the spec.            |
