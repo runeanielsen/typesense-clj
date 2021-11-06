@@ -21,9 +21,8 @@
   "Create collection using the supplied collection schema."
   [settings schema]
   (try+
-   (let [{:keys [uri req]} (api/create-collection-req settings schema)
-         response (http/post uri req)]
-     (util/handle-json-response response))
+   (let [{:keys [uri req]} (api/create-collection-req settings schema)]
+     (util/handle-json-response (http/post uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
