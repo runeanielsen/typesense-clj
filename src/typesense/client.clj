@@ -3,19 +3,19 @@
             [typesense.util :as util]
             [clj-http.client :as http]
             [clojure.data.json :as json]
-            [slingshot.slingshot :refer [try+ throw+]]))
+            [slingshot.slingshot :refer [try+]]))
 
-(defn- http-exception->typesense-error
+(defn- http-ex-data->typesense-ex-info
   [{:keys [status body]}]
   (let [message (-> (json/read-str body :key-fn keyword) :message)]
     (case status
-      400 {:type ::bad-request :message message :status-code status}
-      401 {:type ::unauthorized :message message :status-code status}
-      404 {:type ::not-found :message message :status-code status}
-      409 {:type ::conflict :message message :status-code status}
-      422 {:type ::unprocessable-entity :message message :status-code status}
-      503 {:type ::service-unavailable :message message :status-code status}
-      {:type ::unspecified-api-error :message message :status-code status})))
+      400 (ex-info message {:type ::bad-request :message message})
+      401 (ex-info message {:type ::unauthorized :message message})
+      404 (ex-info message {:type ::not-found :message message})
+      409 (ex-info message {:type ::conflict :message message})
+      422 (ex-info message {:type ::unprocessable-entity :message message})
+      503 (ex-info message {:type ::service-unavailable :message message})
+      (ex-info message {:type ::unspecified-api-error :message message}))))
 
 (defn create-collection!
   "Create collection using the supplied collection schema."
@@ -25,7 +25,7 @@
          response (http/post uri req)]
      (util/handle-json-response response))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn drop-collection!
   "Permanently drops a collection. This action cannot be undone.
@@ -35,7 +35,7 @@
    (let [{:keys [uri req]} (api/drop-collection-req settings collection-name)]
      (util/handle-json-response (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn list-collections
   "Returns a summary of all your collections.
@@ -46,7 +46,7 @@
    (let [{:keys [uri req]} (api/list-collections-req settings)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn retrieve-collection
   "Retrieves collection on collection name."
@@ -55,7 +55,7 @@
    (let [{:keys [uri req]} (api/retrieve-collection-req settings collection-name)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn create-document!
   "Indexes the document."
@@ -64,7 +64,7 @@
    (let [{:keys [uri req]} (api/create-document-req settings collection-name document)]
      (util/handle-json-response (http/post uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn upsert-document!
   "Indexes the document."
@@ -73,7 +73,7 @@
    (let [{:keys [uri req]} (api/upsert-document-req settings collection-name document)]
      (util/handle-json-response (http/post uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn retrieve-document
   "Retrieves the document on id in the specified collection."
@@ -82,7 +82,7 @@
    (let [{:keys [uri req]} (api/retrieve-document-req settings collection-name id)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn delete-document!
   "Deletes the document on id in the specified collection."
@@ -91,7 +91,7 @@
    (let [{:keys [uri req]} (api/delete-document-req settings collection-name id)]
      (util/handle-json-response (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn update-document!
   "Update an individual document from a collection by using its id.
@@ -101,7 +101,7 @@
    (let [{:keys [uri req]} (api/update-document-req settings collection-name id document)]
      (util/handle-json-response (http/patch uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn import-documents!
   "Imports documents in the specified collection."
@@ -112,7 +112,7 @@
     (let [{:keys [uri req]} (api/import-documents-req settings collection-name documents options)]
       (util/handle-jsonline-response (http/post uri req)))
     (catch [:type :clj-http.client/unexceptional-status] e
-      (throw+ (http-exception->typesense-error e))))))
+      (throw (http-ex-data->typesense-ex-info e))))))
 
 (defn delete-documents!
   "Delete documents."
@@ -121,7 +121,7 @@
    (let [{:keys [uri req]} (api/delete-documents-req settings collection-name options)]
      (util/handle-json-response (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn export-documents
   "Exports documents in the specified collection."
@@ -130,7 +130,7 @@
    (let [{:keys [uri req]} (api/export-documents-req settings collection-name options)]
      (util/handle-jsonline-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn search
   "Search for documents using the specified query options."
@@ -139,7 +139,7 @@
    (let [{:keys [uri req]} (api/search-req settings collection-name options)]
      (util/handle-jsonline-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn create-api-key!
   "Create api-key."
@@ -148,7 +148,7 @@
    (let [{:keys [uri req]} (api/create-api-key-req settings options)]
      (util/handle-json-response (http/post uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn retrieve-api-key
   "Retrives api-key on id."
@@ -157,7 +157,7 @@
    (let [{:keys [uri req]} (api/retrieve-api-key-req settings id)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn list-api-keys
   "List api-keys."
@@ -166,7 +166,7 @@
    (let [{:keys [uri req]} (api/list-api-keys-req settings)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn delete-api-key!
   "Deletes api-key on id."
@@ -175,7 +175,7 @@
    (let [{:keys [uri req]} (api/delete-api-key-req settings id)]
      (util/handle-json-response (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn upsert-override!
   "Upsert override."
@@ -184,7 +184,7 @@
    (let [{:keys [uri req]} (api/upsert-override-req settings collection-name override-name override)]
      (util/handle-json-response (http/put uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn list-overrides
   "Lists overrides."
@@ -193,7 +193,7 @@
    (let [{:keys [uri req]} (api/list-overrides-req settings collection-name)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn retrieve-override
   "Retrieve override on name."
@@ -202,7 +202,7 @@
    (let [{:keys [uri req]} (api/retrieve-override-req settings collection-name override-name)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn delete-override!
   "Delete override on name."
@@ -211,7 +211,7 @@
    (let [{:keys [uri req]} (api/delete-override-req settings collection-name override-name)]
      (util/handle-json-response (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn upsert-alias!
   "Upsert alias."
@@ -220,7 +220,7 @@
    (let [{:keys [uri req]} (api/upsert-alias-req settings collection-name alias-collection)]
      (util/handle-json-response (http/put uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn list-aliases
   "List aliases."
@@ -229,7 +229,7 @@
    (let [{:keys [uri req]} (api/list-aliases-req settings)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn retrieve-alias
   "Retrieves alias on collection-name."
@@ -238,7 +238,7 @@
    (let [{:keys [uri req]} (api/retrieve-alias-req settings collection-name)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn delete-alias!
   "Delete alias on collection-name"
@@ -247,7 +247,7 @@
    (let [{:keys [uri req]} (api/delete-alias-req settings collection-name)]
      (util/handle-json-response (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn upsert-synonym!
   "Upsert synonym."
@@ -256,7 +256,7 @@
    (let [{:keys [uri req]} (api/upsert-synonym-req settings collection-name synonym-name synonyms)]
      (util/handle-json-response (http/put uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn retrieve-synonym
   "Retrieve synonym on synonym-name in collection."
@@ -265,7 +265,7 @@
    (let [{:keys [uri req]} (api/retrieve-synonym-req settings collection-name synonym-name)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn list-synonyms
   "List synonyms in collection"
@@ -274,7 +274,7 @@
    (let [{:keys [uri req]} (api/list-synonyms-req settings collection-name)]
      (util/handle-json-response (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
 
 (defn delete-synonym!
   "Delete synonym on synonym-name in collection."
@@ -283,4 +283,4 @@
    (let [{:keys [uri req]} (api/delete-synonym-req settings collection-name synonym-name)]
      (util/handle-json-response (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
-     (throw+ (http-exception->typesense-error e)))))
+     (throw (http-ex-data->typesense-ex-info e)))))
