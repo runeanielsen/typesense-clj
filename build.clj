@@ -2,7 +2,7 @@
   (:require [clojure.tools.build.api :as b]
             [org.corfield.build :as bb]))
 
-(def lib 'io.github.runeanielsen/clojure-clj)
+(def lib 'io.github.runeanielsen/typesense-clj)
 (def version (format "0.1.%s" (b/git-count-revs nil)))
 
 (defn ci "Run the CI pipeline of tests (and build the JAR)." [opts]
