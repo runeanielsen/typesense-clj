@@ -9,6 +9,7 @@
   (-> opts
       (assoc :lib lib :version version)
       (bb/clean)
+      (bb/run-tests)
       (bb/jar)))
 
 (defn deploy "Deploy the JAR to Clojars." [opts]
