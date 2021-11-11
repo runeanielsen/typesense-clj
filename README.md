@@ -1,5 +1,7 @@
 # Clojure client for Typesense
 
+[![Clojars Project](https://img.shields.io/clojars/v/io.github.runeanielsen/typesense-clj.svg)](https://clojars.org/io.github.runeanielsen/typesense-clj)
+
 **Still under development - API might change a bit in the future until finished**
 
 Clojure client for [Typesense 0.21](https://github.com/typesense/typesense)
