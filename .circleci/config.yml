@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build
+          name: Run build and test
           command: clojure -T:build ci
 
   deploy-clojars:
