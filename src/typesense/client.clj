@@ -26,7 +26,7 @@
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
-(defn drop-collection!
+(defn delete-collection!
   "Permanently drops a collection. This action cannot be undone.
   For large collections, this might have an impact on read latencies."
   [settings collection-name]
@@ -102,13 +102,32 @@
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
-(defn import-documents!
-  "Imports documents in the specified collection."
-  ([settings collection-name documents]
-   (import-documents! settings collection-name documents {}))
-  ([settings collection-name documents options]
+(defn create-documents!
+  "Creates documents in the specified collection."
+  ([settings collection-name documents & {:as opt}]
    (try+
-    (let [{:keys [uri req]} (api/import-documents-req settings collection-name documents options)]
+    (let [options (merge opt {:action "create"})
+          {:keys [uri req]} (api/import-documents-req settings collection-name documents options)]
+      (util/http-response-jsonline->hash-maps (http/post uri req)))
+    (catch [:type :clj-http.client/unexceptional-status] e
+      (throw (http-ex-data->typesense-ex-info e))))))
+
+(defn upsert-documents!
+  "Upserts documents in the specified collection."
+  ([settings collection-name documents & {:as opt}]
+   (try+
+    (let [options (merge opt {:action "upsert"})
+          {:keys [uri req]} (api/import-documents-req settings collection-name documents options)]
+      (util/http-response-jsonline->hash-maps (http/post uri req)))
+    (catch [:type :clj-http.client/unexceptional-status] e
+      (throw (http-ex-data->typesense-ex-info e))))))
+
+(defn update-documents!
+  "Updates documents in the specified collection."
+  ([settings collection-name documents & {:as opt}]
+   (try+
+    (let [options (merge opt {:action "update"})
+          {:keys [uri req]} (api/import-documents-req settings collection-name documents options)]
       (util/http-response-jsonline->hash-maps (http/post uri req)))
     (catch [:type :clj-http.client/unexceptional-status] e
       (throw (http-ex-data->typesense-ex-info e))))))

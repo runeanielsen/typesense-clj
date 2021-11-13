@@ -8,7 +8,7 @@ Clojure client for [Typesense 0.21](https://github.com/typesense/typesense)
 
 All of the examples uses the `typesense.client` namespace. The examples shows the simplest way to get started using the client, but all parameters described on Typesense API documentation should work, if that is not the case, please make a pull-request or open an issue.
 
-# Settings
+## Settings
 
 Two values are currently required for settings.
 
@@ -22,12 +22,11 @@ Example of configs:
                :key "my-super-secret-api-key"})
 ```
 
-
-# Collection
+## Collection
 
 This section describes how to use the collection, further information can be found [here.](https://typesense.org/docs/0.21.0/api/collections.html#create-a-collection)
 
-## Create collection
+### Create collection
 
 The different `types` for the schema can be found [here](https://typesense.org/docs/0.21.0/api/collections.html#create-a-collection).
 
@@ -45,16 +44,16 @@ The examples displays the creation of collection named `companies`.
                               :default_sorting_field "num_employees"})
 ```
 
-## Drop collection
+### Delete collection
 
 Permanently drops a collection on the `collection-name`. This action cannot be undone.
 For large collections, this might have an impact on read latencies.
 
 ```clojure
-(drop-collection! settings "companies")
+(delete-collection! settings "companies")
 ```
 
-## List collections
+### List collections
 
 Returns a summary of all your collections. The collections are returned sorted by creation date, with the most recent collections appearing first.
 
@@ -62,7 +61,7 @@ Returns a summary of all your collections. The collections are returned sorted b
 (list-collections settings)
 ```
 
-## Retrieve collection
+### Retrieve collection
 
 Retrieves the collection on the `collection-name`.
 
@@ -70,11 +69,11 @@ Retrieves the collection on the `collection-name`.
 (retrieve-collection settings "companies")
 ```
 
-# Documents
+## Documents
 
 This section describes how to use the documents, further information can be found [here.](https://typesense.org/docs/0.21.0/api/documents.html)
 
-## Create document
+### Create document
 
 Creates the document in a given collection. The document should comply with the `schema` of the collection.
 
@@ -83,7 +82,7 @@ Creates the document in a given collection. The document should comply with the 
                                         :num_employees 5215 :country "USA""})
 ```
 
-## Upsert document
+### Upsert document
 
 Upserts the document in a given collection. The document will either be created or updated depending on if it already exists.
 
@@ -93,7 +92,7 @@ Upserts the document in a given collection. The document will either be created 
                                         :country "USA""})
 ```
 
-## Retrieve document
+### Retrieve document
 
 Retrives document in a collection on `id`.
 
@@ -101,7 +100,7 @@ Retrives document in a collection on `id`.
 (retrieve-document settings "companies" 1)
 ```
 
-## Delete document
+### Delete document
 
 Deletes document in a collection on `id`.
 
@@ -109,7 +108,7 @@ Deletes document in a collection on `id`.
 (delete-document! settings "companies" 1)
 ```
 
-## Update document
+### Update document
 
 Update document in a collection on id. The update can be partial.
 
@@ -117,11 +116,37 @@ Update document in a collection on id. The update can be partial.
 (update-document! settings "companies" {:company_name "Stark innovation"} 1)
 ```
 
-# Import documents
+## Create/Upsert/Update/Delete Documents
 
-Create/upsert/update documents.
+Create/upsert/update documents. All of them takes optional parameters, an example is setting the batch size using `:batch_size 20`. Read more [here.](https://typesense.org/docs/0.21.0/api/documents.html#import-documents)
 
-## Import documents
+### Create documents
+
+```clojure
+(create-documents! settings
+                   "companies"
+                   [{:company_name "Innovationsoft A/S"
+                     :num_employees 10
+                     :country "Finland"}
+                    {:company_name "GoSoftware"
+                     :num_employees 5000
+                     :country Sweden}])
+```
+
+### Upsert documents
+
+```clojure
+(upsert-documents! settings
+                   "companies"
+                   [{:company_name "Innovationsoft A/S"
+                     :num_employees 10
+                     :country "Finland"}
+                    {:company_name "GoSoftware"
+                     :num_employees 5000
+                     :country Sweden}])
+```
+
+### Update documents
 
 ```clojure
 (import-documents! settings
@@ -134,35 +159,7 @@ Create/upsert/update documents.
                      :country Sweden}])
 ```
 
-## Upsert documents
-
-```clojure
-(import-documents! settings
-                   "companies"
-                   [{:company_name "Innovationsoft A/S"
-                     :num_employees 10
-                     :country "Finland"}
-                    {:company_name "GoSoftware"
-                     :num_employees 5000
-                     :country Sweden}]
-                   {:action "upsert"})
-```
-
-## Update documents
-
-```clojure
-(import-documents! settings
-                   "companies"
-                   [{:company_name "Innovationsoft A/S"
-                     :num_employees 10
-                     :country "Finland"}
-                    {:company_name "GoSoftware"
-                     :num_employees 5000
-                     :country Sweden}]
-                   {:action "update"})
-```
-
-## Delete documents
+### Delete documents
 
 Delete multiple documents on filter.
 
@@ -170,7 +167,7 @@ Delete multiple documents on filter.
 (delete-documents! settings "companies" {:filter_by "num_employees:>=100"})
 ```
 
-## Export documents
+### Export documents
 
 Export documents in collection.
 
@@ -187,11 +184,11 @@ Search for documents in a collection.
                               :query_by "test_name"})
 ```
 
-# Api key
+## Api keys
 
 Typesense allows you to create API Keys with fine-grain access control. You can restrict access on both a per-collection and per-action level, [read more here](https://typesense.org/docs/0.21.0/api/api-keys.html#create-an-api-key)
 
-## Create api key
+### Create api key
 
 ```clojure
 (create-api-key! settings {:description "Search only companies key."
@@ -199,7 +196,7 @@ Typesense allows you to create API Keys with fine-grain access control. You can 
                            :collections ["companies"]})
 ```
 
-## Retrieve api key
+### Retrieve api key
 
 Retrieves api key on `id`.
 
@@ -207,7 +204,7 @@ Retrieves api key on `id`.
 (retrieve-api-key settings 0)
 ```
 
-## List api keys
+### List api keys
 
 List all api keys.
 
@@ -215,7 +212,7 @@ List all api keys.
 (list-api-keys settings)
 ```
 
-## Delete api key
+### Delete api key
 
 Deletes api key on `id`.
 
@@ -223,11 +220,11 @@ Deletes api key on `id`.
 (delete-api-key! settings 0)
 ```
 
-# Curation
+## Curation
 
 Using overrides, you can include or exclude specific documents for a given query, read more [here.](https://typesense.org/docs/0.21.0/api/curation.html)
 
-## Create or update an override
+### Create or update an override
 
 Create or update override if already exist.
 
@@ -242,7 +239,7 @@ Create or update override if already exist.
                    :excludes [{:id "287"}]})
 ```
 
-## List overrides
+### List overrides
 
 Lists all overrides.
 
@@ -250,7 +247,7 @@ Lists all overrides.
 (list-overrides settings "companies")
 ```
 
-## Retrieve override
+### Retrieve override
 
 Retrieves override on name.
 
@@ -258,7 +255,7 @@ Retrieves override on name.
 (retrieve-override settings "companies" "customize-apple")
 ```
 
-## Delete override
+### Delete override
 
 Deletes override on name.
 
@@ -266,11 +263,11 @@ Deletes override on name.
 (delete-override! settings "companies" "customize-apple")
 ```
 
-# Collection alias
+## Collection alias
 
 An alias is a virtual collection name that points to a real collection. Read more [here](https://typesense.org/docs/0.21.0/api/collection-alias.html)
 
-## Create or update alias
+### Create or update alias
 
 Create or update alias.
 
@@ -278,7 +275,7 @@ Create or update alias.
 (upsert-alias! settings "companies" {:collection_name "companies_june11"})
 ```
 
-## Retrieve alias
+### Retrieve alias
 
 Retrieve alias on collection-name.
 
@@ -286,7 +283,7 @@ Retrieve alias on collection-name.
 (retrieve-alias settings "companies")
 ```
 
-## List aliases
+### List aliases
 
 List aliases.
 
@@ -294,7 +291,7 @@ List aliases.
 (list-aliases settings)
 ```
 
-## Delete alias
+### Delete alias
 
 Delete alias on collection name.
 
@@ -302,11 +299,11 @@ Delete alias on collection name.
 (delete-alias! settings "companies")
 ```
 
-# Synonyms
+## Synonyms
 
 The synonyms feature allows you to define search terms that should be considered equivalent, read more [here.](https://typesense.org/docs/0.21.0/api/synonyms.html)
 
-## Create or update synonym
+### Create or update synonym
 
 Create or update synonym.
 
@@ -314,7 +311,7 @@ Create or update synonym.
 (upsert-synonym! settings "products" "coat-synonyms" {:synonyms ["blazer" "coat" "jacket"]})
 ```
 
-## Retrieve synonym
+### Retrieve synonym
 
 Retrieve synonym on synonym name in collection.
 
@@ -322,7 +319,7 @@ Retrieve synonym on synonym name in collection.
 (retrieve-synonym settings "products" "coat-synonyms")
 ```
 
-## List synonyms
+### List synonyms
 
 List synonyms in collection.
 
@@ -330,7 +327,7 @@ List synonyms in collection.
 (list-synonyms settings "products")
 ```
 
-## Delete synonym
+### Delete synonym
 
 Delete synonym on synonym-name in collection.
 
@@ -340,7 +337,7 @@ Delete synonym on synonym-name in collection.
 
 ## Exceptions
 
-### API Errors
+### Typesense API Errors
 
 Typesense API exceptions in the [Typesense-api-errors](https://typesense.org/docs/0.21.0/api/api-errors.html) spec.
 
