@@ -10,16 +10,58 @@
                                 :sort_by "num_employees:desc"})]
     (is (= expected query))))
 
+(deftest build-query-test-empty
+  (let [expected ""
+        query (sut/build-query {})]
+    (is (= expected query))))
+
 (deftest maps->json-lines-test
   (let [expected "{\"username\":\"progamer42\",\"rank\":42}\n{\"username\":\"progamer69\",\"rank\":69}\n"
         ms [{:username "progamer42" :rank 42}
             {:username "progamer69" :rank 69}]
-        json-lines (sut/maps->json-lines ms)]
+        json-lines (sut/hash-maps->json-lines ms)]
+    (is (= expected json-lines))))
+
+(deftest maps->json-lines-test-empty
+  (let [expected ""
+        ms []
+        json-lines (sut/hash-maps->json-lines ms)]
     (is (= expected json-lines))))
 
 (deftest json-lines->maps-test
   (let [expected [{:username "progamer42" :rank 42}
                   {:username "progamer69" :rank 69}]
         json-lines "{\"username\":\"progamer42\",\"rank\":42}\n{\"username\":\"progamer69\",\"rank\":69}\n"
-        maps (sut/json-lines->maps json-lines)]
+        maps (sut/json-lines->hash-maps json-lines)]
     (is (= expected maps))))
+
+(deftest json-lines->maps-test-empty
+  (let [expected []
+        json-lines ""
+        maps (sut/json-lines->hash-maps json-lines)]
+    (is (= expected maps))))
+
+(deftest http-response-json->hash-map-test
+  (let [expected {:username "progamer42" :rank 42}
+        http-response {:body "{\"username\":\"progamer42\",\"rank\":42}"}
+        result (sut/http-response-json->hash-map http-response)]
+    (is (= expected result))))
+
+(deftest http-response-json->hash-map-test-empty
+  (let [expected nil
+        http-response {:body ""}
+        result (sut/http-response-json->hash-map http-response)]
+    (is (= expected result))))
+
+(deftest http-response-jsonline->hash-maps-test
+  (let [expected [{:username "progamer42" :rank 42}
+                  {:username "progamer69" :rank 69}]
+        http-response {:body "{\"username\":\"progamer42\",\"rank\":42}\n{\"username\":\"progamer69\",\"rank\":69}\n"}
+        result (sut/http-response-jsonline->hash-maps http-response)]
+    (is (= expected result))))
+
+(deftest http-response-jsonline->hash-maps-empty
+  (let [expected []
+        http-response {:body ""}
+        result (sut/http-response-jsonline->hash-maps http-response)]
+    (is (= expected result))))

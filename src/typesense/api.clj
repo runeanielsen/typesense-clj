@@ -108,7 +108,7 @@
               (util/build-query options))
     :req {:headers {api-key-header-name key
                     "Content-Type" "text/plain"}
-          :body (util/maps->json-lines documents)}}))
+          :body (util/hash-maps->json-lines documents)}}))
 
 (defn delete-documents-req
   [{:keys [uri key]} collection-name options]
