@@ -177,11 +177,25 @@ Export documents in collection.
 
 ## Search
 
-Search for documents in a collection.
+Search for documents in a collection. You can find all the query arguments [here.](https://typesense.org/docs/0.21.0/api/documents.html#arguments)
 
 ```clojure
 (search settings "companies" {:q "Stark"
                               :query_by "test_name"})
+```
+
+## Multi search
+
+You can send multiple search requests in a single HTTP request, using the Multi-Search feature. This is especially useful to avoid round-trip network latencies incurred otherwise if each of these requests are sent in separate HTTP requests. You can read more about multi-search [here.](https://typesense.org/docs/0.21.0/api/documents.html#federated-multi-search)
+
+```clojure
+(multi-search settings
+              {:searches [{:collection "products"
+                           :q "shoe"
+                           :filter_by "price:=[50..120]"}
+                          {:collection "brands"
+                           :q "Nike"}]}
+              {:query_by "name"})
 ```
 
 ## Api keys

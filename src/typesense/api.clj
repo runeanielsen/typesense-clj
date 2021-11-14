@@ -46,6 +46,11 @@
   ([uri collection-name synonym-name]
    (str (synonyms-uri uri collection-name) "/" synonym-name)))
 
+(defn- multi-search-uri
+  "Returns the full multi-search uri resource path."
+  [uri common-search-parameters]
+  (str uri "/multi_search" (util/build-query common-search-parameters)))
+
 (defn create-collection-req
   [{:keys [uri key]} schema]
   {:uri (collection-uri uri)
@@ -129,6 +134,13 @@
              "/search"
              (util/build-query options))
    :req {:headers {api-key-header-name key}}})
+
+(defn multi-search-req
+  [{:keys [uri key]} search-reqs common-search-params]
+  {:uri (multi-search-uri uri common-search-params)
+   :req {:headers {api-key-header-name key
+                   "Content-Type" "application/json"}
+         :body (json/write-str search-reqs)}})
 
 (defn create-api-key-req
   [{:keys [uri key]} options]

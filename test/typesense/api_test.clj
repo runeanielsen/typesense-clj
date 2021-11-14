@@ -158,6 +158,20 @@
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
 
+(deftest multi-search-req-test
+  (let [req (sut/multi-search-req settings
+                                  {:searches [{:collection "products"
+                                               :q "shoe"
+                                               :filter_by "price:=[50..120]"}
+                                              {:collection "brands"
+                                               :q "Nike"}]}
+                                  {:query_by "name"})
+        exp {:uri "http://localhost:8108/multi_search?query_by=name"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"
+                             "Content-Type" "application/json"}
+                   :body "{\"searches\":[{\"collection\":\"products\",\"q\":\"shoe\",\"filter_by\":\"price:=[50..120]\"},{\"collection\":\"brands\",\"q\":\"Nike\"}]}"}}]
+    (is (= exp req))))
+
 (deftest create-api-key-req-test
   (let [req (sut/create-api-key-req settings
                                     {:description "Search only companies key."

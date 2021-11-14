@@ -159,6 +159,15 @@
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
+(defn multi-search
+  "Search for documents in multiple collections."
+  [settings search-reqs common-search-params]
+  (try+
+   (let [{:keys [uri req]} (api/multi-search-req settings search-reqs common-search-params)]
+     (util/http-response-json->hash-map (http/post uri req)))
+   (catch [:type :clj-http.client/unexceptional-status] e
+     (throw (http-ex-data->typesense-ex-info e)))))
+
 (defn create-api-key!
   "Create api-key."
   [settings options]
