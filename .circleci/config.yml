@@ -22,7 +22,7 @@ jobs:
           command: clojure -T:build deploy
 
 workflows:
-  build-test-publish_clojars:
+  build-test-publish-clojars:
     jobs:
       - ci:
           filters:
