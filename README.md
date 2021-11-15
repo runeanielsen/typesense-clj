@@ -147,7 +147,7 @@ Create/upsert/update documents. All of them takes optional parameters, an exampl
 ### Update documents
 
 ```clojure
-(import-documents! settings
+(update-documents! settings
                    "companies"
                    [{:company_name "Innovationsoft A/S"
                      :num_employees 10
