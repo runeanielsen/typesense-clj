@@ -22,7 +22,7 @@
   [settings schema]
   (try+
    (let [{:keys [uri req]} (api/create-collection-req settings schema)]
-     (util/http-response-json->hash-map (http/post uri req)))
+     (util/http-response-json->map (http/post uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -32,7 +32,7 @@
   [settings collection-name]
   (try+
    (let [{:keys [uri req]} (api/drop-collection-req settings collection-name)]
-     (util/http-response-json->hash-map (http/delete uri req)))
+     (util/http-response-json->map (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -43,7 +43,7 @@
   [settings]
   (try+
    (let [{:keys [uri req]} (api/list-collections-req settings)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -52,7 +52,7 @@
   [settings collection-name]
   (try+
    (let [{:keys [uri req]} (api/retrieve-collection-req settings collection-name)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -61,7 +61,7 @@
   [settings collection-name document]
   (try+
    (let [{:keys [uri req]} (api/create-document-req settings collection-name document)]
-     (util/http-response-json->hash-map (http/post uri req)))
+     (util/http-response-json->map (http/post uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -70,7 +70,7 @@
   [settings collection-name document]
   (try+
    (let [{:keys [uri req]} (api/upsert-document-req settings collection-name document)]
-     (util/http-response-json->hash-map (http/post uri req)))
+     (util/http-response-json->map (http/post uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -79,7 +79,7 @@
   [settings collection-name id]
   (try+
    (let [{:keys [uri req]} (api/retrieve-document-req settings collection-name id)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -88,7 +88,7 @@
   [settings collection-name id]
   (try+
    (let [{:keys [uri req]} (api/delete-document-req settings collection-name id)]
-     (util/http-response-json->hash-map (http/delete uri req)))
+     (util/http-response-json->map (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -98,7 +98,7 @@
   [settings collection-name id document]
   (try+
    (let [{:keys [uri req]} (api/update-document-req settings collection-name id document)]
-     (util/http-response-json->hash-map (http/patch uri req)))
+     (util/http-response-json->map (http/patch uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -108,7 +108,7 @@
    (try+
     (let [options (merge opt {:action "create"})
           {:keys [uri req]} (api/import-documents-req settings collection-name documents options)]
-      (util/http-response-jsonline->hash-maps (http/post uri req)))
+      (util/http-response-jsonline->maps (http/post uri req)))
     (catch [:type :clj-http.client/unexceptional-status] e
       (throw (http-ex-data->typesense-ex-info e))))))
 
@@ -118,7 +118,7 @@
    (try+
     (let [options (merge opt {:action "upsert"})
           {:keys [uri req]} (api/import-documents-req settings collection-name documents options)]
-      (util/http-response-jsonline->hash-maps (http/post uri req)))
+      (util/http-response-jsonline->maps (http/post uri req)))
     (catch [:type :clj-http.client/unexceptional-status] e
       (throw (http-ex-data->typesense-ex-info e))))))
 
@@ -128,7 +128,7 @@
    (try+
     (let [options (merge opt {:action "update"})
           {:keys [uri req]} (api/import-documents-req settings collection-name documents options)]
-      (util/http-response-jsonline->hash-maps (http/post uri req)))
+      (util/http-response-jsonline->maps (http/post uri req)))
     (catch [:type :clj-http.client/unexceptional-status] e
       (throw (http-ex-data->typesense-ex-info e))))))
 
@@ -137,7 +137,7 @@
   [settings collection-name options]
   (try+
    (let [{:keys [uri req]} (api/delete-documents-req settings collection-name options)]
-     (util/http-response-json->hash-map (http/delete uri req)))
+     (util/http-response-json->map (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -146,7 +146,7 @@
   [settings collection-name options]
   (try+
    (let [{:keys [uri req]} (api/export-documents-req settings collection-name options)]
-     (util/http-response-jsonline->hash-maps (http/get uri req)))
+     (util/http-response-jsonline->maps (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -155,7 +155,7 @@
   [settings collection-name options]
   (try+
    (let [{:keys [uri req]} (api/search-req settings collection-name options)]
-     (util/http-response-jsonline->hash-maps (http/get uri req)))
+     (util/http-response-jsonline->maps (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -164,7 +164,7 @@
   [settings search-reqs common-search-params]
   (try+
    (let [{:keys [uri req]} (api/multi-search-req settings search-reqs common-search-params)]
-     (util/http-response-json->hash-map (http/post uri req)))
+     (util/http-response-json->map (http/post uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -173,7 +173,7 @@
   [settings options]
   (try+
    (let [{:keys [uri req]} (api/create-api-key-req settings options)]
-     (util/http-response-json->hash-map (http/post uri req)))
+     (util/http-response-json->map (http/post uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -182,7 +182,7 @@
   [settings id]
   (try+
    (let [{:keys [uri req]} (api/retrieve-api-key-req settings id)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -191,7 +191,7 @@
   [settings]
   (try+
    (let [{:keys [uri req]} (api/list-api-keys-req settings)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -200,7 +200,7 @@
   [settings id]
   (try+
    (let [{:keys [uri req]} (api/delete-api-key-req settings id)]
-     (util/http-response-json->hash-map (http/delete uri req)))
+     (util/http-response-json->map (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -209,7 +209,7 @@
   [settings collection-name override-name override]
   (try+
    (let [{:keys [uri req]} (api/upsert-override-req settings collection-name override-name override)]
-     (util/http-response-json->hash-map (http/put uri req)))
+     (util/http-response-json->map (http/put uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -218,7 +218,7 @@
   [settings collection-name]
   (try+
    (let [{:keys [uri req]} (api/list-overrides-req settings collection-name)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -227,7 +227,7 @@
   [settings collection-name override-name]
   (try+
    (let [{:keys [uri req]} (api/retrieve-override-req settings collection-name override-name)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -236,7 +236,7 @@
   [settings collection-name override-name]
   (try+
    (let [{:keys [uri req]} (api/delete-override-req settings collection-name override-name)]
-     (util/http-response-json->hash-map (http/delete uri req)))
+     (util/http-response-json->map (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -245,7 +245,7 @@
   [settings collection-name alias-collection]
   (try+
    (let [{:keys [uri req]} (api/upsert-alias-req settings collection-name alias-collection)]
-     (util/http-response-json->hash-map (http/put uri req)))
+     (util/http-response-json->map (http/put uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -254,7 +254,7 @@
   [settings]
   (try+
    (let [{:keys [uri req]} (api/list-aliases-req settings)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -263,7 +263,7 @@
   [settings collection-name]
   (try+
    (let [{:keys [uri req]} (api/retrieve-alias-req settings collection-name)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -272,7 +272,7 @@
   [settings collection-name]
   (try+
    (let [{:keys [uri req]} (api/delete-alias-req settings collection-name)]
-     (util/http-response-json->hash-map (http/delete uri req)))
+     (util/http-response-json->map (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -281,7 +281,7 @@
   [settings collection-name synonym-name synonyms]
   (try+
    (let [{:keys [uri req]} (api/upsert-synonym-req settings collection-name synonym-name synonyms)]
-     (util/http-response-json->hash-map (http/put uri req)))
+     (util/http-response-json->map (http/put uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -290,7 +290,7 @@
   [settings collection-name synonym-name]
   (try+
    (let [{:keys [uri req]} (api/retrieve-synonym-req settings collection-name synonym-name)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -299,7 +299,7 @@
   [settings collection-name]
   (try+
    (let [{:keys [uri req]} (api/list-synonyms-req settings collection-name)]
-     (util/http-response-json->hash-map (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
@@ -308,6 +308,6 @@
   [settings collection-name synonym-name]
   (try+
    (let [{:keys [uri req]} (api/delete-synonym-req settings collection-name synonym-name)]
-     (util/http-response-json->hash-map (http/delete uri req)))
+     (util/http-response-json->map (http/delete uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))

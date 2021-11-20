@@ -15,35 +15,35 @@
          (str "?"))
     ""))
 
-(defn hash-maps->json-lines
+(defn maps->json-lines
   "Take a vector of maps and returns json-line format.
   Returns an empty string if the vector is empty."
   [ms]
   (reduce #(str %1 (json/write-str %2) "\n") "" ms))
 
-(defn json->hash-map
-  "Transforms json to hash map.
+(defn json->map
+  "Transforms json to a map.
   Return nil if the json string is nil or blank."
   [json]
   (when-not (str/blank? json)
     (json/read-str json :key-fn keyword)))
 
-(defn json-lines->hash-maps
+(defn json-lines->maps
   "Transforms json-lines to vector of maps.
   Returns empty vector if json-lines are nil or blank."
   [json-lines]
   (if (str/blank? json-lines)
     []
-    (into [] (map json->hash-map) (str/split-lines json-lines))))
+    (into [] (map json->map) (str/split-lines json-lines))))
 
-(defn http-response-json->hash-map
-  "Transforms HTTP response json to hash-map.
+(defn http-response-json->map
+  "Transforms HTTP response json to a map.
   Returns nil if HTTP response body is nil or a blank string."
   [{:keys [body]}]
-  (json->hash-map body))
+  (json->map body))
 
-(defn http-response-jsonline->hash-maps
-  "Transforms HTTP response jsonline to vector of hash-maps.
+(defn http-response-jsonline->maps
+  "Transforms HTTP response jsonline to vector of maps.
   Returns empty vector if HTTP response body is nil or a blank string."
   [{:keys [body]}]
-  (json-lines->hash-maps body))
+  (json-lines->maps body))
