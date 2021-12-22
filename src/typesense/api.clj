@@ -48,8 +48,9 @@
 
 (defn- multi-search-uri
   "Returns the full multi-search uri resource path."
-  [uri common-search-parameters]
-  (str uri "/multi_search" (util/build-query common-search-parameters)))
+  [uri common-search-params opt-query-params]
+  (let [query-parameter-map (merge common-search-params opt-query-params)]
+    (str uri "/multi_search" (util/build-query query-parameter-map))))
 
 (defn create-collection-req
   [{:keys [uri key]} schema]
@@ -136,8 +137,8 @@
    :req {:headers {api-key-header-name key}}})
 
 (defn multi-search-req
-  [{:keys [uri key]} search-reqs common-search-params]
-  {:uri (multi-search-uri uri common-search-params)
+  [{:keys [uri key]} search-reqs common-search-params opt-query-params]
+  {:uri (multi-search-uri uri common-search-params opt-query-params)
    :req {:headers {api-key-header-name key
                    "Content-Type" "application/json"}
          :body (json/write-str search-reqs)}})
