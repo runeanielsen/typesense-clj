@@ -165,8 +165,24 @@
                                                :filter_by "price:=[50..120]"}
                                               {:collection "brands"
                                                :q "Nike"}]}
-                                  {:query_by "name"})
+                                  {:query_by "name"}
+                                  nil)
         exp {:uri "http://localhost:8108/multi_search?query_by=name"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"
+                             "Content-Type" "application/json"}
+                   :body "{\"searches\":[{\"collection\":\"products\",\"q\":\"shoe\",\"filter_by\":\"price:=[50..120]\"},{\"collection\":\"brands\",\"q\":\"Nike\"}]}"}}]
+    (is (= exp req))))
+
+(deftest multi-search-req-test-optional-parameter
+  (let [req (sut/multi-search-req settings
+                                  {:searches [{:collection "products"
+                                               :q "shoe"
+                                               :filter_by "price:=[50..120]"}
+                                              {:collection "brands"
+                                               :q "Nike"}]}
+                                  {:query_by "name"}
+                                  {:limit_multi_searches 100})
+        exp {:uri "http://localhost:8108/multi_search?query_by=name&limit_multi_searches=100"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"
                              "Content-Type" "application/json"}
                    :body "{\"searches\":[{\"collection\":\"products\",\"q\":\"shoe\",\"filter_by\":\"price:=[50..120]\"},{\"collection\":\"brands\",\"q\":\"Nike\"}]}"}}]

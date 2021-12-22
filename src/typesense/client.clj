@@ -161,9 +161,9 @@
 
 (defn multi-search
   "Search for documents in multiple collections."
-  [settings search-reqs common-search-params]
+  [settings search-reqs common-search-params & opt-query-params]
   (try+
-   (let [{:keys [uri req]} (api/multi-search-req settings search-reqs common-search-params)]
+   (let [{:keys [uri req]} (api/multi-search-req settings search-reqs common-search-params opt-query-params)]
      (util/http-response-json->map (http/post uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
