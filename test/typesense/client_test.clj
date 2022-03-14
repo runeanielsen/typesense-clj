@@ -21,120 +21,121 @@
 (t/use-fixtures :once clean-typesense-fixture)
 
 (deftest collection-workflow-test
-  (testing "Create collection"
-    (let [expected {:default_sorting_field "num_employees"
-                    :fields [{:facet false
-                              :index true
-                              :name "company_name"
-                              :optional false
+  (let [collection-name "companies_collection_test"]
+    (testing "Create collection"
+      (let [expected {:default_sorting_field "num_employees"
+                      :fields [{:facet false
+                                :index true
+                                :name "company_name"
+                                :optional false
+                                :type "string"}
+                               {:facet false
+                                :index true
+                                :name "num_employees"
+                                :optional false
+                                :type "int32"}
+                               {:facet true
+                                :index true
+                                :name "country"
+                                :optional false
+                                :type "string"}]
+                      :name collection-name
+                      :num_documents  0
+                      :symbols_to_index []
+                      :token_separators []}
+            schema {:name collection-name
+                    :fields [{:name "company_name"
                               :type "string"}
-                             {:facet false
-                              :index true
-                              :name "num_employees"
-                              :optional false
+                             {:name "num_employees"
                               :type "int32"}
-                             {:facet true
-                              :index true
-                              :name "country"
-                              :optional false
-                              :type "string"}]
-                    :name "companies_collection_test"
-                    :num_documents  0
-                    :symbols_to_index []
-                    :token_separators []}
-          schema {:name "companies_collection_test"
-                  :fields [{:name "company_name"
-                            :type "string"}
-                           {:name "num_employees"
-                            :type "int32"}
-                           {:name "country"
-                            :type "string"
-                            :facet true}]
-                  :default_sorting_field "num_employees"}
-          response (sut/create-collection! settings schema)]
-      (is (> (:created_at response) 0))
+                             {:name "country"
+                              :type "string"
+                              :facet true}]
+                    :default_sorting_field "num_employees"}
+            response (sut/create-collection! settings schema)]
+        (is (> (:created_at response) 0))
       ;; We remove :created_at it cannot be asserted since it changes each run.
-      (is (= expected (dissoc response :created_at)))))
+        (is (= expected (dissoc response :created_at)))))
 
-  (testing "List collections"
-    (let [expected [{:default_sorting_field  "num_employees"
-                     :fields [{:facet false
-                               :index true
-                               :name "company_name"
-                               :optional false
-                               :type "string"}
-                              {:facet false
-                               :index true
-                               :name "num_employees"
-                               :optional false
-                               :type "int32"}
-                              {:facet true
-                               :index true
-                               :name "country"
-                               :optional false
-                               :type "string"}]
-                     :name "companies_collection_test"
-                     :num_documents 0
-                     :symbols_to_index []
-                     :token_separators []}]
-          response (sut/list-collections settings)]
-      (is (true? (every? #(> (:created_at %) 0) response)))
+    (testing "List collections"
+      (let [expected [{:default_sorting_field "num_employees"
+                       :fields [{:facet false
+                                 :index true
+                                 :name "company_name"
+                                 :optional false
+                                 :type "string"}
+                                {:facet false
+                                 :index true
+                                 :name "num_employees"
+                                 :optional false
+                                 :type "int32"}
+                                {:facet true
+                                 :index true
+                                 :name "country"
+                                 :optional false
+                                 :type "string"}]
+                       :name collection-name
+                       :num_documents 0
+                       :symbols_to_index []
+                       :token_separators []}]
+            response (sut/list-collections settings)]
+        (is (true? (every? #(> (:created_at %) 0) response)))
       ;; We remove :created_at it cannot be asserted since it changes each run.
-      (is (= expected (map #(dissoc % :created_at) response)))))
+        (is (= expected (map #(dissoc % :created_at) response)))))
 
-  (testing "Retrieve collection"
-    (let [expected {:default_sorting_field "num_employees",
-                    :fields
-                    [{:facet false,
-                      :index true,
-                      :name "company_name",
-                      :optional false,
-                      :type "string"}
-                     {:facet false,
-                      :index true,
-                      :name "num_employees",
-                      :optional false,
-                      :type "int32"}
-                     {:facet true,
-                      :index true,
-                      :name "country",
-                      :optional false,
-                      :type "string"}],
-                    :name "companies_collection_test",
-                    :num_documents 0,
-                    :symbols_to_index [],
-                    :token_separators []}
-          response (sut/retrieve-collection settings "companies_collection_test")]
-      (is (> (:created_at response) 0))
+    (testing "Retrieve collection"
+      (let [expected {:default_sorting_field "num_employees"
+                      :fields
+                      [{:facet false
+                        :index true
+                        :name "company_name"
+                        :optional false
+                        :type "string"}
+                       {:facet false
+                        :index true
+                        :name "num_employees"
+                        :optional false
+                        :type "int32"}
+                       {:facet true
+                        :index true
+                        :name "country"
+                        :optional false
+                        :type "string"}]
+                      :name collection-name
+                      :num_documents 0
+                      :symbols_to_index []
+                      :token_separators []}
+            response (sut/retrieve-collection settings collection-name)]
+        (is (> (:created_at response) 0))
       ;; We remove :created_at it cannot be asserted since it changes each run.
-      (is (= expected (dissoc response :created_at)))))
+        (is (= expected (dissoc response :created_at)))))
 
-  (testing "Delete collection"
-    (let [expected {:default_sorting_field "num_employees",
-                    :fields
-                    [{:facet false,
-                      :index true,
-                      :name "company_name",
-                      :optional false,
-                      :type "string"}
-                     {:facet false,
-                      :index true,
-                      :name "num_employees",
-                      :optional false,
-                      :type "int32"}
-                     {:facet true,
-                      :index true,
-                      :name "country",
-                      :optional false,
-                      :type "string"}],
-                    :name "companies_collection_test",
-                    :num_documents 0,
-                    :symbols_to_index [],
-                    :token_separators []}
-          response (sut/delete-collection! settings "companies_collection_test")]
-      (is (> (:created_at response) 0))
+    (testing "Delete collection"
+      (let [expected {:default_sorting_field "num_employees"
+                      :fields
+                      [{:facet false
+                        :index true
+                        :name "company_name"
+                        :optional false
+                        :type "string"}
+                       {:facet false
+                        :index true
+                        :name "num_employees"
+                        :optional false
+                        :type "int32"}
+                       {:facet true
+                        :index true
+                        :name "country"
+                        :optional false
+                        :type "string"}]
+                      :name collection-name
+                      :num_documents 0
+                      :symbols_to_index []
+                      :token_separators []}
+            response (sut/delete-collection! settings collection-name)]
+        (is (> (:created_at response) 0))
       ;; We remove :created_at it cannot be asserted since it changes each run.
-      (is (= expected (dissoc response :created_at))))))
+        (is (= expected (dissoc response :created_at)))))))
 
 (deftest document-workflow-test
   ;; Initialize test collection for documents
@@ -151,9 +152,9 @@
 
   (let [collection-name "companies_document_test"]
     (testing "Create document"
-      (let [expected {:company_name "Stark Industries",
-                      :country "USA",
-                      :id "0",
+      (let [expected {:company_name "Stark Industries"
+                      :country "USA"
+                      :id "0"
                       :num_employees 5215}
             document {:company_name "Stark Industries"
                       :num_employees 5215
