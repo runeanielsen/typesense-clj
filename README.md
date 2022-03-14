@@ -72,6 +72,30 @@ For large collections, this might have an impact on read latencies.
 
 ```clojure
 (delete-collection! settings "companies")
+
+; Example success response =>
+{:created_at 1647261230,
+ :default_sorting_field "num_employees",
+ :fields
+ [{:facet false,
+   :index true,
+   :name "company_name",
+   :optional false,
+   :type "string"}
+  {:facet false,
+   :index true,
+   :name "num_employees",
+   :optional false,
+   :type "int32"}
+  {:facet true,
+   :index true,
+   :name "country",
+   :optional false,
+   :type "string"}],
+ :name "companies",
+ :num_documents 0,
+ :symbols_to_index [],
+ :token_separators []}
 ```
 
 ### List collections
@@ -111,6 +135,29 @@ Retrieves the collection on the `collection-name`.
 
 ```clojure
 (retrieve-collection settings "companies")
+
+; Example success response =>
+{:default_sorting_field "num_employees",
+ :fields
+ [{:facet false,
+   :index true,
+   :name "company_name",
+   :optional false,
+   :type "string"}
+  {:facet false,
+   :index true,
+   :name "num_employees",
+   :optional false,
+   :type "int32"}
+  {:facet true,
+   :index true,
+   :name "country",
+   :optional false,
+   :type "string"}],
+ :name "companies",
+ :num_documents 0,
+ :symbols_to_index [],
+ :token_separators []}
 ```
 
 ## Documents
