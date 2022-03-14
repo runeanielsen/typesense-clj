@@ -38,11 +38,11 @@
                               :name "country"
                               :optional false
                               :type "string"}]
-                    :name "companies"
+                    :name "companies_collection_test"
                     :num_documents  0
                     :symbols_to_index []
                     :token_separators []}
-          schema {:name "companies"
+          schema {:name "companies_collection_test"
                   :fields [{:name "company_name"
                             :type "string"}
                            {:name "num_employees"
@@ -73,7 +73,7 @@
                                :name "country"
                                :optional false
                                :type "string"}]
-                     :name "companies"
+                     :name "companies_collection_test"
                      :num_documents 0
                      :symbols_to_index []
                      :token_separators []}]
@@ -100,11 +100,11 @@
                       :name "country",
                       :optional false,
                       :type "string"}],
-                    :name "companies",
+                    :name "companies_collection_test",
                     :num_documents 0,
                     :symbols_to_index [],
                     :token_separators []}
-          response (sut/retrieve-collection settings "companies")]
+          response (sut/retrieve-collection settings "companies_collection_test")]
       (is (> (:created_at response) 0))
       ;; We remove :created_at it cannot be asserted since it changes each run.
       (is (= expected (dissoc response :created_at)))))
@@ -127,11 +127,11 @@
                       :name "country",
                       :optional false,
                       :type "string"}],
-                    :name "companies",
+                    :name "companies_collection_test",
                     :num_documents 0,
                     :symbols_to_index [],
                     :token_separators []}
-          response (sut/delete-collection! settings "companies")]
+          response (sut/delete-collection! settings "companies_collection_test")]
       (is (> (:created_at response) 0))
       ;; We remove :created_at it cannot be asserted since it changes each run.
       (is (= expected (dissoc response :created_at))))))
