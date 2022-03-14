@@ -461,6 +461,12 @@ Typesense API exceptions in the [Typesense-api-errors](https://typesense.org/doc
 
 ### Tests
 
+To run all the tests.
+
+```sh
+clojure -M:test
+```
+
 To run the integration tests you can run a local docker instance with the following command. This will start a instance of Typesense on `localhost:8108`. The Typesense instance will be cleaned before starting the integration tests.
 
 ```sh
