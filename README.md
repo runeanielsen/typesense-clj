@@ -170,7 +170,14 @@ Creates the document in a given collection. The document should comply with the 
 
 ```clojure
 (create-document! settings "companies" {:company_name "Stark Industries"
-                                        :num_employees 5215 :country "USA""})
+                                        :num_employees 5215
+                                        :country "USA""})
+
+; Example success response =>
+{:company_name "Stark Industries",
+                    :country "USA",
+                    :id "0",
+                    :num_employees 5215}
 ```
 
 ### Upsert document

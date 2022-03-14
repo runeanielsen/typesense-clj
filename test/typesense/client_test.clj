@@ -135,3 +135,27 @@
       (is (> (:created_at response) 0))
       ;; We remove :created_at it cannot be asserted since it changes each run.
       (is (= expected (dissoc response :created_at))))))
+
+(deftest document-workflow-test
+  ; Initialize test collection for documents
+  (let [schema {:name "companies_document_test"
+                :fields [{:name "company_name"
+                          :type "string"}
+                         {:name "num_employees"
+                          :type "int32"}
+                         {:name "country"
+                          :type "string"
+                          :facet true}]
+                :default_sorting_field "num_employees"}]
+    (sut/create-collection! settings schema))
+
+  (testing "Create document"
+    (let [expected {:company_name "Stark Industries",
+                    :country "USA",
+                    :id "0",
+                    :num_employees 5215}
+          document {:company_name "Stark Industries"
+                    :num_employees 5215
+                    :country "USA"}
+          response (sut/create-document! settings "companies_document_test" document)]
+      (is (= expected response)))))
