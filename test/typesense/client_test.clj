@@ -137,7 +137,7 @@
       (is (= expected (dissoc response :created_at))))))
 
 (deftest document-workflow-test
-  ; Initialize test collection for documents
+  ;; Initialize test collection for documents
   (let [schema {:name "companies_document_test"
                 :fields [{:name "company_name"
                           :type "string"}
@@ -149,32 +149,42 @@
                 :default_sorting_field "num_employees"}]
     (sut/create-collection! settings schema))
 
-  (testing "Create document"
-    (let [expected {:company_name "Stark Industries",
-                    :country "USA",
-                    :id "0",
-                    :num_employees 5215}
-          document {:company_name "Stark Industries"
-                    :num_employees 5215
-                    :country "USA"}
-          response (sut/create-document! settings "companies_document_test" document)]
-      (is (= expected response))))
+  (let [collection-name "companies_document_test"]
+    (testing "Create document"
+      (let [expected {:company_name "Stark Industries",
+                      :country "USA",
+                      :id "0",
+                      :num_employees 5215}
+            document {:company_name "Stark Industries"
+                      :num_employees 5215
+                      :country "USA"}
+            response (sut/create-document! settings collection-name document)]
+        (is (= expected response))))
 
-  (testing "Upsert document"
-    (let [expected {:company_name "Awesome Inc."
-                    :num_employees 10
-                    :country "Norway"
-                    :id "1"}
-          document {:company_name "Awesome Inc."
-                    :num_employees 10
-                    :country "Norway"}
-          response (sut/upsert-document! settings "companies_document_test" document)]
-      (is (= expected response))))
+    (testing "Upsert document"
+      (let [expected {:company_name "Awesome Inc."
+                      :num_employees 10
+                      :country "Norway"
+                      :id "1"}
+            document {:company_name "Awesome Inc."
+                      :num_employees 10
+                      :country "Norway"}
+            response (sut/upsert-document! settings collection-name document)]
+        (is (= expected response))))
 
-  (testing "Retrieve document"
-    (let [expected {:company_name "Awesome Inc."
-                    :num_employees 10
-                    :country "Norway"
-                    :id "1"}
-          response (sut/retrieve-document settings "companies_document_test" 1)]
-      (is (= expected response)))))
+    (testing "Retrieve document"
+      (let [expected {:company_name "Awesome Inc."
+                      :num_employees 10
+                      :country "Norway"
+                      :id "1"}
+            response (sut/retrieve-document settings collection-name 1)]
+        (is (= expected response))))
+
+    (testing "Update document"
+      (let [expected {:company_name "Mega Awesome Inc."
+                      :num_employees 10
+                      :country "Norway"
+                      :id "1"}
+            update-doc {:company_name "Mega Awesome Inc."}
+            response (sut/update-document! settings collection-name 1 update-doc)]
+        (is (= expected response))))))

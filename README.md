@@ -223,7 +223,13 @@ Deletes document in a collection on `id`. The `id` can be parsed in as `int` or 
 Update document in a collection on id. The update can be partial.
 
 ```clojure
-(update-document! settings "companies" {:company_name "Stark innovation"} 1)
+(update-document! settings "companies" {:company_name "Mega Awesome Inc."} 1)
+
+;; Example success response =>
+{:company_name "Mega Awesome Inc."
+ :num_employees 10
+ :country "Norway"
+ :id "1"}
 ```
 
 ## Create/Upsert/Update/Delete Documents
