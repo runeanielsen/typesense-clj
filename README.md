@@ -216,6 +216,12 @@ Deletes document in a collection on `id`. The `id` can be parsed in as `int` or 
 
 ```clojure
 (delete-document! settings "companies" 1)
+
+;; Example success response =>
+{:company_name "Stark Industries",
+ :country "USA",
+ :id "0",
+ :num_employees 5215}
 ```
 
 ### Update document
