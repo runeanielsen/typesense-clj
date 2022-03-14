@@ -40,6 +40,29 @@ The examples displays the creation of collection named `companies`.
                                         :type "string"
                                         :facet true}]
                               :default_sorting_field "num_employees"})
+
+; Example success response =>
+{:created_at 1647252992
+ :default_sorting_field "num_employees"
+ :fields [{:facet false
+           :index true
+           :name "company_name"
+           :optional false
+           :type "string"}
+          {:facet false
+           :index true
+           :name "num_employees"
+           :optional false
+           :type "int32"}
+          {:facet true
+           :index true
+           :name "country"
+           :optional false
+           :type "string"}]
+ :name "companies"
+ :num_documents  0
+ :symbols_to_index []
+ :token_separators []}
 ```
 
 ### Delete collection
@@ -362,3 +385,16 @@ Typesense API exceptions in the [Typesense-api-errors](https://typesense.org/doc
 | `:typesense.client/unprocessable-entity`  | Unprocessable Entity - Request is well-formed, but cannot be processed.    |
 | `:typesense.client/service-unavailable`   | Service Unavailable - We’re temporarily offline. Please try again later.   |
 | `:typesense.client/unspecified-api-error` | If Typesense throws an error that is not specified in the spec.            |
+
+
+## Development
+
+### Tests
+
+To run the integration tests you can run a local docker instance with the following command. This will start a instance of Typesense on `localhost:8108`. The Typesense instance will be cleaned before starting the integration tests.
+
+```sh
+docker run -p 8108:8108 -v/tmp/data:/data typesense/typesense:0.22.1 --data-dir /data --api-key=key
+```
+
+The unit tests won't need a Typesense instance running.
