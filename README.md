@@ -171,36 +171,48 @@ Creates the document in a given collection. The document should comply with the 
 ```clojure
 (create-document! settings "companies" {:company_name "Stark Industries"
                                         :num_employees 5215
-                                        :country "USA""})
+                                        :country "USA"})
 
 ; Example success response =>
 {:company_name "Stark Industries",
-                    :country "USA",
-                    :id "0",
-                    :num_employees 5215}
-```
+ :country "USA",
+ :id "0",
+ :num_employees 5215}
+ ```
 
 ### Upsert document
 
 Upserts the document in a given collection. The document will either be created or updated depending on if it already exists.
 
 ```clojure
-(upsert-document! settings "companies" {:company_name "Stark Industries"
-                                        :num_employees 5215
-                                        :country "USA""})
+(upsert-document! settings "companies" {:company_name "Awesome Inc."
+                                        :num_employees 10
+                                        :country "Norway"})
+
+; Example success response =>
+{:company_name "Awesome Inc."
+ :num_employees 10
+ :country "Norway"
+ :id "1"}
 ```
 
 ### Retrieve document
 
-Retrives document in a collection on `id`.
+Retrieves document in a collection on `id`. The `id` can be parsed in as `int` or `string`.
 
 ```clojure
 (retrieve-document settings "companies" 1)
+
+; Example success response =>
+{:company_name "Awesome Inc."
+ :num_employees 10
+ :country "Norway"
+ :id "1"}
 ```
 
 ### Delete document
 
-Deletes document in a collection on `id`.
+Deletes document in a collection on `id`. The `id` can be parsed in as `int` or `string`.
 
 ```clojure
 (delete-document! settings "companies" 1)

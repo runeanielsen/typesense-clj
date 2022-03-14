@@ -158,4 +158,23 @@
                     :num_employees 5215
                     :country "USA"}
           response (sut/create-document! settings "companies_document_test" document)]
+      (is (= expected response))))
+
+  (testing "Upsert document"
+    (let [expected {:company_name "Awesome Inc."
+                    :num_employees 10
+                    :country "Norway"
+                    :id "1"}
+          document {:company_name "Awesome Inc."
+                    :num_employees 10
+                    :country "Norway"}
+          response (sut/upsert-document! settings "companies_document_test" document)]
+      (is (= expected response))))
+
+  (testing "Retrieve document"
+    (let [expected {:company_name "Awesome Inc."
+                    :num_employees 10
+                    :country "Norway"
+                    :id "1"}
+          response (sut/retrieve-document settings "companies_document_test" 1)]
       (is (= expected response)))))
