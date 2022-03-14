@@ -41,7 +41,7 @@ The examples displays the creation of collection named `companies`.
                                         :facet true}]
                               :default_sorting_field "num_employees"})
 
-; Example success response =>
+;; Example success response =>
 {:created_at 1647252992
  :default_sorting_field "num_employees"
  :fields [{:facet false
@@ -73,7 +73,7 @@ For large collections, this might have an impact on read latencies.
 ```clojure
 (delete-collection! settings "companies")
 
-; Example success response =>
+;; Example success response =>
 {:created_at 1647261230,
  :default_sorting_field "num_employees",
  :fields
@@ -105,7 +105,7 @@ Returns a summary of all your collections. The collections are returned sorted b
 ```clojure
 (list-collections settings)
 
-; Example success response =>
+;; Example success response =>
 {:created_at 1647255857
  :default_sorting_field  "num_employees"
  :fields [{:facet false
@@ -136,7 +136,7 @@ Retrieves the collection on the `collection-name`.
 ```clojure
 (retrieve-collection settings "companies")
 
-; Example success response =>
+;; Example success response =>
 {:default_sorting_field "num_employees",
  :fields
  [{:facet false,
@@ -173,7 +173,7 @@ Creates the document in a given collection. The document should comply with the 
                                         :num_employees 5215
                                         :country "USA"})
 
-; Example success response =>
+;; Example success response =>
 {:company_name "Stark Industries",
  :country "USA",
  :id "0",
@@ -182,14 +182,14 @@ Creates the document in a given collection. The document should comply with the 
 
 ### Upsert document
 
-Upserts the document in a given collection. The document will either be created or updated depending on if it already exists.
+Upsert the document in a given collection. The document will either be created or updated depending on if it already exists.
 
 ```clojure
 (upsert-document! settings "companies" {:company_name "Awesome Inc."
                                         :num_employees 10
                                         :country "Norway"})
 
-; Example success response =>
+;; Example success response =>
 {:company_name "Awesome Inc."
  :num_employees 10
  :country "Norway"
@@ -203,7 +203,7 @@ Retrieves document in a collection on `id`. The `id` can be parsed in as `int` o
 ```clojure
 (retrieve-document settings "companies" 1)
 
-; Example success response =>
+;; Example success response =>
 {:company_name "Awesome Inc."
  :num_employees 10
  :country "Norway"
