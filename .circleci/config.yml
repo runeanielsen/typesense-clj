@@ -4,6 +4,9 @@ executors:
   clojure-tools-deps:
     docker:
     - image: circleci/clojure:openjdk-11-tools-deps-1.10.3.998
+      auth:
+        username: $DOCKER_LOGIN
+        password: $DOCKER_ACCESSTOKEN
     - image: typesense/typesense:0.22.1 # For integration testing
       auth:
         username: $DOCKER_LOGIN
