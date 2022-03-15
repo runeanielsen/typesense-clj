@@ -330,6 +330,14 @@ Typesense allows you to create API Keys with fine-grain access control. You can 
 (create-api-key! settings {:description "Search only companies key."
                            :actions ["document:search"]
                            :collections ["companies"]})
+
+;; Example response =>
+{:actions ["document:search"]
+ :collections ["companies"]
+ :description "Search only companies key."
+ :expires_at 64723363199
+ :id 0
+ :value "sK0jo6CSn1EBoJJ8LKPjRZCtsJ1JCFkt"}
 ```
 
 ### Retrieve api key
@@ -338,6 +346,14 @@ Retrieves api key on `id`.
 
 ```clojure
 (retrieve-api-key settings 0)
+
+;; Example response =>
+{:actions ["document:search"]
+ :collections ["companies"]
+ :description "Search only companies key."
+ :expires_at 64723363199
+ :id 0
+ :value_prefix "vLbB"}
 ```
 
 ### List api keys
@@ -346,6 +362,14 @@ List all api keys.
 
 ```clojure
 (list-api-keys settings)
+
+;; Example response =>
+{:keys [{:actions ["document:search"]
+         :collections ["companies"]
+         :description "Search only companies key."
+         :expires_at 64723363199
+         :id 0
+         :value_prefix "vLbB"}]}
 ```
 
 ### Delete api key
@@ -354,6 +378,9 @@ Deletes api key on `id`.
 
 ```clojure
 (delete-api-key! settings 0)
+
+;; Example success response =>
+{:id 0}
 ```
 
 ## Curation
