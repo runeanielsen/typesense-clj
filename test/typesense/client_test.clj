@@ -12,18 +12,25 @@
     (doseq [collection collections]
       (sut/delete-collection! settings (:name collection)))))
 
+(defn- clean-api-keys
+  []
+  (let [keys (sut/list-api-keys settings)]
+    (doseq [key (:keys keys)]
+      (sut/delete-api-key! settings (:id key)))))
+
 (defn- clean-typesense-fixture
   "Cleanup before each integration test run."
   [f]
   (clean-collections)
+  (clean-api-keys)
   (f))
 
 (t/use-fixtures :once clean-typesense-fixture)
 
 ;; Handles the primary workflow for interactiong with the Typesense Client.
-;; The flow is inside of a single deftest, because the interaction with the API
-;; is stateful, so it simplifies the test cases to keep them together.
-(deftest client-primary-workflow-test
+;; The flow is inside of a single deftest because the interaction with the API
+;; is stateful so it simplifies the test cases to keep them together.
+(deftest client-primary-workflow-tests
   (testing "Create collection"
     (let [expected {:default_sorting_field "num_employees"
                     :fields [{:facet false
@@ -197,3 +204,69 @@
                     :num_employees 5215}
           response (sut/delete-document! settings "companies_document_test" 0)]
       (is (= expected response)))))
+
+(deftest client-api-key-tests
+  (testing "Create api key"
+    (let [exp {:actions ["document:search"]
+               :collections ["companies"]
+               :description "Search only companies key."
+               :expires_at 64723363199
+               :id 0
+               :value "sK0jo6CSn1EBoJJ8LKPjRZCtsJ1JCFkt"}
+          key {:description "Search only companies key."
+               :actions ["document:search"]
+               :collections ["companies"]}
+          res (sut/create-api-key! settings key)]
+      ;; We test individual cases since they will change each run.
+      (is (> (count (:value res)) 0))
+      (is (> (:expires_at res) 0))
+      (is (>= (:id res) 0))
+      ;; We remove :id, :value and :expires_at since they change each run.
+      (let [exp (dissoc exp :id :value :expires_at)
+            res (dissoc res :id :value :expires_at)]
+        (is (= exp res)))))
+
+  (testing "Retrieve api key"
+    ;; We have to retrieve the first key-id this way because they change each run.
+    (let [id (-> (sut/list-api-keys settings) :keys first :id)
+          exp {:actions ["document:search"]
+               :collections ["companies"]
+               :description "Search only companies key."
+               :expires_at 64723363199
+               :id 49
+               :value_prefix "Bx3y"}
+          res (sut/retrieve-api-key settings id)]
+      ;; We make individual tests for the following parameters since they change each run.
+      (is (>= (:id res) 0))
+      (is (> (:expires_at res) 0))
+      (is (> (count (:value_prefix res)) 0))
+      ;; We remove :id :value_prefex and :expires_at since they change each run.
+      (is (= (dissoc exp :expires_at :id :value_prefix)
+             (dissoc res :expires_at :id :value_prefix)))))
+
+  (testing "List api keys"
+    (let [exp {:keys [{:actions ["document:search"]
+                       :collections ["companies"]
+                       :description "Search only companies key."
+                       :expires_at 64723363199
+                       :id 17
+                       :value_prefix "vLbB"}]}
+          res (sut/list-api-keys settings)]
+      ;; We make individual tests for the following parameters since they change each run.
+      (is (every? #(>= (:id %) 0) (:keys res)))
+      (is (every? #(>= (:expires_at %) 0) (:keys res)))
+      (is (every? #(> (count (:value_prefix %)) 0) (:keys res)))
+      ;; We remove :id :value_prefex and :expires_at since they change each run.
+      (let [exp (assoc exp :keys (->> exp
+                                      :keys
+                                      (map #(dissoc % :id :expires_at :value_prefix))))
+            res (assoc res :keys (->> res
+                                      :keys
+                                      (map #(dissoc % :id :expires_at :value_prefix))))]
+        (is (= exp res)))))
+
+  (testing "Delete api key"
+    (let [id (-> (sut/list-api-keys settings) :keys first :id)
+          exp {:id id}
+          res (sut/delete-api-key! settings id)]
+      (is (= exp res)))))
