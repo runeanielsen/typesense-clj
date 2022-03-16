@@ -13,7 +13,7 @@ Two values are currently required for settings.
 * `Uri` the base-uri for Typesense, an example is "https://localhost:8108".
 * `Key` the api-key required for the header `X-TYPESENSE-API-KEY`.
 
-Example of configs:
+Example of settings.
 
 ```clojure
 (def settings {:uri "http://localhost:8108"
@@ -74,27 +74,27 @@ For large collections, this might have an impact on read latencies.
 (delete-collection! settings "companies")
 
 ;; Example success response =>
-{:created_at 1647261230,
- :default_sorting_field "num_employees",
+{:created_at 1647261230
+ :default_sorting_field "num_employees"
  :fields
- [{:facet false,
-   :index true,
-   :name "company_name",
-   :optional false,
+ [{:facet false
+   :index true
+   :name "company_name"
+   :optional false
    :type "string"}
-  {:facet false,
-   :index true,
-   :name "num_employees",
-   :optional false,
+  {:facet false
+   :index true
+   :name "num_employees"
+   :optional false
    :type "int32"}
-  {:facet true,
-   :index true,
-   :name "country",
-   :optional false,
-   :type "string"}],
- :name "companies",
- :num_documents 0,
- :symbols_to_index [],
+  {:facet true
+   :index true
+   :name "country"
+   :optional false
+   :type "string"}]
+ :name "companies"
+ :num_documents 0
+ :symbols_to_index []
  :token_separators []}
 ```
 
@@ -137,26 +137,26 @@ Retrieves the collection on the `collection-name`.
 (retrieve-collection settings "companies")
 
 ;; Example success response =>
-{:default_sorting_field "num_employees",
+{:default_sorting_field "num_employees"
  :fields
- [{:facet false,
-   :index true,
-   :name "company_name",
-   :optional false,
+ [{:facet false
+   :index true
+   :name "company_name"
+   :optional false
    :type "string"}
-  {:facet false,
-   :index true,
-   :name "num_employees",
-   :optional false,
+  {:facet false
+   :index true
+   :name "num_employees"
+   :optional false
    :type "int32"}
-  {:facet true,
-   :index true,
-   :name "country",
-   :optional false,
-   :type "string"}],
- :name "companies",
- :num_documents 0,
- :symbols_to_index [],
+  {:facet true
+   :index true
+   :name "country"
+   :optional false
+   :type "string"}]
+ :name "companies"
+ :num_documents 0
+ :symbols_to_index []
  :token_separators []}
 ```
 
@@ -174,9 +174,9 @@ Creates the document in a given collection. The document should comply with the 
                                         :country "USA"})
 
 ;; Example success response =>
-{:company_name "Stark Industries",
- :country "USA",
- :id "0",
+{:company_name "Stark Industries"
+ :country "USA"
+ :id "0"
  :num_employees 5215}
  ```
 
@@ -218,9 +218,9 @@ Deletes document in a collection on `id`. The `id` can be parsed in as `int` or 
 (delete-document! settings "companies" 1)
 
 ;; Example success response =>
-{:company_name "Stark Industries",
- :country "USA",
- :id "0",
+{:company_name "Stark Industries"
+ :country "USA"
+ :id "0"
  :num_employees 5215}
 ```
 
@@ -400,14 +400,26 @@ Create or update override if already exist.
                    :includes [{:id "422" :position 1}
                               {:id "54" :position 2}]
                    :excludes [{:id "287"}]})
+
+;; Examples success response =>
+{:excludes [{:id "287"}]
+ :id "customize_apple"
+ :includes [{:id "422" :position 1} {:id "54" :position 2}]
+ :rule {:match "exact" :query "apple"}}
 ```
 
 ### List overrides
 
-Lists all overrides.
+List all overrides.
 
 ```clojure
 (list-overrides settings "companies")
+
+;; Example success response =>
+{:overrides [{:excludes [{:id "287"}]
+              :id "customize_apple"
+              :includes [{:id "422" :position 1} {:id "54" :position 2}]
+              :rule {:match "exact" :query "apple"}}]}
 ```
 
 ### Retrieve override
@@ -416,6 +428,12 @@ Retrieves override on name.
 
 ```clojure
 (retrieve-override settings "companies" "customize-apple")
+
+;; Example success response =>
+{:excludes [{:id "287"}]
+ :id "customize_apple"
+ :includes [{:id "422" :position 1} {:id "54" :position 2}]
+ :rule {:match "exact" :query "apple"}}
 ```
 
 ### Delete override
@@ -424,6 +442,9 @@ Deletes override on name.
 
 ```clojure
 (delete-override! settings "companies" "customize-apple")
+
+;; Example success response =>
+{:id "customize_apple"}
 ```
 
 ## Collection alias

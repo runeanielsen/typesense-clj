@@ -30,6 +30,8 @@
 ;; Handles the primary workflow for interactiong with the Typesense Client.
 ;; The flow is inside of a single deftest because the interaction with the API
 ;; is stateful so it simplifies the test cases to keep them together.
+;; If we had decided to split them out listing collections might result in issues.
+;; hmm...
 (deftest client-primary-workflow-tests
   (testing "Create collection"
     (let [expected {:default_sorting_field "num_employees"
@@ -203,7 +205,59 @@
                     :id "0"
                     :num_employees 5215}
           response (sut/delete-document! settings "companies_document_test" 0)]
-      (is (= expected response)))))
+      (is (= expected response))))
+
+  ;; Initialize test collection for documents
+  (let [schema {:name "companies_curation_test"
+                :fields [{:name "company_name"
+                          :type "string"}
+                         {:name "num_employees"
+                          :type "int32"}
+                         {:name "country"
+                          :type "string"
+                          :facet true}]
+                :default_sorting_field "num_employees"}]
+    (sut/create-collection! settings schema))
+
+  (testing "Upsert override"
+    (let [exp {:excludes [{:id "287"}]
+               :id "customize_apple"
+               :includes [{:id "422" :position 1} {:id "54" :position 2}]
+               :rule {:match "exact" :query "apple"}}
+          res (sut/upsert-override! settings
+                                    "companies_curation_test"
+                                    "customize_apple"
+                                    {:rule {:query "apple"
+                                            :match "exact"}
+                                     :includes [{:id "422" :position 1}
+                                                {:id "54" :position 2}]
+                                     :excludes [{:id "287"}]})]
+      (is (= exp res))))
+
+  (testing "List all overrides"
+    (let [exp {:overrides [{:excludes [{:id "287"}]
+                            :id "customize_apple"
+                            :includes [{:id "422" :position 1} {:id "54" :position 2}]
+                            :rule {:match "exact" :query "apple"}}]}
+          res (sut/list-overrides settings "companies_curation_test")]
+      (is (= exp res))))
+
+  (testing "Retrieve override"
+    (let [exp {:excludes [{:id "287"}]
+               :id "customize_apple"
+               :includes [{:id "422" :position 1} {:id "54" :position 2}]
+               :rule {:match "exact" :query "apple"}}
+          res (sut/retrieve-override settings
+                                     "companies_curation_test"
+                                     "customize_apple")]
+      (is (= exp res))))
+
+  (testing "Delete override"
+    (let [exp {:id "customize_apple"}
+          res (sut/delete-override! settings
+                                    "companies_curation_test"
+                                    "customize_apple")]
+      (is (= exp res)))))
 
 (deftest client-api-key-tests
   (testing "Create api key"
@@ -221,7 +275,7 @@
       (is (> (count (:value res)) 0))
       (is (> (:expires_at res) 0))
       (is (>= (:id res) 0))
-      ;; We remove :id, :value and :expires_at since they change each run.
+      ;; We remove :id :value and :expires_at since they change each run.
       (let [exp (dissoc exp :id :value :expires_at)
             res (dissoc res :id :value :expires_at)]
         (is (= exp res)))))
@@ -236,7 +290,7 @@
                :id 49
                :value_prefix "Bx3y"}
           res (sut/retrieve-api-key settings id)]
-      ;; We make individual tests for the following parameters since they change each run.
+      ;; We make individual tests for the parameters since they change each run.
       (is (>= (:id res) 0))
       (is (> (:expires_at res) 0))
       (is (> (count (:value_prefix res)) 0))
@@ -252,7 +306,7 @@
                        :id 17
                        :value_prefix "vLbB"}]}
           res (sut/list-api-keys settings)]
-      ;; We make individual tests for the following parameters since they change each run.
+      ;; We make individual tests for the parameters since they change each run.
       (is (every? #(>= (:id %) 0) (:keys res)))
       (is (every? #(>= (:expires_at %) 0) (:keys res)))
       (is (every? #(> (count (:value_prefix %)) 0) (:keys res)))
