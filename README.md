@@ -457,6 +457,9 @@ Create or update alias.
 
 ```clojure
 (upsert-alias! settings "companies" {:collection_name "companies_june11"})
+
+;; Example success response =>
+{:collection_name "companies_june11" :name "companies"}
 ```
 
 ### Retrieve alias

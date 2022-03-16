@@ -207,7 +207,7 @@
           response (sut/delete-document! settings "companies_document_test" 0)]
       (is (= expected response))))
 
-  ;; Initialize test collection for documents
+  ;; Initialize test collection for curation.
   (let [schema {:name "companies_curation_test"
                 :fields [{:name "company_name"
                           :type "string"}
@@ -257,7 +257,32 @@
           res (sut/delete-override! settings
                                     "companies_curation_test"
                                     "customize_apple")]
-      (is (= exp res)))))
+      (is (= exp res))))
+
+  ;; Initialize test collection for alias.
+  (let [schema {:name "companies_alias_test"
+                :fields [{:name "company_name"
+                          :type "string"}
+                         {:name "num_employees"
+                          :type "int32"}
+                         {:name "country"
+                          :type "string"
+                          :facet true}]
+                :default_sorting_field "num_employees"}]
+    (sut/create-collection! settings schema))
+
+  (testing "Upsert alias"
+    (let [exp {:collection_name "companies_alias_test" :name "companies"}
+          res (sut/upsert-alias! settings
+                                 "companies"
+                                 {:collection_name "companies_alias_test"})]
+      (is (= exp res))))
+
+  (testing "Retrieve alias"
+    ())
+
+  (testing "List aliases")
+  (testing "Delete alias"))
 
 (deftest client-api-key-tests
   (testing "Create api key"
