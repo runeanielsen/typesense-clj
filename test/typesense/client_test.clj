@@ -13,16 +13,25 @@
       (sut/delete-collection! settings (:name collection)))))
 
 (defn- clean-api-keys
+  "Clean all api-keys."
   []
   (let [keys (sut/list-api-keys settings)]
     (doseq [key (:keys keys)]
       (sut/delete-api-key! settings (:id key)))))
+
+(defn- clean-aliases
+  "Cleans all aliases."
+  []
+  (let [aliases (sut/list-aliases settings)]
+    (doseq [key (:aliases aliases)]
+      (sut/delete-alias! settings key))))
 
 (defn- clean-typesense-fixture
   "Cleanup before each integration test run."
   [f]
   (clean-collections)
   (clean-api-keys)
+  (clean-aliases)
   (f))
 
 (t/use-fixtures :once clean-typesense-fixture)
@@ -291,7 +300,42 @@
   (testing "Delete alias"
     (let [exp {:collection_name "companies_alias_test" :name "companies"}
           res (sut/delete-alias! settings "companies")]
-      (is (= exp res)))))
+      (is (= exp res))))
+
+  ;; Initialize test collection for synonyms.
+  (let [schema {:name "products"
+                :fields [{:name "company_name"
+                          :type "string"}
+                         {:name "num_employees"
+                          :type "int32"}
+                         {:name "country"
+                          :type "string"
+                          :facet true}]
+                :default_sorting_field "num_employees"}]
+    (sut/create-collection! settings schema))
+
+  (testing "Upsert synonym"
+    (let [exp {:id "coat-synonyms" :synonyms ["blazer" "coat" "jacket"]}
+          res (sut/upsert-synonym! settings
+                                   "products"
+                                   "coat-synonyms"
+                                   {:synonyms ["blazer" "coat" "jacket"]})]
+      (is (= exp res))))
+
+  (testing "Retrieve synonym"
+    (let [exp {:id "coat-synonyms", :root "", :synonyms ["blazer" "coat" "jacket"]}
+          res (sut/retrieve-synonym settings "products" "coat-synonyms")]
+      (is (= exp res))))
+
+  (testing "List synonyms"
+    (let [exp {:synonyms [{:id "coat-synonyms", :root "", :synonyms ["blazer" "coat" "jacket"]}]}
+          res (sut/list-synonyms settings "products")]
+      (is (= exp res))))
+
+  (testing "Delete synonym"
+    (let [exp {:id "coat-synonyms"}
+          res (sut/delete-synonym! settings "products" "coat-synonyms")]
+      (is (= res exp)))))
 
 (deftest client-api-key-tests
   (testing "Create api key"

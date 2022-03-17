@@ -505,6 +505,9 @@ Create or update synonym.
 
 ```clojure
 (upsert-synonym! settings "products" "coat-synonyms" {:synonyms ["blazer" "coat" "jacket"]})
+
+;; Example success response =>
+{:id "coat-synonyms" :synonyms ["blazer" "coat" "jacket"]}
 ```
 
 ### Retrieve synonym
@@ -513,6 +516,9 @@ Retrieve synonym on synonym name in collection.
 
 ```clojure
 (retrieve-synonym settings "products" "coat-synonyms")
+
+;; Example success response =>
+{:id "coat-synonyms", :root "", :synonyms ["blazer" "coat" "jacket"]}
 ```
 
 ### List synonyms
@@ -521,6 +527,9 @@ List synonyms in collection.
 
 ```clojure
 (list-synonyms settings "products")
+
+;; Example success response =>
+{:synonyms [{:id "coat-synonyms", :root "", :synonyms ["blazer" "coat" "jacket"]}]}
 ```
 
 ### Delete synonym
@@ -529,6 +538,9 @@ Delete synonym on synonym-name in collection.
 
 ```clojure
 (delete-synonym! settings "products" "coat-synonyms")
+
+;; Example success response =>
+{:id "coat-synonyms"}
 ```
 
 ## Exceptions
