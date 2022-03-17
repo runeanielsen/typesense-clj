@@ -468,6 +468,9 @@ Retrieve alias on collection-name.
 
 ```clojure
 (retrieve-alias settings "companies")
+
+;; Example success response =>
+{:collection_name "companies_alias_test" :name "companies"}
 ```
 
 ### List aliases
@@ -476,6 +479,9 @@ List aliases.
 
 ```clojure
 (list-aliases settings)
+
+;; Example success response =>
+{:aliases [{:collection_name "companies_alias_test" :name "companies"}]}
 ```
 
 ### Delete alias
@@ -484,6 +490,9 @@ Delete alias on collection name.
 
 ```clojure
 (delete-alias! settings "companies")
+
+;; Example success response =>
+{:collection_name "companies_alias_test" :name "companies"}
 ```
 
 ## Synonyms

@@ -278,11 +278,20 @@
                                  {:collection_name "companies_alias_test"})]
       (is (= exp res))))
 
-  (testing "Retrieve alias"
-    ())
+  (testing "List all aliases"
+    (let [exp {:aliases [{:collection_name "companies_alias_test" :name "companies"}]}
+          res (sut/list-aliases settings)]
+      (is (= exp res))))
 
-  (testing "List aliases")
-  (testing "Delete alias"))
+  (testing "Retrieve alias"
+    (let [exp {:collection_name "companies_alias_test" :name "companies"}
+          res (sut/retrieve-alias settings "companies")]
+      (is (= exp res))))
+
+  (testing "Delete alias"
+    (let [exp {:collection_name "companies_alias_test" :name "companies"}
+          res (sut/delete-alias! settings "companies")]
+      (is (= exp res)))))
 
 (deftest client-api-key-tests
   (testing "Create api key"
