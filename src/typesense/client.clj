@@ -155,7 +155,7 @@
   [settings collection-name options]
   (try+
    (let [{:keys [uri req]} (api/search-req settings collection-name options)]
-     (util/http-response-jsonline->maps (http/get uri req)))
+     (util/http-response-json->map (http/get uri req)))
    (catch [:type :clj-http.client/unexceptional-status] e
      (throw (http-ex-data->typesense-ex-info e)))))
 
