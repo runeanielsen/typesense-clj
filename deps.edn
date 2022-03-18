@@ -6,9 +6,9 @@
  :aliases {:cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.27.2"}}
                        :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}
            :dev {:extra-paths ["classes"]}
-           :test    {:extra-paths ["test"]
-                     :extra-deps  {lambdaisland/kaocha {:mvn/version "1.0.887"}}
-                     :main-opts   ["-m" "kaocha.runner"]}
+           :test {:extra-paths ["test"]
+                  :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.887"}}
+                  :main-opts ["-m" "kaocha.runner"]}
            :clj-kondo/config
            {:extra-deps {clj-kondo/config {:git/url "https://github.com/clj-kondo/config"
                                            :sha "a4139daf79255cf646e0f1b81d47ccfdc05814ce"}}
