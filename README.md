@@ -252,7 +252,10 @@ Create/upsert/update documents. All of them takes optional parameters, an exampl
                      :country "Finland"}
                     {:company_name "GoSoftware"
                      :num_employees 5000
-                     :country Sweden}])
+                     :country "Sweden"}])
+
+;; Example success response =>
+[{:success true} {:success true}]
 ```
 
 ### Upsert documents
@@ -265,7 +268,10 @@ Create/upsert/update documents. All of them takes optional parameters, an exampl
                      :country "Finland"}
                     {:company_name "GoSoftware"
                      :num_employees 5000
-                     :country Sweden}])
+                     :country "Sweden"}])
+
+;; Example success response =>
+[{:success true} {:success true}]
 ```
 
 ### Update documents
@@ -273,12 +279,17 @@ Create/upsert/update documents. All of them takes optional parameters, an exampl
 ```clojure
 (update-documents! settings
                    "companies"
-                   [{:company_name "Innovationsoft A/S"
+                   [{:id "1"
+                     :company_name "Innovationsoft A/S"
                      :num_employees 10
                      :country "Finland"}
-                    {:company_name "GoSoftware"
+                    {:id "2"
+                     :company_name "GoSoftware"
                      :num_employees 5000
-                     :country Sweden}])
+                     :country "Sweden"}])
+
+;; Example success response =>
+[{:success true} {:success true}]
 ```
 
 ### Delete documents
@@ -287,6 +298,9 @@ Delete multiple documents on filter.
 
 ```clojure
 (delete-documents! settings "companies" {:filter_by "num_employees:>=100"})
+
+;; Example success response =>
+{:num_deleted 2}
 ```
 
 ### Export documents
@@ -295,6 +309,12 @@ Export documents in collection.
 
 ```clojure
 (export-documents settings "companies" {:filter_by "num_employees:>=100"})
+
+;; Example success response =>
+[{:id "1"
+  :company_name "Innovationsoft A/S"
+  :num_employees 10
+  :country "Finland"}]
 ```
 
 ## Search
