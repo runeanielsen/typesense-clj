@@ -216,6 +216,77 @@
           response (sut/delete-document! settings "companies_document_test" 0)]
       (is (= expected response))))
 
+  ;; Initize test collection for documents
+  (let [schema {:name "companies_documents_test"
+                :fields [{:name "company_name"
+                          :type "string"}
+                         {:name "num_employees"
+                          :type "int32"}
+                         {:name "country"
+                          :type "string"
+                          :facet true}]
+                :default_sorting_field "num_employees"}]
+    (sut/create-collection! settings schema))
+
+  (testing "Create documents"
+    (let [exp [{:success true} {:success true}]
+          res (sut/create-documents! settings
+                                     "companies_documents_test"
+                                     [{:id "1"
+                                       :company_name "Innovationsoft A/S"
+                                       :num_employees 10
+                                       :country "Finland"}
+                                      {:id "2"
+                                       :company_name "GoSoftware"
+                                       :num_employees 5000
+                                       :country "Sweden"}])]
+      (is (= exp res))))
+
+  (testing "Upsert documents"
+    (let [exp [{:success true} {:success true}]
+          res (sut/upsert-documents! settings
+                                     "companies_documents_test"
+                                     [{:id "1"
+                                       :company_name "Innovationsoft A/S"
+                                       :num_employees 10
+                                       :country "Finland"}
+                                      {:id "3"
+                                       :company_name "Awesomesoftwaresoft"
+                                       :num_employees 105
+                                       :country "Denmark"}])]
+      (is (= exp res))))
+
+  (testing "Update documents"
+    (let [exp [{:success true} {:success true}]
+          res (sut/update-documents! settings
+                                     "companies_documents_test"
+                                     [{:id "1"
+                                       :company_name "Innovationsoft A/S"
+                                       :num_employees 10
+                                       :country "Finland"}
+                                      {:id "2"
+                                       :company_name "GoSoftware"
+                                       :num_employees 5000
+                                       :country "Sweden"}])]
+      (is (= exp res))))
+
+  (testing "Delete documents"
+    (let [exp {:num_deleted 2}
+          res (sut/delete-documents! settings
+                                     "companies_documents_test"
+                                     {:filter_by "num_employees:>=100"})]
+      (is (= exp res))))
+
+  (testing "Export documents"
+    (let [exp [{:id "1"
+                :company_name "Innovationsoft A/S"
+                :num_employees 10
+                :country "Finland"}]
+          res (sut/export-documents settings
+                                    "companies_documents_test"
+                                    {:filter_by "num_employees:<=100"})]
+      (is (= exp res))))
+
   ;; Initialize test collection for curation.
   (let [schema {:name "companies_curation_test"
                 :fields [{:name "company_name"
