@@ -287,6 +287,82 @@
                                     {:filter_by "num_employees:<=100"})]
       (is (= exp res))))
 
+  (testing "Search"
+    (let [exp {:facet_counts []
+               :found 0
+               :hits []
+               :out_of 1
+               :page 1
+               :request_params
+               {:collection_name "companies_documents_test"
+                :per_page 10
+                :q "Stark"}
+               :search_cutoff false
+               :search_time_ms 0}
+          res (sut/search settings
+                          "companies_documents_test"
+                          {:q "Stark"
+                           :query_by "company_name"})]
+      (is (= res exp))))
+
+  ;; Creating test setup for multi search
+  (let [schema {:name "products_multi_search_test"
+                :fields [{:name "name"
+                          :type "string"}
+                         {:name "price"
+                          :type "int32"}]}]
+    (sut/create-collection! settings schema)
+    (sut/create-document! settings "products_multi_search_test" {:id "1"
+                                                                 :name "shoe"
+                                                                 :price 75}))
+
+  (let [schema {:name "brands_multi_search_test"
+                :fields [{:name "name"
+                          :type "string"}]}]
+    (sut/create-collection! settings schema)
+    (sut/create-document! settings "brands_multi_search_test" {:id "1" :name "Nike"}))
+
+  (testing "Multi search"
+    (let [exp {:results
+               [{:facet_counts []
+                 :found 1
+                 :hits
+                 [{:document {:id "1" :name "shoe" :price 75}
+                   :highlights
+                   [{:field "name"
+                     :matched_tokens ["shoe"]
+                     :snippet "<mark>shoe</mark>"}]
+                   :text_match 33514497}]
+                 :out_of 1
+                 :page 1
+                 :request_params
+                 {:collection_name "products_multi_search_test" :per_page 10 :q "shoe"}
+                 :search_cutoff false
+                 :search_time_ms 0}
+                {:facet_counts []
+                 :found 1
+                 :hits
+                 [{:document {:id "1" :name "Nike"}
+                   :highlights
+                   [{:field "name"
+                     :matched_tokens ["Nike"]
+                     :snippet "<mark>Nike</mark>"}]
+                   :text_match 33514497}]
+                 :out_of 1
+                 :page 1
+                 :request_params
+                 {:collection_name "brands_multi_search_test" :per_page 10 :q "Nike"}
+                 :search_cutoff false
+                 :search_time_ms 0}]}
+          res (sut/multi-search settings
+                                {:searches [{:collection "products_multi_search_test"
+                                             :q "shoe"
+                                             :filter_by "price:=[50..120]"}
+                                            {:collection "brands_multi_search_test"
+                                             :q "Nike"}]}
+                                {:query_by "name"})]
+      (is (= exp res))))
+
   ;; Initialize test collection for curation.
   (let [schema {:name "companies_curation_test"
                 :fields [{:name "company_name"
@@ -374,7 +450,7 @@
       (is (= exp res))))
 
   ;; Initialize test collection for synonyms.
-  (let [schema {:name "products"
+  (let [schema {:name "products_synonyms_test"
                 :fields [{:name "company_name"
                           :type "string"}
                          {:name "num_employees"
@@ -388,24 +464,24 @@
   (testing "Upsert synonym"
     (let [exp {:id "coat-synonyms" :synonyms ["blazer" "coat" "jacket"]}
           res (sut/upsert-synonym! settings
-                                   "products"
+                                   "products_synonyms_test"
                                    "coat-synonyms"
                                    {:synonyms ["blazer" "coat" "jacket"]})]
       (is (= exp res))))
 
   (testing "Retrieve synonym"
-    (let [exp {:id "coat-synonyms", :root "", :synonyms ["blazer" "coat" "jacket"]}
-          res (sut/retrieve-synonym settings "products" "coat-synonyms")]
+    (let [exp {:id "coat-synonyms" :root "" :synonyms ["blazer" "coat" "jacket"]}
+          res (sut/retrieve-synonym settings "products_synonyms_test" "coat-synonyms")]
       (is (= exp res))))
 
   (testing "List synonyms"
-    (let [exp {:synonyms [{:id "coat-synonyms", :root "", :synonyms ["blazer" "coat" "jacket"]}]}
-          res (sut/list-synonyms settings "products")]
+    (let [exp {:synonyms [{:id "coat-synonyms" :root "" :synonyms ["blazer" "coat" "jacket"]}]}
+          res (sut/list-synonyms settings "products_synonyms_test")]
       (is (= exp res))))
 
   (testing "Delete synonym"
     (let [exp {:id "coat-synonyms"}
-          res (sut/delete-synonym! settings "products" "coat-synonyms")]
+          res (sut/delete-synonym! settings "products_synonyms_test" "coat-synonyms")]
       (is (= res exp)))))
 
 (deftest client-api-key-tests

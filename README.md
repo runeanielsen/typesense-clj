@@ -323,7 +323,20 @@ Search for documents in a collection. You can find all the query arguments [here
 
 ```clojure
 (search settings "companies" {:q "Stark"
-                              :query_by "test_name"})
+                              :query_by "company_name"})
+
+;; Example success response =>
+{:facet_counts []
+               :found 0
+               :hits []
+               :out_of 1
+               :page 1
+               :request_params
+               {:collection_name "companies_documents_test"
+                :per_page 10
+                :q "Stark"}
+               :search_cutoff false
+               :search_time_ms 0}
 ```
 
 ## Multi search
@@ -338,6 +351,39 @@ You can send multiple search requests in a single HTTP request, using the Multi-
                           {:collection "brands"
                            :q "Nike"}]}
               {:query_by "name"})
+
+;; Example success response =>
+{:results
+ [{:facet_counts []
+   :found 1
+   :hits
+   [{:document {:id "1" :name "shoe" :price 75}
+     :highlights
+     [{:field "name"
+       :matched_tokens ["shoe"]
+       :snippet "<mark>shoe</mark>"}]
+     :text_match 33514497}]
+   :out_of 1
+   :page 1
+   :request_params
+   {:collection_name "products" :per_page 10 :q "shoe"}
+   :search_cutoff false
+   :search_time_ms 0}
+  {:facet_counts []
+   :found 1
+   :hits
+   [{:document {:id "1" :name "Nike"}
+     :highlights
+     [{:field "name"
+       :matched_tokens ["Nike"]
+       :snippet "<mark>Nike</mark>"}]
+     :text_match 33514497}]
+   :out_of 1
+   :page 1
+   :request_params
+   {:collection_name "brands" :per_page 10 :q "Nike"}
+   :search_cutoff false
+   :search_time_ms 0}]}
 ```
 
 ## Api keys
