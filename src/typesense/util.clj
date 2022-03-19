@@ -19,7 +19,9 @@
   "Take a vector of maps and returns json-line format.
   Returns an empty string if the vector is empty."
   [ms]
-  (reduce #(str %1 (json/write-str %2) "\n") "" ms))
+  (->> ms
+       (map #(str (json/write-str %) \newline))
+       str/join))
 
 (defn json->map
   "Transforms json to a map.
