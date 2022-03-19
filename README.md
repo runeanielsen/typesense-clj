@@ -639,7 +639,7 @@ clojure -M:test
 To run the integration tests you can run a local docker instance with the following command. This will start a instance of Typesense on `localhost:8108`. The Typesense instance will be cleaned before starting the integration tests.
 
 ```sh
-docker run -p 8108:8108 -v/tmp/data:/data typesense/typesense:0.22.1 --data-dir /data --api-key=key
+docker run -p 8108:8108 -v/tmp/data:/data typesense/typesense:0.22.2 --data-dir /data --api-key=key
 ```
 
 The unit tests won't need a Typesense instance running.
