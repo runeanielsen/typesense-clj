@@ -1,4 +1,4 @@
-(ns typesense.client-test
+(ns ^:integration typesense.client-test
   (:require [typesense.client :as sut]
             [clojure.test :as t :refer [deftest is testing]]))
 

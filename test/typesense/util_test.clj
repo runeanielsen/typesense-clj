@@ -1,4 +1,4 @@
-(ns typesense.util-test
+(ns ^:unit typesense.util-test
   (:require [typesense.util :as sut]
             [clojure.test :refer [deftest is]]))
 

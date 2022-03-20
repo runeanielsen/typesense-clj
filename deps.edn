@@ -5,7 +5,6 @@
         slingshot/slingshot {:mvn/version "0.12.2"}}
  :aliases {:cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.27.2"}}
                        :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}
-           :dev {:extra-paths ["classes"]}
            :test {:extra-paths ["test"]
                   :extra-deps {lambdaisland/kaocha {:mvn/version "1.64.1010"}}
                   :main-opts ["-m" "kaocha.runner"]}

@@ -5,12 +5,16 @@
 (def lib 'io.github.runeanielsen/typesense-clj)
 (def version (format "0.1.%s" (b/git-count-revs nil)))
 
-(defn ci "Run the CI pipeline of tests (and build the JAR)." [opts]
+(defn build "Build the JAR." [opts]
   (-> opts
       (assoc :lib lib :version version)
-      (bb/run-tests)
       (bb/clean)
       (bb/jar)))
+
+(defn tests "Run the tests." [opts]
+  (-> opts
+      (bb/clean)
+      (bb/run-tests)))
 
 (defn deploy "Deploy the JAR to Clojars." [opts]
   (-> opts

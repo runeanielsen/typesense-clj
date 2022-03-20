@@ -1,4 +1,4 @@
-(ns typesense.api-test
+(ns ^:unit typesense.api-test
   (:require [typesense.api :as sut]
             [clojure.test :refer [deftest is]]
             [clojure.data.json :as json]))
