@@ -7,6 +7,12 @@ executors:
       auth:
         username: $DOCKER_LOGIN
         password: $DOCKER_ACCESSTOKEN
+  clojure-tools-deps-tests:
+    docker:
+    - image: clojure:openjdk-11-tools-deps-1.10.3.1087-slim-buster
+      auth:
+        username: $DOCKER_LOGIN
+        password: $DOCKER_ACCESSTOKEN
     - image: typesense/typesense:0.22.2 # For integration testing
       auth:
         username: $DOCKER_LOGIN
@@ -14,13 +20,21 @@ executors:
       command: [--data-dir=/tmp, --api-key=key]
 
 jobs:
-  ci:
+  build:
     executor: clojure-tools-deps
     steps:
       - checkout
       - run:
-          name: Run build and test
-          command: clojure -T:build ci
+          name: Run build
+          command: clojure -T:build build
+
+  test:
+    executor: clojure-tools-deps-tests
+    steps:
+      - checkout
+      - run:
+          name: Run test
+          command: clojure -T:build tests
 
   deploy-clojars:
     executor: clojure-tools-deps
@@ -31,16 +45,21 @@ jobs:
           command: clojure -T:build deploy
 
 workflows:
-  build-test-publish-clojars:
+  primary:
     jobs:
-      - ci:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - test:
           filters:
             tags:
               only: /.*/
       - deploy-clojars:
           context: clojars
           requires:
-            - ci
+            - build
+            - test
           filters:
             tags:
               only: /^[0-9].*/

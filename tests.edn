@@ -1,1 +1,7 @@
-#kaocha/v1 {}
+#kaocha/v1
+ {:tests [{:id :unit
+           :test-paths ["test"]
+           :focus-meta [:unit]}
+          {:id :integration
+           :test-paths ["test"]
+           :focus-meta [:integration]}]}
