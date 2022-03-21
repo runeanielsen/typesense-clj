@@ -289,19 +289,29 @@
 
   (testing "Search"
     (let [exp {:facet_counts []
-               :found 0
-               :hits []
+               :found 1
+               :hits
+               [{:document
+                 {:company_name "Innovationsoft A/S"
+                  :country "Finland"
+                  :id "1"
+                  :num_employees 10}
+                 :highlights
+                 [{:field "company_name"
+                   :matched_tokens ["Innovationsoft"]
+                   :snippet "<mark>Innovationsoft</mark> A/S"}]
+                 :text_match 33448960}]
                :out_of 1
                :page 1
                :request_params
                {:collection_name "companies_documents_test"
                 :per_page 10
-                :q "Stark"}
+                :q "Innovation"}
                :search_cutoff false
                :search_time_ms 0}
           res (sut/search settings
                           "companies_documents_test"
-                          {:q "Stark"
+                          {:q "Innovation"
                            :query_by "company_name"})]
       (is (= res exp))))
 
