@@ -40,7 +40,6 @@
 ;; The flow is inside of a single deftest because the interaction with the API
 ;; is stateful so it simplifies the test cases to keep them together.
 ;; If we had decided to split them out listing collections might result in issues.
-;; hmm...
 (deftest client-primary-workflow-tests
   (testing "Create collection"
     (let [expected {:default_sorting_field "num_employees"
@@ -73,8 +72,9 @@
                             :facet true}]
                   :default_sorting_field "num_employees"}
           response (sut/create-collection! settings schema)]
+      ;; We make individual test for :created_at since it changes each run.
       (is (> (:created_at response) 0))
-        ;; We remove :created_at it cannot be asserted since it changes each run.
+      ;; We remove :created_at it cannot be asserted since it changes each run.
       (is (= expected (dissoc response :created_at)))))
 
   (testing "List collections"
@@ -99,6 +99,7 @@
                      :symbols_to_index []
                      :token_separators []}]
           response (sut/list-collections settings)]
+      ;; We make individual test for :created_at since it changes each run.
       (is (true? (every? #(> (:created_at %) 0) response)))
       ;; We remove :created_at it cannot be asserted since it changes each run.
       (is (= expected (map #(dissoc % :created_at) response)))))
@@ -322,9 +323,11 @@
                          {:name "price"
                           :type "int32"}]}]
     (sut/create-collection! settings schema)
-    (sut/create-document! settings "products_multi_search_test" {:id "1"
-                                                                 :name "shoe"
-                                                                 :price 75}))
+    (sut/create-document! settings
+                          "products_multi_search_test"
+                          {:id "1"
+                           :name "shoe"
+                           :price 75}))
 
   (let [schema {:name "brands_multi_search_test"
                 :fields [{:name "name"
@@ -480,12 +483,16 @@
       (is (= exp res))))
 
   (testing "Retrieve synonym"
-    (let [exp {:id "coat-synonyms" :root "" :synonyms ["blazer" "coat" "jacket"]}
+    (let [exp {:id "coat-synonyms"
+               :root ""
+               :synonyms ["blazer" "coat" "jacket"]}
           res (sut/retrieve-synonym settings "products_synonyms_test" "coat-synonyms")]
       (is (= exp res))))
 
   (testing "List synonyms"
-    (let [exp {:synonyms [{:id "coat-synonyms" :root "" :synonyms ["blazer" "coat" "jacket"]}]}
+    (let [exp {:synonyms [{:id "coat-synonyms"
+                           :root ""
+                           :synonyms ["blazer" "coat" "jacket"]}]}
           res (sut/list-synonyms settings "products_synonyms_test")]
       (is (= exp res))))
 
@@ -493,6 +500,11 @@
     (let [exp {:id "coat-synonyms"}
           res (sut/delete-synonym! settings "products_synonyms_test" "coat-synonyms")]
       (is (= res exp)))))
+
+(defn api-key-constant-values
+  "Helper function to get unique values of api-key."
+  [k]
+  (dissoc k :id :value :expires_at :value_prefix))
 
 (deftest client-api-key-tests
   (testing "Create api key"
@@ -510,10 +522,8 @@
       (is (> (count (:value res)) 0))
       (is (> (:expires_at res) 0))
       (is (>= (:id res) 0))
-      ;; We remove :id :value and :expires_at since they change each run.
-      (let [exp (dissoc exp :id :value :expires_at)
-            res (dissoc res :id :value :expires_at)]
-        (is (= exp res)))))
+      ;; We test the values that do not change each run.
+      (is (= (api-key-constant-values exp) (api-key-constant-values res)))))
 
   (testing "Retrieve api key"
     ;; We have to retrieve the first key-id this way because they change each run.
@@ -529,9 +539,8 @@
       (is (>= (:id res) 0))
       (is (> (:expires_at res) 0))
       (is (> (count (:value_prefix res)) 0))
-      ;; We remove :id :value_prefex and :expires_at since they change each run.
-      (is (= (dissoc exp :expires_at :id :value_prefix)
-             (dissoc res :expires_at :id :value_prefix)))))
+      ;; We test the values that do not change each run.
+      (is (= (api-key-constant-values exp) (api-key-constant-values res)))))
 
   (testing "List api keys"
     (let [exp {:keys [{:actions ["document:search"]
@@ -545,14 +554,9 @@
       (is (every? #(>= (:id %) 0) (:keys res)))
       (is (every? #(>= (:expires_at %) 0) (:keys res)))
       (is (every? #(> (count (:value_prefix %)) 0) (:keys res)))
-      ;; We remove :id :value_prefex and :expires_at since they change each run.
-      (let [exp (assoc exp :keys (->> exp
-                                      :keys
-                                      (map #(dissoc % :id :expires_at :value_prefix))))
-            res (assoc res :keys (->> res
-                                      :keys
-                                      (map #(dissoc % :id :expires_at :value_prefix))))]
-        (is (= exp res)))))
+      ;; We test the values that do not change each run.
+      (is (= (update-in exp [:keys] #(map api-key-constant-values %))
+             (update-in res [:keys] #(map api-key-constant-values %))))))
 
   (testing "Delete api key"
     (let [id (-> (sut/list-api-keys settings) :keys first :id)
