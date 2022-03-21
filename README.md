@@ -322,21 +322,31 @@ Export documents in collection.
 Search for documents in a collection. You can find all the query arguments [here.](https://typesense.org/docs/0.22.2/api/documents.html#arguments)
 
 ```clojure
-(search settings "companies" {:q "Stark"
+(search settings "companies" {:q "Innovation"
                               :query_by "company_name"})
 
 ;; Example success response =>
 {:facet_counts []
-               :found 0
-               :hits []
-               :out_of 1
-               :page 1
-               :request_params
-               {:collection_name "companies_documents_test"
-                :per_page 10
-                :q "Stark"}
-               :search_cutoff false
-               :search_time_ms 0}
+ :found 1
+ :hits
+ [{:document
+   {:company_name "Innovationsoft A/S"
+    :country "Finland"
+    :id "1"
+    :num_employees 10}
+   :highlights
+   [{:field "company_name"
+     :matched_tokens ["Innovationsoft"]
+     :snippet "<mark>Innovationsoft</mark> A/S"}]
+   :text_match 33448960}]
+ :out_of 1
+ :page 1
+ :request_params
+ {:collection_name "companies_documents_test"
+  :per_page 10
+  :q "Innovation"}
+ :search_cutoff false
+ :search_time_ms 0}
 ```
 
 ## Multi search
