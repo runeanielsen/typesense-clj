@@ -228,31 +228,25 @@
                                      override)
         exp {:uri
              "http://localhost:8108/collections/companies/overrides/customize-apple"
-             :req
-             {:headers {"X-TYPESENSE-API-KEY" "key"
-                        "Content-Type" "text/json"}
-              :body "{\"rule\":{\"query\":\"apple\",\"match\":\"exact\"},\"includes\":[{\"id\":\"422\",\"position\":1},{\"id\":\"54\",\"position\":2}],\"excludes\":[{\"id\":\"287\"}]}"}}]
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"
+                             "Content-Type" "text/json"}
+                   :body "{\"rule\":{\"query\":\"apple\",\"match\":\"exact\"},\"includes\":[{\"id\":\"422\",\"position\":1},{\"id\":\"54\",\"position\":2}],\"excludes\":[{\"id\":\"287\"}]}"}}]
     (is (= exp req))))
 
 (deftest list-overrides-req-test
-  (let [req (sut/list-overrides-req settings
-                                    "companies")
+  (let [req (sut/list-overrides-req settings "companies")
         exp {:uri "http://localhost:8108/collections/companies/overrides"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
 
 (deftest retrieve-override-req-test
-  (let [req (sut/retrieve-override-req settings
-                                       "companies"
-                                       "customize-apple")
+  (let [req (sut/retrieve-override-req settings "companies" "customize-apple")
         exp {:uri "http://localhost:8108/collections/companies/overrides/customize-apple"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
 
 (deftest delete-override-req-test
-  (let [req (sut/delete-override-req settings
-                                     "companies"
-                                     "customize-apple")
+  (let [req (sut/delete-override-req settings "companies" "customize-apple")
         exp {:uri "http://localhost:8108/collections/companies/overrides/customize-apple"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
@@ -268,8 +262,7 @@
     (is (= exp req))))
 
 (deftest retrieve-alias-req-test
-  (let [req (sut/retrieve-alias-req settings
-                                    "companies")
+  (let [req (sut/retrieve-alias-req settings "companies")
         exp {:uri "http://localhost:8108/aliases/companies"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
@@ -281,8 +274,7 @@
     (is (= exp req))))
 
 (deftest delete-alias-req-test
-  (let [req (sut/delete-alias-req settings
-                                  "companies")
+  (let [req (sut/delete-alias-req settings "companies")
         exp {:uri "http://localhost:8108/aliases/companies"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
@@ -292,31 +284,25 @@
                                     "products"
                                     "coat-synonyms"
                                     {:synonyms ["blazer" "coat" "jacket"]})
-
         exp {:uri "http://localhost:8108/collections/products/synonyms/coat-synonyms"
              :req {:headers {"X-TYPESENSE-API-KEY" "key", "Content-Type" "text/json"}
                    :body "{\"synonyms\":[\"blazer\",\"coat\",\"jacket\"]}"}}]
     (is (= exp req))))
 
 (deftest retrieve-synonym-req-test
-  (let [req (sut/retrieve-synonym-req settings
-                                      "products"
-                                      "coat-synonyms")
+  (let [req (sut/retrieve-synonym-req settings "products" "coat-synonyms")
         exp {:uri "http://localhost:8108/collections/products/synonyms/coat-synonyms"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
 
 (deftest list-synonyms-req-test
-  (let [req (sut/list-synonyms-req settings
-                                   "products")
+  (let [req (sut/list-synonyms-req settings "products")
         exp {:uri "http://localhost:8108/collections/products/synonyms"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
 
 (deftest delete-synonyms-req-test
-  (let [req (sut/delete-synonym-req settings
-                                    "products"
-                                    "coat-synonyms")
+  (let [req (sut/delete-synonym-req settings "products" "coat-synonyms")
         exp {:uri "http://localhost:8108/collections/products/synonyms/coat-synonyms"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
