@@ -630,11 +630,15 @@ Typesense API exceptions in the [Typesense-api-errors](https://typesense.org/doc
 
 ### Tests
 
-To run all the tests.
+#### Run unit tests
+
+The following command runs only unit tests.
 
 ```sh
-clojure -M:test
+bin/kaocha unit
 ```
+
+#### Run integration tests
 
 To run the integration tests you can run a local docker instance with the following command. This will start a instance of Typesense on `localhost:8108`. The Typesense instance will be cleaned before starting the integration tests.
 
@@ -642,4 +646,16 @@ To run the integration tests you can run a local docker instance with the follow
 docker run -p 8108:8108 -v/tmp/data:/data typesense/typesense:0.22.2 --data-dir /data --api-key=key
 ```
 
-The unit tests won't need a Typesense instance running.
+The following command runs only the integration tests.
+
+```sh
+bin/kaocha integration
+```
+
+#### Run all the tests.
+
+The following command runs all tests.
+
+```sh
+bin/kaocha
+```
