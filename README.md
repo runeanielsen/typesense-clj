@@ -106,27 +106,26 @@ Returns a summary of all your collections. The collections are returned sorted b
 (list-collections settings)
 
 ;; Example success response =>
-{:created_at 1647255857
- :default_sorting_field  "num_employees"
- :fields [{:facet false
-           :index true
-           :name "company_name"
-           :optional false
-           :type "string"}
-          {:facet false
-           :index true
-           :name "num_employees"
-           :optional false
-           :type "int32"}
-          {:facet true
-           :index true
-           :name "country"
-           :optional false
-           :type "string"}]
- :name "companies"
- :num_documents 0
- :symbols_to_index []
- :token_separators []}
+[{:default_sorting_field "num_employees"
+  :fields [{:facet false
+            :index true
+            :name "company_name"
+            :optional false
+            :type "string"}
+           {:facet false
+            :index true
+            :name "num_employees"
+            :optional false
+            :type "int32"}
+           {:facet true
+            :index true
+            :name "country"
+            :optional false
+            :type "string"}]
+  :name "companies_collection_test"
+  :num_documents 0
+  :symbols_to_index []
+  :token_separators []}]
 ```
 
 ### Retrieve collection
