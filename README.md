@@ -395,6 +395,48 @@ You can send multiple search requests in a single HTTP request, using the Multi-
    :search_time_ms 0}]}
 ```
 
+## Geosearch
+
+```
+;; Create collection for geosearch with document.
+(let [schema {:name "places"
+              :fields [{:name "title" :type "string"}
+                       {:name "points" :type "int32"}
+                       {:name "location" :type "geopoint"}]
+              :default_sorting_field "points"}
+      document {:points 1
+                :title "Louvre Museuem"
+                :location [48.86093481609114 2.33698396872901]}]
+  (create-collection! settings schema)
+  (create-document! settings "places" document))
+
+;; Search
+(search settings
+        "places"
+        {:q "*"
+         :query_by "title"
+         :filter_by "location:(48.90615915923891 2.3435897727061175 5.1 km)"
+         :sort_by "location(48.853 2.344):asc"})
+
+;; Example success response =>
+{:facet_counts []
+ :found 1
+ :hits
+ [{:document
+   {:id "0"
+    :location [48.86093481609114 2.33698396872901]
+    :points 1
+    :title "Louvre Museuem"}
+   :geo_distance_meters {:location 1020}
+   :highlights []
+   :text_match 33514496}]
+ :out_of 1
+ :page 1
+ :request_params {:collection_name "places" :per_page 10 :q "*"}
+ :search_cutoff false
+ :search_time_ms 0}
+```
+
 ## Api keys
 
 Typesense allows you to create API Keys with fine-grain access control. You can restrict access on both a per-collection and per-action level, [read more here](https://typesense.org/docs/0.22.2/api/api-keys.html#create-an-api-key)

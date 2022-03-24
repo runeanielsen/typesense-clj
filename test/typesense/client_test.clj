@@ -376,6 +376,46 @@
                                 {:query_by "name"})]
       (is (= exp res))))
 
+  ;; Initialize test collection with documents for geosearch.
+  (let [schema {:name "places"
+                :fields [{:name "title" :type "string"}
+                         {:name "points" :type "int32"}
+                         {:name "location" :type "geopoint"}]
+                :default_sorting_field "points"}
+        document {:points 1
+                  :title "Louvre Museuem"
+                  :location [48.86093481609114 2.33698396872901]}]
+    (sut/create-collection! settings schema)
+    (sut/create-document! settings "places" document))
+
+  (testing "Geosearch"
+    (let [exp {:facet_counts []
+               :found 1
+               :hits
+               [{:document
+                 {:id "0"
+                  :location [48.86093481609114 2.33698396872901]
+                  :points 1
+                  :title "Louvre Museuem"}
+                 :geo_distance_meters {:location 1020}
+                 :highlights []
+                 :text_match 33514496}]
+               :out_of 1
+               :page 1
+               :request_params {:collection_name "places" :per_page 10 :q "*"}
+               :search_cutoff false
+               :search_time_ms 0}
+          res (sut/search settings
+                          "places"
+                          {:q "*"
+                           :query_by "title"
+                           :filter_by "location:(48.90615915923891, 2.3435897727061175, 5.1 km)"
+                           :sort_by "location(48.853, 2.344):asc"})]
+      ;; We test :search_time_ms individually since it can chane each run.
+      (is (number? (res :search_time_ms)))
+      (is (= (dissoc exp :search_time_ms)
+             (dissoc res :search_time_ms)))))
+
   ;; Initialize test collection for curation.
   (let [schema {:name "companies_curation_test"
                 :fields [{:name "company_name"
