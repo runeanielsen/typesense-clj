@@ -397,7 +397,7 @@ You can send multiple search requests in a single HTTP request, using the Multi-
 
 ## Geosearch
 
-```
+```clojure
 ;; Create collection for geosearch with document.
 (let [schema {:name "places"
               :fields [{:name "title" :type "string"}
