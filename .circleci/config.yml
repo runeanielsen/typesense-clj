@@ -3,13 +3,13 @@ version: 2.1
 executors:
   clojure-tools-deps:
     docker:
-    - image: clojure:openjdk-11-tools-deps-1.10.3.1087-slim-buster
+    - image: clojure:openjdk-11-tools-deps-1.10.3.1087-buster
       auth:
         username: $DOCKER_LOGIN
         password: $DOCKER_ACCESSTOKEN
   clojure-tools-deps-tests:
     docker:
-    - image: clojure:openjdk-11-tools-deps-1.10.3.1087-slim-buster
+    - image: clojure:openjdk-11-tools-deps-1.10.3.1087-buster
       auth:
         username: $DOCKER_LOGIN
         password: $DOCKER_ACCESSTOKEN
@@ -32,6 +32,17 @@ jobs:
     executor: clojure-tools-deps-tests
     steps:
       - checkout
+      - run:
+          name: install dockerize
+          command: |
+            wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+            tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+            rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for Typesense
+          command: dockerize -wait tcp://localhost:8108 -timeout 1m
       - run:
           name: Run test
           command: clojure -T:build tests
