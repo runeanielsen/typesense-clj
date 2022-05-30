@@ -4,7 +4,7 @@
             [clojure.walk :as walk])
   (:import [java.net URLEncoder]))
 
-(defn build-query
+(defn map->url-parameter-string
   "Convert param pairs into a query string.
   If query-params are empty returns empty string."
   [query-params]
