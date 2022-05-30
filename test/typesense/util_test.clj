@@ -2,17 +2,17 @@
   (:require [typesense.util :as sut]
             [clojure.test :refer [deftest is]]))
 
-(deftest build-query-test
+(deftest map->url-parameter-string-test
   (let [expected "?q=Stark+is+a+company&query_by=test_name&filter_by=num_employees%3A%3E100&sort_by=num_employees%3Adesc"
-        query (sut/build-query {:q "Stark is a company"
-                                :query_by "test_name"
-                                :filter_by "num_employees:>100"
-                                :sort_by "num_employees:desc"})]
+        query (sut/map->url-parameter-string {:q "Stark is a company"
+                                              :query_by "test_name"
+                                              :filter_by "num_employees:>100"
+                                              :sort_by "num_employees:desc"})]
     (is (= expected query))))
 
-(deftest build-query-test-empty
+(deftest map->url-parameter-string-test-empty
   (let [expected ""
-        query (sut/build-query {})]
+        query (sut/map->url-parameter-string {})]
     (is (= expected query))))
 
 (deftest maps->json-lines-test

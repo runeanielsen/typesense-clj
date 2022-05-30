@@ -50,7 +50,7 @@
   "Returns the full multi-search uri resource path."
   [uri common-search-params opt-query-params]
   (let [query-parameter-map (merge common-search-params opt-query-params)]
-    (str uri "/multi_search" (util/build-query query-parameter-map))))
+    (str uri "/multi_search" (util/map->url-parameter-string query-parameter-map))))
 
 (defn create-collection-req
   [{:keys [uri key]} schema]
@@ -111,7 +111,7 @@
   ([{:keys [uri key]} collection-name documents options]
    {:uri (str (document-uri uri collection-name)
               "/import"
-              (util/build-query options))
+              (util/map->url-parameter-string options))
     :req {:headers {api-key-header-name key
                     "Content-Type" "text/plain"}
           :body (util/maps->json-lines documents)}}))
@@ -119,21 +119,21 @@
 (defn delete-documents-req
   [{:keys [uri key]} collection-name options]
   {:uri (str (document-uri uri collection-name)
-             (util/build-query options))
+             (util/map->url-parameter-string options))
    :req {:headers {api-key-header-name key}}})
 
 (defn export-documents-req
   [{:keys [uri key]} collection-name options]
   {:uri (str (document-uri uri collection-name)
              "/export"
-             (util/build-query options))
+             (util/map->url-parameter-string options))
    :req {:headers {api-key-header-name key}}})
 
 (defn search-req
   [{:keys [uri key]} collection-name options]
   {:uri (str (document-uri uri collection-name)
              "/search"
-             (util/build-query options))
+             (util/map->url-parameter-string options))
    :req {:headers {api-key-header-name key}}})
 
 (defn multi-search-req
