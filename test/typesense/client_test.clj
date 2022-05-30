@@ -171,13 +171,13 @@
     (sut/create-collection! settings schema))
 
   (testing "Create document"
-    (let [expected {:company_name "Stark Industries"
-                    :country "USA"
+    (let [expected {:company_name "Hotel Sanders København A/S"
+                    :country "DK"
                     :id "0"
                     :num_employees 5215}
-          document {:company_name "Stark Industries"
+          document {:company_name "Hotel Sanders København A/S"
                     :num_employees 5215
-                    :country "USA"}
+                    :country "DK"}
           response (sut/create-document! settings "companies_document_test" document)]
       (is (= expected response))))
 
@@ -210,8 +210,8 @@
       (is (= expected response))))
 
   (testing "Delete document"
-    (let [expected {:company_name "Stark Industries"
-                    :country "USA"
+    (let [expected {:company_name "Hotel Sanders København A/S"
+                    :country "DK"
                     :id "0"
                     :num_employees 5215}
           response (sut/delete-document! settings "companies_document_test" 0)]
