@@ -4,22 +4,32 @@
             [clojure.walk :as walk])
   (:import [java.net URLEncoder]))
 
+(defn- pair->url-parameter
+  "Takes a pair and converts it into a url parameter."
+  [[name value]]
+  (str name "=" (URLEncoder/encode (str value))))
+
 (defn map->url-parameter-string
   "Convert param pairs into a query string.
   If query-params are empty returns empty string."
   [query-params]
   (if (seq query-params)
     (->> (walk/stringify-keys query-params)
-         (map #(str (key %) "=" (URLEncoder/encode (str (val %)))))
-         (str/join \&)
+         (map pair->url-parameter)
+         (str/join "&")
          (str "?"))
     ""))
+
+(defn- map->json-newline
+  "Takes a map and return a json-newline."
+  [m]
+  (str (json/write-str m) "\n"))
 
 (defn maps->json-lines
   "Take a vector of maps and returns json-line format.
   Returns an empty string if the vector is empty."
   [ms]
-  (str/join (map #(str (json/write-str %) \newline) ms)))
+  (str/join (map map->json-newline ms)))
 
 (defn json->map
   "Transforms json to a map.
@@ -29,7 +39,7 @@
     (json/read-str json :key-fn keyword)))
 
 (defn json-lines->maps
-  "Transforms json-lines to vector of maps.
+  "Transforms json-lines into a vector of maps.
   Returns empty vector if json-lines are nil or blank."
   [json-lines]
   (if (str/blank? json-lines)
