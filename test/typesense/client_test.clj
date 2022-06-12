@@ -47,19 +47,28 @@
                               :index true
                               :name "company_name"
                               :optional false
-                              :type "string"}
+                              :type "string"
+                              :infix false
+                              :locale ""
+                              :sort false}
                              {:facet false
                               :index true
                               :name "num_employees"
                               :optional false
-                              :type "int32"}
+                              :type "int32"
+                              :infix false
+                              :locale ""
+                              :sort true}
                              {:facet true
                               :index true
                               :name "country"
                               :optional false
-                              :type "string"}]
+                              :type "string"
+                              :infix false
+                              :locale ""
+                              :sort false}]
                     :name "companies_collection_test"
-                    :num_documents  0
+                    :num_documents 0
                     :symbols_to_index []
                     :token_separators []}
           schema {:name "companies_collection_test"
@@ -83,17 +92,26 @@
                                :index true
                                :name "company_name"
                                :optional false
-                               :type "string"}
+                               :type "string"
+                               :infix false
+                               :locale ""
+                               :sort false}
                               {:facet false
                                :index true
                                :name "num_employees"
                                :optional false
-                               :type "int32"}
+                               :type "int32"
+                               :infix false
+                               :locale ""
+                               :sort true}
                               {:facet true
                                :index true
                                :name "country"
                                :optional false
-                               :type "string"}]
+                               :type "string"
+                               :infix false
+                               :locale ""
+                               :sort false}]
                      :name "companies_collection_test"
                      :num_documents 0
                      :symbols_to_index []
@@ -106,22 +124,30 @@
 
   (testing "Retrieve collection"
     (let [expected {:default_sorting_field "num_employees"
-                    :fields
-                    [{:facet false
-                      :index true
-                      :name "company_name"
-                      :optional false
-                      :type "string"}
-                     {:facet false
-                      :index true
-                      :name "num_employees"
-                      :optional false
-                      :type "int32"}
-                     {:facet true
-                      :index true
-                      :name "country"
-                      :optional false
-                      :type "string"}]
+                    :fields [{:facet false
+                              :index true
+                              :infix false
+                              :locale ""
+                              :name "company_name"
+                              :optional false
+                              :sort false
+                              :type "string"}
+                             {:facet false
+                              :index true
+                              :infix false
+                              :locale ""
+                              :name "num_employees"
+                              :optional false
+                              :sort true
+                              :type "int32"}
+                             {:facet true
+                              :index true
+                              :infix false
+                              :locale ""
+                              :name "country"
+                              :optional false
+                              :sort false
+                              :type "string"}]
                     :name "companies_collection_test"
                     :num_documents 0
                     :symbols_to_index []
@@ -133,22 +159,30 @@
 
   (testing "Delete collection"
     (let [expected {:default_sorting_field "num_employees"
-                    :fields
-                    [{:facet false
-                      :index true
-                      :name "company_name"
-                      :optional false
-                      :type "string"}
-                     {:facet false
-                      :index true
-                      :name "num_employees"
-                      :optional false
-                      :type "int32"}
-                     {:facet true
-                      :index true
-                      :name "country"
-                      :optional false
-                      :type "string"}]
+                    :fields [{:facet false
+                              :index true
+                              :name "company_name"
+                              :optional false
+                              :type "string"
+                              :infix false
+                              :locale ""
+                              :sort false}
+                             {:facet false
+                              :index true
+                              :name "num_employees"
+                              :optional false
+                              :type "int32"
+                              :infix false
+                              :locale ""
+                              :sort true}
+                             {:facet true
+                              :index true
+                              :name "country"
+                              :optional false
+                              :type "string"
+                              :infix false
+                              :locale ""
+                              :sort false}]
                     :name "companies_collection_test"
                     :num_documents 0
                     :symbols_to_index []
@@ -299,9 +333,9 @@
                   :num_employees 10}
                  :highlights
                  [{:field "company_name"
-                   :matched_tokens ["Innovationsoft"]
-                   :snippet "<mark>Innovationsoft</mark> A/S"}]
-                 :text_match 33448960}]
+                   :matched_tokens ["Innovation"]
+                   :snippet "<mark>Innovation</mark>soft A/S"}]
+                 :text_match 282583051272193}]
                :out_of 1
                :page 1
                :request_params
@@ -345,7 +379,7 @@
                    [{:field "name"
                      :matched_tokens ["shoe"]
                      :snippet "<mark>shoe</mark>"}]
-                   :text_match 33514497}]
+                   :text_match 282583068049665}]
                  :out_of 1
                  :page 1
                  :request_params
@@ -360,7 +394,7 @@
                    [{:field "name"
                      :matched_tokens ["Nike"]
                      :snippet "<mark>Nike</mark>"}]
-                   :text_match 33514497}]
+                   :text_match 282583068049665}]
                  :out_of 1
                  :page 1
                  :request_params
@@ -399,7 +433,7 @@
                   :title "Louvre Museuem"}
                  :geo_distance_meters {:location 1020}
                  :highlights []
-                 :text_match 33514496}]
+                 :text_match 100}]
                :out_of 1
                :page 1
                :request_params {:collection_name "places" :per_page 10 :q "*"}
@@ -447,7 +481,9 @@
     (let [exp {:overrides [{:excludes [{:id "287"}]
                             :id "customize_apple"
                             :includes [{:id "422" :position 1} {:id "54" :position 2}]
-                            :rule {:match "exact" :query "apple"}}]}
+                            :rule {:match "exact" :query "apple"}
+                            :filter_curated_hits false
+                            :remove_matched_tokens false}]}
           res (sut/list-overrides settings "companies_curation_test")]
       (is (= exp res))))
 
@@ -455,7 +491,9 @@
     (let [exp {:excludes [{:id "287"}]
                :id "customize_apple"
                :includes [{:id "422" :position 1} {:id "54" :position 2}]
-               :rule {:match "exact" :query "apple"}}
+               :rule {:match "exact" :query "apple"}
+               :filter_curated_hits false
+               :remove_matched_tokens false}
           res (sut/retrieve-override settings
                                      "companies_curation_test"
                                      "customize_apple")]

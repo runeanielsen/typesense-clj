@@ -2,7 +2,7 @@
 
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.runeanielsen/typesense-clj.svg)](https://clojars.org/io.github.runeanielsen/typesense-clj)
 
-Clojure client for [Typesense 0.22](https://github.com/typesense/typesense)
+Clojure client for [Typesense 0.23](https://github.com/typesense/typesense)
 
 All of the examples uses the `typesense.client` namespace. The examples shows the simplest way to get started using the client, but all parameters described on Typesense API documentation should work, if that is not the case, please make a pull-request or open an issue.
 
@@ -22,11 +22,11 @@ Example of settings.
 
 ## Collection
 
-This section describes how to use the collection, further information can be found [here.](https://typesense.org/docs/0.22.2/api/collections.html#create-a-collection)
+This section describes how to use the collection, further information can be found [here.](https://typesense.org/docs/0.23.0/api/collections.html#create-a-collection)
 
 ### Create collection
 
-The different `types` for the schema can be found [here](https://typesense.org/docs/0.22.2/api/collections.html#create-a-collection).
+The different `types` for the schema can be found [here](https://typesense.org/docs/0.23.0/api/collections.html#create-a-collection).
 
 The examples displays the creation of collection named `companies`.
 
@@ -42,25 +42,33 @@ The examples displays the creation of collection named `companies`.
                               :default_sorting_field "num_employees"})
 
 ;; Example success response =>
-{:created_at 1647252992
- :default_sorting_field "num_employees"
+{:default_sorting_field "num_employees"
  :fields [{:facet false
            :index true
            :name "company_name"
            :optional false
-           :type "string"}
+           :type "string"
+           :infix false
+           :locale ""
+           :sort false}
           {:facet false
            :index true
            :name "num_employees"
            :optional false
-           :type "int32"}
+           :type "int32"
+           :infix false
+           :locale ""
+           :sort true}
           {:facet true
            :index true
            :name "country"
            :optional false
-           :type "string"}]
- :name "companies"
- :num_documents  0
+           :type "string"
+           :infix false
+           :locale ""
+           :sort false}]
+ :name "companies_collection_test"
+ :num_documents 0
  :symbols_to_index []
  :token_separators []}
 ```
@@ -106,26 +114,35 @@ Returns a summary of all your collections. The collections are returned sorted b
 (list-collections settings)
 
 ;; Example success response =>
-[{:default_sorting_field "num_employees"
-  :fields [{:facet false
-            :index true
-            :name "company_name"
-            :optional false
-            :type "string"}
-           {:facet false
-            :index true
-            :name "num_employees"
-            :optional false
-            :type "int32"}
-           {:facet true
-            :index true
-            :name "country"
-            :optional false
-            :type "string"}]
-  :name "companies_collection_test"
-  :num_documents 0
-  :symbols_to_index []
-  :token_separators []}]
+{:default_sorting_field "num_employees"
+ :fields [{:facet false
+           :index true
+           :name "company_name"
+           :optional false
+           :type "string"
+           :infix false
+           :locale ""
+           :sort false}
+          {:facet false
+           :index true
+           :name "num_employees"
+           :optional false
+           :type "int32"
+           :infix false
+           :locale ""
+           :sort true}
+          {:facet true
+           :index true
+           :name "country"
+           :optional false
+           :type "string"
+           :infix false
+           :locale ""
+           :sort false}]
+ :name "companies_collection_test"
+ :num_documents 0
+ :symbols_to_index []
+ :token_separators []}
 ```
 
 ### Retrieve collection
@@ -137,23 +154,31 @@ Retrieves the collection on the `collection-name`.
 
 ;; Example success response =>
 {:default_sorting_field "num_employees"
- :fields
- [{:facet false
-   :index true
-   :name "company_name"
-   :optional false
-   :type "string"}
-  {:facet false
-   :index true
-   :name "num_employees"
-   :optional false
-   :type "int32"}
-  {:facet true
-   :index true
-   :name "country"
-   :optional false
-   :type "string"}]
- :name "companies"
+ :fields [{:facet false
+           :index true
+           :infix false
+           :locale ""
+           :name "company_name"
+           :optional false
+           :sort false
+           :type "string"}
+          {:facet false
+           :index true
+           :infix false
+           :locale ""
+           :name "num_employees"
+           :optional false
+           :sort true
+           :type "int32"}
+          {:facet true
+           :index true
+           :infix false
+           :locale ""
+           :name "country"
+           :optional false
+           :sort false
+           :type "string"}]
+ :name "companies_collection_test"
  :num_documents 0
  :symbols_to_index []
  :token_separators []}
@@ -161,7 +186,7 @@ Retrieves the collection on the `collection-name`.
 
 ## Documents
 
-This section describes how to use the documents, further information can be found [here.](https://typesense.org/docs/0.22.2/api/documents.html)
+This section describes how to use the documents, further information can be found [here.](https://typesense.org/docs/0.23.0/api/documents.html)
 
 ### Create document
 
@@ -239,7 +264,7 @@ Update document in a collection on id. The update can be partial.
 
 ## Create/Upsert/Update/Delete Documents
 
-Create/upsert/update documents. All of them takes optional parameters, an example is setting the batch size using `:batch_size 20`. Read more [here.](https://typesense.org/docs/0.22.2/api/documents.html#import-documents)
+Create/upsert/update documents. All of them takes optional parameters, an example is setting the batch size using `:batch_size 20`. Read more [here.](https://typesense.org/docs/0.23.0/api/documents.html#import-documents)
 
 ### Create documents
 
@@ -318,7 +343,7 @@ Export documents in collection.
 
 ## Search
 
-Search for documents in a collection. You can find all the query arguments [here.](https://typesense.org/docs/0.22.2/api/documents.html#arguments)
+Search for documents in a collection. You can find all the query arguments [here.](https://typesense.org/docs/0.23.0/api/documents.html#arguments)
 
 ```clojure
 (search settings "companies" {:q "Innovation"
@@ -350,7 +375,7 @@ Search for documents in a collection. You can find all the query arguments [here
 
 ## Multi search
 
-You can send multiple search requests in a single HTTP request, using the Multi-Search feature. This is especially useful to avoid round-trip network latencies incurred otherwise if each of these requests are sent in separate HTTP requests. You can read more about multi-search [here.](https://typesense.org/docs/0.22.2/api/documents.html#federated-multi-search)
+You can send multiple search requests in a single HTTP request, using the Multi-Search feature. This is especially useful to avoid round-trip network latencies incurred otherwise if each of these requests are sent in separate HTTP requests. You can read more about multi-search [here.](https://typesense.org/docs/0.23.0/api/documents.html#federated-multi-search)
 
 ```clojure
 (multi-search settings
@@ -439,7 +464,7 @@ You can send multiple search requests in a single HTTP request, using the Multi-
 
 ## Api keys
 
-Typesense allows you to create API Keys with fine-grain access control. You can restrict access on both a per-collection and per-action level, [read more here](https://typesense.org/docs/0.22.2/api/api-keys.html#create-an-api-key)
+Typesense allows you to create API Keys with fine-grain access control. You can restrict access on both a per-collection and per-action level, [read more here](https://typesense.org/docs/0.23.0/api/api-keys.html#create-an-api-key)
 
 ### Create api key
 
@@ -502,7 +527,7 @@ Deletes api key on `id`.
 
 ## Curation
 
-Using overrides, you can include or exclude specific documents for a given query, read more [here.](https://typesense.org/docs/0.22.2/api/curation.html)
+Using overrides, you can include or exclude specific documents for a given query, read more [here.](https://typesense.org/docs/0.23.0/api/curation.html)
 
 ### Create or update an override
 
@@ -536,7 +561,9 @@ List all overrides.
 {:overrides [{:excludes [{:id "287"}]
               :id "customize_apple"
               :includes [{:id "422" :position 1} {:id "54" :position 2}]
-              :rule {:match "exact" :query "apple"}}]}
+              :rule {:match "exact" :query "apple"}
+              :filter_curated_hits false
+              :remove_matched_tokens false}]}
 ```
 
 ### Retrieve override
@@ -550,7 +577,9 @@ Retrieves override on name.
 {:excludes [{:id "287"}]
  :id "customize_apple"
  :includes [{:id "422" :position 1} {:id "54" :position 2}]
- :rule {:match "exact" :query "apple"}}
+ :rule {:match "exact" :query "apple"}
+ :filter_curated_hits false
+ :remove_matched_tokens false}
 ```
 
 ### Delete override
@@ -566,7 +595,7 @@ Deletes override on name.
 
 ## Collection alias
 
-An alias is a virtual collection name that points to a real collection. Read more [here](https://typesense.org/docs/0.22.2/api/collection-alias.html)
+An alias is a virtual collection name that points to a real collection. Read more [here](https://typesense.org/docs/0.23.0/api/collection-alias.html)
 
 ### Create or update alias
 
@@ -614,7 +643,7 @@ Delete alias on collection name.
 
 ## Synonyms
 
-The synonyms feature allows you to define search terms that should be considered equivalent, read more [here.](https://typesense.org/docs/0.22.2/api/synonyms.html)
+The synonyms feature allows you to define search terms that should be considered equivalent, read more [here.](https://typesense.org/docs/0.23.0/api/synonyms.html)
 
 ### Create or update synonym
 
@@ -664,7 +693,7 @@ Delete synonym on synonym-name in collection.
 
 ### Typesense API Errors
 
-Typesense API exceptions in the [Typesense-api-errors](https://typesense.org/docs/0.22.2/api/api-errors.html) spec.
+Typesense API exceptions in the [Typesense-api-errors](https://typesense.org/docs/0.23.0/api/api-errors.html) spec.
 
 | Type                                      | Description                                                                |
 |:------------------------------------------|:---------------------------------------------------------------------------|
@@ -694,7 +723,7 @@ bin/kaocha unit
 To run the integration tests you can run a local docker instance with the following command. This will start a instance of Typesense on `localhost:8108`. The Typesense instance will be cleaned before starting the integration tests.
 
 ```sh
-docker run -p 8108:8108 -v/tmp/data:/data typesense/typesense:0.22.2 --data-dir /data --api-key=key
+docker run -p 8108:8108 -v/tmp/data:/data typesense/typesense:0.23.0 --data-dir /data --api-key=key
 ```
 
 The following command runs only the integration tests.
