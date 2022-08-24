@@ -139,7 +139,7 @@
 
 (defn multi-search
   "Search for documents in multiple collections."
-  [settings search-reqs common-search-params & opt-query-params]
+  [settings search-reqs common-search-params & {:as opt-query-params}]
   (try-typesense-api
    (let [{:keys [uri req]} (api/multi-search-req settings search-reqs common-search-params opt-query-params)]
      (util/http-response-json->map (http/post uri req)))))
