@@ -335,7 +335,7 @@
                  [{:field "company_name"
                    :matched_tokens ["Innovation"]
                    :snippet "<mark>Innovation</mark>soft A/S"}]
-                 :text_match 282583051272193}]
+                 :text_match 72341261125681153}]
                :out_of 1
                :page 1
                :request_params
@@ -379,7 +379,7 @@
                    [{:field "name"
                      :matched_tokens ["shoe"]
                      :snippet "<mark>shoe</mark>"}]
-                   :text_match 282583068049665}]
+                   :text_match 72341265420713985}]
                  :out_of 1
                  :page 1
                  :request_params
@@ -394,7 +394,7 @@
                    [{:field "name"
                      :matched_tokens ["Nike"]
                      :snippet "<mark>Nike</mark>"}]
-                   :text_match 282583068049665}]
+                   :text_match 72341265420713985}]
                  :out_of 1
                  :page 1
                  :request_params
