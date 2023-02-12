@@ -43,6 +43,7 @@
 (deftest client-primary-workflow-tests
   (testing "Create collection"
     (let [expected {:default_sorting_field "num_employees"
+                    :enable_nested_fields false
                     :fields [{:facet false
                               :index true
                               :name "company_name"
@@ -88,6 +89,7 @@
 
   (testing "List collections"
     (let [expected [{:default_sorting_field "num_employees"
+                     :enable_nested_fields false
                      :fields [{:facet false
                                :index true
                                :name "company_name"
@@ -124,6 +126,7 @@
 
   (testing "Retrieve collection"
     (let [expected {:default_sorting_field "num_employees"
+                    :enable_nested_fields false
                     :fields [{:facet false
                               :index true
                               :infix false
@@ -159,6 +162,7 @@
 
   (testing "Delete collection"
     (let [expected {:default_sorting_field "num_employees"
+                    :enable_nested_fields false
                     :fields [{:facet false
                               :index true
                               :name "company_name"
@@ -323,26 +327,36 @@
       (is (= exp res))))
 
   (testing "Search"
-    (let [exp {:facet_counts []
-               :found 1
+    (let [exp {:facet_counts [],
+               :found 1,
                :hits
                [{:document
-                 {:company_name "Innovationsoft A/S"
-                  :country "Finland"
-                  :id "1"
-                  :num_employees 10}
+                 {:company_name "Innovationsoft A/S",
+                  :country "Finland",
+                  :id "1",
+                  :num_employees 10},
+                 :highlight
+                 {:company_name
+                  {:matched_tokens ["Innovation"],
+                   :snippet "<mark>Innovation</mark>soft A/S"}},
                  :highlights
-                 [{:field "company_name"
-                   :matched_tokens ["Innovation"]
-                   :snippet "<mark>Innovation</mark>soft A/S"}]
-                 :text_match 72341261125681153}]
-               :out_of 1
-               :page 1
+                 [{:field "company_name",
+                   :matched_tokens ["Innovation"],
+                   :snippet "<mark>Innovation</mark>soft A/S"}],
+                 :text_match 578730089005449337,
+                 :text_match_info
+                 {:best_field_score "1108074561536",
+                  :best_field_weight 15,
+                  :fields_matched 1,
+                  :score "578730089005449337",
+                  :tokens_matched 1}}],
+               :out_of 1,
+               :page 1,
                :request_params
-               {:collection_name "companies_documents_test"
-                :per_page 10
-                :q "Innovation"}
-               :search_cutoff false
+               {:collection_name "companies_documents_test",
+                :per_page 10,
+                :q "Innovation"},
+               :search_cutoff false,
                :search_time_ms 0}
           res (sut/search settings
                           "companies_documents_test"
@@ -371,35 +385,55 @@
 
   (testing "Multi search"
     (let [exp {:results
-               [{:facet_counts []
-                 :found 1
+               [{:facet_counts [],
+                 :found 1,
                  :hits
-                 [{:document {:id "1" :name "shoe" :price 75}
+                 [{:document {:id "1", :name "shoe", :price 75},
+                   :highlight
+                   {:name {:matched_tokens ["shoe"], :snippet "<mark>shoe</mark>"}},
                    :highlights
-                   [{:field "name"
-                     :matched_tokens ["shoe"]
-                     :snippet "<mark>shoe</mark>"}]
-                   :text_match 72341265420713985}]
-                 :out_of 1
-                 :page 1
+                   [{:field "name",
+                     :matched_tokens ["shoe"],
+                     :snippet "<mark>shoe</mark>"}],
+                   :text_match 578730123365711993,
+                   :text_match_info
+                   {:best_field_score "1108091339008",
+                    :best_field_weight 15,
+                    :fields_matched 1,
+                    :score "578730123365711993",
+                    :tokens_matched 1}}],
+                 :out_of 1,
+                 :page 1,
                  :request_params
-                 {:collection_name "products_multi_search_test" :per_page 10 :q "shoe"}
-                 :search_cutoff false
+                 {:collection_name "products_multi_search_test",
+                  :per_page 10,
+                  :q "shoe"},
+                 :search_cutoff false,
                  :search_time_ms 0}
-                {:facet_counts []
-                 :found 1
+                {:facet_counts [],
+                 :found 1,
                  :hits
-                 [{:document {:id "1" :name "Nike"}
+                 [{:document {:id "1", :name "Nike"},
+                   :highlight
+                   {:name {:matched_tokens ["Nike"], :snippet "<mark>Nike</mark>"}},
                    :highlights
-                   [{:field "name"
-                     :matched_tokens ["Nike"]
-                     :snippet "<mark>Nike</mark>"}]
-                   :text_match 72341265420713985}]
-                 :out_of 1
-                 :page 1
+                   [{:field "name",
+                     :matched_tokens ["Nike"],
+                     :snippet "<mark>Nike</mark>"}],
+                   :text_match 578730123365711993,
+                   :text_match_info
+                   {:best_field_score "1108091339008",
+                    :best_field_weight 15,
+                    :fields_matched 1,
+                    :score "578730123365711993",
+                    :tokens_matched 1}}],
+                 :out_of 1,
+                 :page 1,
                  :request_params
-                 {:collection_name "brands_multi_search_test" :per_page 10 :q "Nike"}
-                 :search_cutoff false
+                 {:collection_name "brands_multi_search_test",
+                  :per_page 10,
+                  :q "Nike"},
+                 :search_cutoff false,
                  :search_time_ms 0}]}
           res (sut/multi-search settings
                                 {:searches [{:collection "products_multi_search_test"
@@ -423,22 +457,21 @@
     (sut/create-document! settings "places" document))
 
   (testing "Geosearch"
-    (let [exp {:facet_counts []
-               :found 1
+    (let [exp {:facet_counts [],
+               :found 1,
                :hits
                [{:document
-                 {:id "0"
-                  :location [48.86093481609114 2.33698396872901]
-                  :points 1
-                  :title "Louvre Museuem"}
-                 :geo_distance_meters {:location 1020}
-                 :highlights []
-                 :text_match 100}]
-               :out_of 1
-               :page 1
-               :request_params {:collection_name "places" :per_page 10 :q "*"}
-               :search_cutoff false
-               :search_time_ms 0}
+                 {:id "0",
+                  :location [48.86093481609114 2.33698396872901],
+                  :points 1,
+                  :title "Louvre Museuem"},
+                 :geo_distance_meters {:location 1020},
+                 :highlight {},
+                 :highlights []}],
+               :out_of 1,
+               :page 1,
+               :request_params {:collection_name "places", :per_page 10, :q "*"},
+               :search_cutoff false}
           res (sut/search settings
                           "places"
                           {:q "*"
@@ -478,22 +511,25 @@
       (is (= exp res))))
 
   (testing "List all overrides"
-    (let [exp {:overrides [{:excludes [{:id "287"}]
-                            :id "customize_apple"
-                            :includes [{:id "422" :position 1} {:id "54" :position 2}]
-                            :rule {:match "exact" :query "apple"}
-                            :filter_curated_hits false
-                            :remove_matched_tokens false}]}
+    (let [exp {:overrides
+               [{:excludes [{:id "287"}],
+                 :filter_curated_hits false,
+                 :id "customize_apple",
+                 :includes [{:id "422", :position 1} {:id "54", :position 2}],
+                 :remove_matched_tokens false,
+                 :rule {:match "exact", :query "apple"},
+                 :stop_processing true}]}
           res (sut/list-overrides settings "companies_curation_test")]
       (is (= exp res))))
 
   (testing "Retrieve override"
-    (let [exp {:excludes [{:id "287"}]
-               :id "customize_apple"
-               :includes [{:id "422" :position 1} {:id "54" :position 2}]
-               :rule {:match "exact" :query "apple"}
-               :filter_curated_hits false
-               :remove_matched_tokens false}
+    (let [exp {:excludes [{:id "287"}],
+               :filter_curated_hits false,
+               :id "customize_apple",
+               :includes [{:id "422", :position 1} {:id "54", :position 2}],
+               :remove_matched_tokens false,
+               :rule {:match "exact", :query "apple"},
+               :stop_processing true}
           res (sut/retrieve-override settings
                                      "companies_curation_test"
                                      "customize_apple")]
