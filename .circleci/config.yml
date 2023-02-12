@@ -3,13 +3,13 @@ version: 2.1
 executors:
   clojure-tools-deps:
     docker:
-    - image: clojure:openjdk-11-tools-deps-1.10.3.1087-buster
+    - image: clojure:openjdk-11-tools-deps-1.11.1.1149-buster
       auth:
         username: $DOCKER_LOGIN
         password: $DOCKER_ACCESSTOKEN
   clojure-tools-deps-tests:
     docker:
-    - image: clojure:openjdk-11-tools-deps-1.10.3.1087-buster
+    - image: clojure:openjdk-11-tools-deps-1.11.1.1149-buster
       auth:
         username: $DOCKER_LOGIN
         password: $DOCKER_ACCESSTOKEN
