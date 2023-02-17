@@ -96,7 +96,7 @@
                                       "test_collection"
                                       documents)
         exp {:uri "http://localhost:8108/collections/test_collection/documents/import"
-             :req {:headers {"X-TYPESENSE-API-KEY" "key",
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"
                              "Content-Type" "text/plain"}
                    :body "{\"test_name\":\"test_document_two\",\"test_count\":2}\n{\"test_name\":\"test_document_three\",\"test_count\":3}\n{\"test_name\":\"test_document_four\",\"test_count\":4}\n"}}]
     (is (= exp req))))
@@ -112,7 +112,7 @@
                                       "test_collection"
                                       documents {:action "upsert" :batch_size 100})
         exp {:uri "http://localhost:8108/collections/test_collection/documents/import?action=upsert&batch_size=100"
-             :req {:headers {"X-TYPESENSE-API-KEY" "key",
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"
                              "Content-Type" "text/plain"}
                    :body "{\"test_name\":\"test_document_two\",\"test_count\":2}\n{\"test_name\":\"test_document_three\",\"test_count\":3}\n{\"test_name\":\"test_document_four\",\"test_count\":4}\n"}}]
     (is (= exp req))))
@@ -256,7 +256,7 @@
                                   "companies"
                                   {:collection_name "companies_june11"})
         exp {:uri "http://localhost:8108/aliases/companies"
-             :req {:headers {"X-TYPESENSE-API-KEY" "key",
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"
                              "Content-Type" "text/json"}
                    :body "{\"collection_name\":\"companies_june11\"}"}}]
     (is (= exp req))))
