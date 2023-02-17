@@ -31,18 +31,21 @@ The different `types` for the schema can be found [here](https://typesense.org/d
 The examples displays the creation of collection named `companies`.
 
 ```clojure
-(create-collection! settings {:name "companies"
-                              :fields [{:name "company_name"
-                                        :type "string"}
-                                       {:name "num_employees"
-                                        :type "int32"}
-                                       {:name "country"
-                                        :type "string"
-                                        :facet true}]
-                              :default_sorting_field "num_employees"})
+(create-collection!
+ settings
+ {:name "companies"
+  :fields [{:name "company_name"
+            :type "string"}
+           {:name "num_employees"
+            :type "int32"}
+           {:name "country"
+            :type "string"
+            :facet true}]
+  :default_sorting_field "num_employees"})
 
 ;; Example success response =>
 {:default_sorting_field "num_employees"
+ :enable_nested_fields false
  :fields [{:facet false
            :index true
            :name "company_name"
@@ -83,6 +86,7 @@ For large collections, this might have an impact on read latencies.
 
 ;; Example success response =>
 {:created_at 1647261230
+ :enable_nested_fields false
  :default_sorting_field "num_employees"
  :fields
  [{:facet false
@@ -114,35 +118,36 @@ Returns a summary of all your collections. The collections are returned sorted b
 (list-collections settings)
 
 ;; Example success response =>
-{:default_sorting_field "num_employees"
- :fields [{:facet false
-           :index true
-           :name "company_name"
-           :optional false
-           :type "string"
-           :infix false
-           :locale ""
-           :sort false}
-          {:facet false
-           :index true
-           :name "num_employees"
-           :optional false
-           :type "int32"
-           :infix false
-           :locale ""
-           :sort true}
-          {:facet true
-           :index true
-           :name "country"
-           :optional false
-           :type "string"
-           :infix false
-           :locale ""
-           :sort false}]
- :name "companies_collection_test"
- :num_documents 0
- :symbols_to_index []
- :token_separators []}
+[{:default_sorting_field "num_employees"
+  :enable_nested_fields false
+  :fields [{:facet false
+            :index true
+            :name "company_name"
+            :optional false
+            :type "string"
+            :infix false
+            :locale ""
+            :sort false}
+           {:facet false
+            :index true
+            :name "num_employees"
+            :optional false
+            :type "int32"
+            :infix false
+            :locale ""
+            :sort true}
+           {:facet true
+            :index true
+            :name "country"
+            :optional false
+            :type "string"
+            :infix false
+            :locale ""
+            :sort false}]
+  :name "companies_collection_test"
+  :num_documents 0
+  :symbols_to_index []
+  :token_separators []}]
 ```
 
 ### Retrieve collection
@@ -154,6 +159,7 @@ Retrieves the collection on the `collection-name`.
 
 ;; Example success response =>
 {:default_sorting_field "num_employees"
+ :enable_nested_fields false
  :fields [{:facet false
            :index true
            :infix false
@@ -350,7 +356,7 @@ Search for documents in a collection. You can find all the query arguments [here
                               :query_by "company_name"})
 
 ;; Example success response =>
-{:facet_counts []
+ {:facet_counts []
  :found 1
  :hits
  [{:document
@@ -358,11 +364,21 @@ Search for documents in a collection. You can find all the query arguments [here
     :country "Finland"
     :id "1"
     :num_employees 10}
+   :highlight
+   {:company_name
+    {:matched_tokens ["Innovation"]
+     :snippet "<mark>Innovation</mark>soft A/S"}}
    :highlights
    [{:field "company_name"
-     :matched_tokens ["Innovationsoft"]
-     :snippet "<mark>Innovationsoft</mark> A/S"}]
-   :text_match 33448960}]
+     :matched_tokens ["Innovation"]
+     :snippet "<mark>Innovation</mark>soft A/S"}]
+   :text_match 578730089005449337
+   :text_match_info
+   {:best_field_score "1108074561536"
+    :best_field_weight 15
+    :fields_matched 1
+    :score "578730089005449337"
+    :tokens_matched 1}}]
  :out_of 1
  :page 1
  :request_params
@@ -378,13 +394,14 @@ Search for documents in a collection. You can find all the query arguments [here
 You can send multiple search requests in a single HTTP request, using the Multi-Search feature. This is especially useful to avoid round-trip network latencies incurred otherwise if each of these requests are sent in separate HTTP requests. You can read more about multi-search [here.](https://typesense.org/docs/0.23.1/api/documents.html#federated-multi-search)
 
 ```clojure
-(multi-search settings
-              {:searches [{:collection "products"
-                           :q "shoe"
-                           :filter_by "price:=[50..120]"}
-                          {:collection "brands"
-                           :q "Nike"}]}
-              {:query_by "name"})
+(multi-search
+ settings
+ {:searches [{:collection "products"
+              :q "shoe"
+              :filter_by "price:=[50..120]"}
+             {:collection "brands"
+              :q "Nike"}]}
+ {:query_by "name"})
 
 ;; Example success response =>
 {:results
@@ -392,30 +409,50 @@ You can send multiple search requests in a single HTTP request, using the Multi-
    :found 1
    :hits
    [{:document {:id "1" :name "shoe" :price 75}
+     :highlight
+     {:name {:matched_tokens ["shoe"] :snippet "<mark>shoe</mark>"}}
      :highlights
      [{:field "name"
        :matched_tokens ["shoe"]
        :snippet "<mark>shoe</mark>"}]
-     :text_match 33514497}]
+     :text_match 578730123365711993
+     :text_match_info
+     {:best_field_score "1108091339008"
+      :best_field_weight 15
+      :fields_matched 1
+      :score "578730123365711993"
+      :tokens_matched 1}}]
    :out_of 1
    :page 1
    :request_params
-   {:collection_name "products" :per_page 10 :q "shoe"}
+   {:collection_name "products_multi_search_test"
+    :per_page 10
+    :q "shoe"}
    :search_cutoff false
    :search_time_ms 0}
   {:facet_counts []
    :found 1
    :hits
    [{:document {:id "1" :name "Nike"}
+     :highlight
+     {:name {:matched_tokens ["Nike"] :snippet "<mark>Nike</mark>"}}
      :highlights
      [{:field "name"
        :matched_tokens ["Nike"]
        :snippet "<mark>Nike</mark>"}]
-     :text_match 33514497}]
+     :text_match 578730123365711993
+     :text_match_info
+     {:best_field_score "1108091339008"
+      :best_field_weight 15
+      :fields_matched 1
+      :score "578730123365711993"
+      :tokens_matched 1}}]
    :out_of 1
    :page 1
    :request_params
-   {:collection_name "brands" :per_page 10 :q "Nike"}
+   {:collection_name "brands_multi_search_test"
+    :per_page 10
+    :q "Nike"}
    :search_cutoff false
    :search_time_ms 0}]}
 ```
@@ -453,13 +490,12 @@ You can send multiple search requests in a single HTTP request, using the Multi-
     :points 1
     :title "Louvre Museuem"}
    :geo_distance_meters {:location 1020}
-   :highlights []
-   :text_match 33514496}]
+   :highlight {}
+   :highlights []}]
  :out_of 1
  :page 1
  :request_params {:collection_name "places" :per_page 10 :q "*"}
- :search_cutoff false
- :search_time_ms 0}
+ :search_cutoff false}
 ```
 
 ## Api keys
@@ -558,12 +594,14 @@ List all overrides.
 (list-overrides settings "companies")
 
 ;; Example success response =>
-{:overrides [{:excludes [{:id "287"}]
-              :id "customize_apple"
-              :includes [{:id "422" :position 1} {:id "54" :position 2}]
-              :rule {:match "exact" :query "apple"}
-              :filter_curated_hits false
-              :remove_matched_tokens false}]}
+{:overrides
+ [{:excludes [{:id "287"}]
+   :filter_curated_hits false
+   :id "customize_apple"
+   :includes [{:id "422" :position 1} {:id "54" :position 2}]
+   :remove_matched_tokens false
+   :rule {:match "exact" :query "apple"}
+   :stop_processing true}]}
 ```
 
 ### Retrieve override
@@ -575,11 +613,12 @@ Retrieves override on name.
 
 ;; Example success response =>
 {:excludes [{:id "287"}]
+ :filter_curated_hits false
  :id "customize_apple"
  :includes [{:id "422" :position 1} {:id "54" :position 2}]
+ :remove_matched_tokens false
  :rule {:match "exact" :query "apple"}
- :filter_curated_hits false
- :remove_matched_tokens false}
+ :stop_processing true}
 ```
 
 ### Delete override
@@ -664,7 +703,7 @@ Retrieve synonym on synonym name in collection.
 (retrieve-synonym settings "products" "coat-synonyms")
 
 ;; Example success response =>
-{:id "coat-synonyms", :root "", :synonyms ["blazer" "coat" "jacket"]}
+{:id "coat-synonyms" :root "" :synonyms ["blazer" "coat" "jacket"]}
 ```
 
 ### List synonyms
@@ -675,7 +714,7 @@ List synonyms in collection.
 (list-synonyms settings "products")
 
 ;; Example success response =>
-{:synonyms [{:id "coat-synonyms", :root "", :synonyms ["blazer" "coat" "jacket"]}]}
+{:synonyms [{:id "coat-synonyms" :root "" :synonyms ["blazer" "coat" "jacket"]}]}
 ```
 
 ### Delete synonym
