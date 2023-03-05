@@ -20,6 +20,20 @@
                    :body (json/write-str schema)}}]
     (is (= exp req))))
 
+(deftest update-collection-req-test
+  (let [collection-name "test_collection"
+        update-schema {:fields [{:name "test_name" :drop true}
+                                {:name "new_field"
+                                 :type "string"
+                                 :facet false
+                                 :optional true}]}
+        req (sut/update-collection-req settings collection-name update-schema)
+        exp {:uri "http://localhost:8108/collections/test_collection"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"
+                             "Content-Type" "application/json"}
+                   :body (json/write-str update-schema)}}]
+    (is (= exp req))))
+
 (deftest drop-collection-req-test
   (let [req (sut/drop-collection-req settings "test_collection")
         exp {:uri "http://localhost:8108/collections/test_collection"

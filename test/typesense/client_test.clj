@@ -87,33 +87,63 @@
       ;; We remove :created_at it cannot be asserted since it changes each run.
       (is (= expected (dissoc response :created_at)))))
 
+  (testing "Update collection"
+    (let [expected {:fields
+                    [{:infix false
+                      :index true
+                      :locale ""
+                      :name "year_founded"
+                      :nested false
+                      :nested_array 0
+                      :facet false
+                      :type "int32"
+                      :num_dim 0
+                      :optional true
+                      :vec_dist "cosine"
+                      :sort true}]}
+          collection-name "companies_collection_test"
+          update-schema {:fields [{:name "year_founded"
+                                   :type "int32"
+                                   :optional true}]}
+          response (sut/update-collection! settings collection-name update-schema)]
+      (is (= expected response))))
+
   (testing "List collections"
     (let [expected [{:default_sorting_field "num_employees"
                      :enable_nested_fields false
-                     :fields [{:facet false
-                               :index true
-                               :name "company_name"
-                               :optional false
-                               :type "string"
-                               :infix false
-                               :locale ""
-                               :sort false}
-                              {:facet false
-                               :index true
-                               :name "num_employees"
-                               :optional false
-                               :type "int32"
-                               :infix false
-                               :locale ""
-                               :sort true}
-                              {:facet true
-                               :index true
-                               :name "country"
-                               :optional false
-                               :type "string"
-                               :infix false
-                               :locale ""
-                               :sort false}]
+                     :fields
+                     [{:facet false
+                       :index true
+                       :infix false
+                       :locale ""
+                       :name "company_name"
+                       :optional false
+                       :sort false
+                       :type "string"}
+                      {:facet false
+                       :index true
+                       :infix false
+                       :locale ""
+                       :name "num_employees"
+                       :optional false
+                       :sort true
+                       :type "int32"}
+                      {:facet true
+                       :index true
+                       :infix false
+                       :locale ""
+                       :name "country"
+                       :optional false
+                       :sort false
+                       :type "string"}
+                      {:facet false
+                       :index true
+                       :infix false
+                       :locale ""
+                       :name "year_founded"
+                       :optional true
+                       :sort true
+                       :type "int32"}]
                      :name "companies_collection_test"
                      :num_documents 0
                      :symbols_to_index []
@@ -127,30 +157,39 @@
   (testing "Retrieve collection"
     (let [expected {:default_sorting_field "num_employees"
                     :enable_nested_fields false
-                    :fields [{:facet false
-                              :index true
-                              :infix false
-                              :locale ""
-                              :name "company_name"
-                              :optional false
-                              :sort false
-                              :type "string"}
-                             {:facet false
-                              :index true
-                              :infix false
-                              :locale ""
-                              :name "num_employees"
-                              :optional false
-                              :sort true
-                              :type "int32"}
-                             {:facet true
-                              :index true
-                              :infix false
-                              :locale ""
-                              :name "country"
-                              :optional false
-                              :sort false
-                              :type "string"}]
+                    :fields
+                    [{:facet false
+                      :index true
+                      :infix false
+                      :locale ""
+                      :name "company_name"
+                      :optional false
+                      :sort false
+                      :type "string"}
+                     {:facet false
+                      :index true
+                      :infix false
+                      :locale ""
+                      :name "num_employees"
+                      :optional false
+                      :sort true
+                      :type "int32"}
+                     {:facet true
+                      :index true
+                      :infix false
+                      :locale ""
+                      :name "country"
+                      :optional false
+                      :sort false
+                      :type "string"}
+                     {:facet false
+                      :index true
+                      :infix false
+                      :locale ""
+                      :name "year_founded"
+                      :optional true
+                      :sort true
+                      :type "int32"}]
                     :name "companies_collection_test"
                     :num_documents 0
                     :symbols_to_index []
@@ -163,30 +202,39 @@
   (testing "Delete collection"
     (let [expected {:default_sorting_field "num_employees"
                     :enable_nested_fields false
-                    :fields [{:facet false
-                              :index true
-                              :name "company_name"
-                              :optional false
-                              :type "string"
-                              :infix false
-                              :locale ""
-                              :sort false}
-                             {:facet false
-                              :index true
-                              :name "num_employees"
-                              :optional false
-                              :type "int32"
-                              :infix false
-                              :locale ""
-                              :sort true}
-                             {:facet true
-                              :index true
-                              :name "country"
-                              :optional false
-                              :type "string"
-                              :infix false
-                              :locale ""
-                              :sort false}]
+                    :fields
+                    [{:facet false
+                      :index true
+                      :infix false
+                      :locale ""
+                      :name "company_name"
+                      :optional false
+                      :sort false
+                      :type "string"}
+                     {:facet false
+                      :index true
+                      :infix false
+                      :locale ""
+                      :name "num_employees"
+                      :optional false
+                      :sort true
+                      :type "int32"}
+                     {:facet true
+                      :index true
+                      :infix false
+                      :locale ""
+                      :name "country"
+                      :optional false
+                      :sort false
+                      :type "string"}
+                     {:facet false
+                      :index true
+                      :infix false
+                      :locale ""
+                      :name "year_founded"
+                      :optional true
+                      :sort true
+                      :type "int32"}]
                     :name "companies_collection_test"
                     :num_documents 0
                     :symbols_to_index []
