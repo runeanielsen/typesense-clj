@@ -32,6 +32,13 @@
    (let [{:keys [uri req]} (api/create-collection-req settings schema)]
      (util/http-response-json->map (http/post uri req)))))
 
+(defn update-collection!
+  "Update collection on name using the supplied update-schema."
+  [settings collection-name update-schema]
+  (try-typesense-api
+   (let [{:keys [uri req]} (api/update-collection-req settings collection-name update-schema)]
+     (util/http-response-json->map (http/patch uri req)))))
+
 (defn delete-collection!
   "Permanently drops a collection. This action cannot be undone.
   For large collections, this might have an impact on read latencies."

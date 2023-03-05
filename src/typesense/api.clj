@@ -59,6 +59,13 @@
                    "Content-Type" "application/json"}
          :body (json/write-str schema)}})
 
+(defn update-collection-req
+  [{:keys [uri key]} collection-name update-schema]
+  {:uri (collection-uri uri collection-name)
+   :req {:headers {api-key-header-name key
+                   "Content-Type" "application/json"}
+         :body (json/write-str update-schema)}})
+
 (defn drop-collection-req
   [{:keys [uri key]} collection-name]
   {:uri (collection-uri uri collection-name)

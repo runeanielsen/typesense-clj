@@ -76,6 +76,36 @@ The examples displays the creation of collection named `companies`.
  :token_separators []}
 ```
 
+### Update collection
+
+The different `types` for the schema can be found [here](https://typesense.org/docs/0.24.0/api/collections.html#update-or-alter-a-collection).
+
+The examples shows updating the collection named named `companies` with a new field `year_founded`.
+
+```clojure
+(update-collection!
+ settings
+ "companies"
+ {:fields [{:name "year_founded"
+            :type "int32"
+            :optional true}]})
+
+;; Example success response =>
+{:fields
+ [{:infix false
+   :index true
+   :locale ""
+   :name "year_founded"
+   :nested false
+   :nested_array 0
+   :facet false
+   :type "int32"
+   :num_dim 0
+   :optional true
+   :vec_dist "cosine"
+   :sort true}]}
+```
+
 ### Delete collection
 
 Permanently drops a collection on the `collection-name`. This action cannot be undone.
