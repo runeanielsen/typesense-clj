@@ -91,19 +91,20 @@ The examples shows updating the collection named named `companies` with a new fi
             :optional true}]})
 
 ;; Example success response =>
-{:fields
- [{:infix false
-   :index true
-   :locale ""
-   :name "year_founded"
-   :nested false
-   :nested_array 0
-   :facet false
-   :type "int32"
-   :num_dim 0
-   :optional true
-   :vec_dist "cosine"
-   :sort true}]}
+{:fields [{:facet false,
+             :index true,
+             :infix false,
+             :locale "",
+             :name "year_founded",
+             :nested false,
+             :nested_array 0,
+             :num_dim 0,
+             :optional true,
+             :sort true,
+             :type "int32",
+             :vec_dist "cosine",
+             +:embed nil,
+             +:reference ""}]}
 ```
 
 ### Delete collection
@@ -792,7 +793,7 @@ bin/kaocha unit
 To run the integration tests you can run a local docker instance with the following command. This will start a instance of Typesense on `localhost:8108`. The Typesense instance will be cleaned before starting the integration tests.
 
 ```sh
-docker run -p 8108:8108 -v/tmp/data:/data typesense/typesense:0.24.1 --data-dir /data --api-key=key
+docker run -p 8108:8108 -v/tmp/data:/data typesense/typesense:0.25.0 --data-dir /data --api-key=key
 ```
 
 The following command runs only the integration tests.

@@ -100,7 +100,9 @@
                       :num_dim 0
                       :optional true
                       :vec_dist "cosine"
-                      :sort true}]}
+                      :sort true
+                      :embed nil
+                      :reference ""}]}
           collection-name "companies_collection_test"
           update-schema {:fields [{:name "year_founded"
                                    :type "int32"
