@@ -276,3 +276,12 @@
   (try-typesense-api
    (let [{:keys [uri req]} (api/metrics-req settings)]
      (util/http-response-json->map (http/get uri req)))))
+
+(defn stats
+  "Get stats about API endpoints.
+  This endpoint returns average requests per second and latencies
+  for all requests in the last 10 seconds."
+  [settings]
+  (try-typesense-api
+   (let [{:keys [uri req]} (api/stats-req settings)]
+     (util/http-response-json->map (http/get uri req)))))

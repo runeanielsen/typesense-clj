@@ -333,3 +333,9 @@
         exp {:uri "http://localhost:8108/metrics.json"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
+
+(deftest stats-test
+  (let [req (sut/stats-req settings)
+        exp {:uri "http://localhost:8108/stats.json"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
+    (is (= exp req))))
