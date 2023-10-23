@@ -759,6 +759,8 @@ Delete synonym on synonym-name in collection.
 {:id "coat-synonyms"}
 ```
 
+## Cluster operations
+
 ### Health
 
 Get health information about a Typesense node.
