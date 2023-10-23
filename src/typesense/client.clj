@@ -262,3 +262,10 @@
   (try-typesense-api
    (let [{:keys [uri req]} (api/delete-synonym-req settings collection-name synonym-name)]
      (util/http-response-json->map (http/delete uri req)))))
+
+(defn health
+  "Get health information about a Typesense node."
+  [settings]
+  (try-typesense-api
+   (let [{:keys [uri req]} (api/health-req settings)]
+     (util/http-response-json->map (http/get uri req)))))

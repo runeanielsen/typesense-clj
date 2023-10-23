@@ -52,6 +52,10 @@
   (let [query-parameter-map (merge common-search-params opt-query-params)]
     (str uri "/multi_search" (util/map->url-parameter-string query-parameter-map))))
 
+(defn- health-uri
+  ([uri]
+   (str uri "/health")))
+
 (defn create-collection-req
   [{:keys [uri key]} schema]
   {:uri (collection-uri uri)
@@ -235,4 +239,9 @@
 (defn delete-synonym-req
   [{:keys [uri key]} collection-name synonym-name]
   {:uri (synonyms-uri uri collection-name synonym-name)
+   :req {:headers {api-key-header-name key}}})
+
+(defn health-req
+  [{:keys [uri key]}]
+  {:uri (health-uri uri)
    :req {:headers {api-key-header-name key}}})

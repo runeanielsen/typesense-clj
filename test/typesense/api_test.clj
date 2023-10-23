@@ -320,3 +320,10 @@
         exp {:uri "http://localhost:8108/collections/products/synonyms/coat-synonyms"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
     (is (= exp req))))
+
+
+(deftest health-test
+  (let [req (sut/health-req settings)
+        exp {:uri "http://localhost:8108/health"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
+  (is (= exp req))))
