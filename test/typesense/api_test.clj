@@ -327,3 +327,9 @@
         exp {:uri "http://localhost:8108/health"
              :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
   (is (= exp req))))
+
+(deftest metrics-test
+  (let [req (sut/metrics-req settings)
+        exp {:uri "http://localhost:8108/metrics.json"
+             :req {:headers {"X-TYPESENSE-API-KEY" "key"}}}]
+    (is (= exp req))))

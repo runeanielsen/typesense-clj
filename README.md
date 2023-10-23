@@ -772,6 +772,46 @@ Get health information about a Typesense node.
 {:ok true}
 ```
 
+### Metrics
+
+Get current RAM, CPU, Disk & Network usage metrics.
+
+```clojure
+(metrics settings)
+
+;; Example success response =>
+{:system_cpu8_active_percentage "0.00",
+ :system_cpu12_active_percentage "9.09",
+ :typesense_memory_allocated_bytes "87053184",
+ :system_cpu5_active_percentage "9.09",
+ :system_network_sent_bytes "475775",
+ :system_cpu3_active_percentage "0.00",
+ :system_cpu9_active_percentage "0.00",
+ :typesense_memory_resident_bytes "97734656",
+ :system_cpu_active_percentage "3.77",
+ :system_memory_used_bytes "5583503360",
+ :system_cpu14_active_percentage "9.09",
+ :system_cpu15_active_percentage "0.00",
+ :system_cpu6_active_percentage "0.00",
+ :system_cpu10_active_percentage "10.00",
+ :system_network_received_bytes "585752",
+ :system_cpu13_active_percentage "0.00",
+ :system_cpu11_active_percentage "0.00",
+ :system_disk_total_bytes "16782462976",
+ :typesense_memory_metadata_bytes "28598544",
+ :system_cpu4_active_percentage "10.00",
+ :system_cpu16_active_percentage "0.00",
+ :typesense_memory_fragmentation_ratio "0.11",
+ :system_disk_used_bytes "24072192",
+ :system_memory_total_bytes "33564925952",
+ :typesense_memory_mapped_bytes "255479808",
+ :system_cpu2_active_percentage "18.18",
+ :system_cpu1_active_percentage "9.09",
+ :typesense_memory_retained_bytes "80064512",
+ :system_cpu7_active_percentage "0.00",
+ :typesense_memory_active_bytes "97734656"}
+```
+
 ## Exceptions
 
 ### Typesense API Errors

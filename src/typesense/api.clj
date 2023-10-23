@@ -56,6 +56,10 @@
   ([uri]
    (str uri "/health")))
 
+(defn- metrics-uri
+  ([uri]
+   (str uri "/metrics.json")))
+
 (defn create-collection-req
   [{:keys [uri key]} schema]
   {:uri (collection-uri uri)
@@ -244,4 +248,9 @@
 (defn health-req
   [{:keys [uri key]}]
   {:uri (health-uri uri)
+   :req {:headers {api-key-header-name key}}})
+
+(defn metrics-req
+  [{:keys [uri key]}]
+  {:uri (metrics-uri uri)
    :req {:headers {api-key-header-name key}}})
