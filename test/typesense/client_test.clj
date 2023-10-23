@@ -734,8 +734,8 @@
 
   (testing "Getting metrics information"
     ;; Compare just the keys, the values change everytime the endpoint is called.
-    (let [res (keys (sut/metrics settings))
-          exp {:system_cpu8_active_percentage
+    (let [res (sut/metrics settings)
+          exp [:system_cpu8_active_percentage
                :system_cpu12_active_percentage
                :typesense_memory_allocated_bytes
                :system_cpu5_active_percentage
@@ -764,8 +764,8 @@
                :system_cpu1_active_percentage
                :typesense_memory_retained_bytes
                :system_cpu7_active_percentage
-               :typesense_memory_active_bytes}]
-      (= res exp)))
+               :typesense_memory_active_bytes]]
+      (is (= (keys res) exp))))
 
   (testing "Getting stats from a Typesense node"
     ;; Compare just the keys, the values might change everytime the endpoint is called.
