@@ -726,4 +726,8 @@
     (let [id (-> (sut/list-api-keys settings) :keys first :id)
           exp {:id id}
           res (sut/delete-api-key! settings id)]
-      (is (= exp res)))))
+      (is (= exp res))))
+
+  (testing "Health"
+    (let [res (sut/health settings)]
+      (is (= res {:ok true})))))
