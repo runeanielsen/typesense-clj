@@ -728,7 +728,7 @@
           res (sut/delete-api-key! settings id)]
       (is (= exp res))))
 
-  (testing "Health"
+  (testing "Getting the health information for a Typesense node"
     (let [res (sut/health settings)]
       (is (= res {:ok true}))))
 
