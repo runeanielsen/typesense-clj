@@ -60,6 +60,10 @@
   ([uri]
    (str uri "/metrics.json")))
 
+(defn- stats-uri
+  ([uri]
+   (str uri "/stats.json")))
+
 (defn create-collection-req
   [{:keys [uri key]} schema]
   {:uri (collection-uri uri)
@@ -253,4 +257,9 @@
 (defn metrics-req
   [{:keys [uri key]}]
   {:uri (metrics-uri uri)
+   :req {:headers {api-key-header-name key}}})
+
+(defn stats-req
+  [{:keys [uri key]}]
+  {:uri (stats-uri uri)
    :req {:headers {api-key-header-name key}}})

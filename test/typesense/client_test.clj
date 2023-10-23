@@ -765,4 +765,22 @@
                :typesense_memory_retained_bytes
                :system_cpu7_active_percentage
                :typesense_memory_active_bytes}]
-      (= res exp))))
+      (= res exp)))
+
+  (testing "Getting stats from a Typesense node"
+    ;; Compare just the keys, the values might change everytime the endpoint is called.
+    (let [exp {:import_latency_ms 0
+               :write_requests_per_second 0
+               :import_requests_per_second 0
+               :write_latency_ms 0
+               :latency_ms {}
+               :pending_write_batches 0
+               :search_requests_per_second 0
+               :delete_requests_per_second 0
+               :search_latency_ms 0
+               :requests_per_second {}
+               :total_requests_per_second 0.0
+               :overloaded_requests_per_second 0
+               :delete_latency_ms 0}
+          res (sut/stats settings)]
+      (is (= (keys res) (keys exp))))))

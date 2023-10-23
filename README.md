@@ -812,6 +812,30 @@ Get current RAM, CPU, Disk & Network usage metrics.
  :typesense_memory_active_bytes "97734656"}
 ```
 
+### Stats
+
+Get stats about API endpoints.
+Returns average requests per second and latencies for all requests in the last 10 seconds.
+
+```clojure
+(stats settings)
+
+;; Example success response =>
+{:import_latency_ms 0
+ :write_requests_per_second 0
+ :import_requests_per_second 0
+ :write_latency_ms 0
+ :latency_ms {}
+ :pending_write_batches 0
+ :search_requests_per_second 0
+ :delete_requests_per_second 0
+ :search_latency_ms 0
+ :requests_per_second {}
+ :total_requests_per_second 0.0
+ :overloaded_requests_per_second 0
+ :delete_latency_ms 0}
+ ```
+
 ## Exceptions
 
 ### Typesense API Errors
