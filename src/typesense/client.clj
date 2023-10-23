@@ -269,3 +269,10 @@
   (try-typesense-api
    (let [{:keys [uri req]} (api/health-req settings)]
      (util/http-response-json->map (http/get uri req)))))
+
+(defn metrics
+  "Get current RAM, CPU, Disk & Network usage metrics."
+  [settings]
+  (try-typesense-api
+   (let [{:keys [uri req]} (api/metrics-req settings)]
+     (util/http-response-json->map (http/get uri req)))))

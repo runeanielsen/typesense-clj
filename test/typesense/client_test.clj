@@ -730,4 +730,40 @@
 
   (testing "Health"
     (let [res (sut/health settings)]
-      (is (= res {:ok true})))))
+      (is (= res {:ok true}))))
+
+  (testing "Getting metrics information"
+    (let [res (->> (sut/metrics settings)
+                   keys
+                   set)
+          exp #{:system_cpu8_active_percentage
+                :system_cpu12_active_percentage
+                :typesense_memory_allocated_bytes
+                :system_cpu5_active_percentage
+                :system_network_sent_bytes
+                :system_cpu3_active_percentage
+                :system_cpu9_active_percentage
+                :typesense_memory_resident_bytes
+                :system_cpu_active_percentage
+                :system_memory_used_bytes
+                :system_cpu14_active_percentage
+                :system_cpu15_active_percentage
+                :system_cpu6_active_percentage
+                :system_cpu10_active_percentage
+                :system_network_received_bytes
+                :system_cpu13_active_percentage
+                :system_cpu11_active_percentage
+                :system_disk_total_bytes
+                :typesense_memory_metadata_bytes
+                :system_cpu4_active_percentage
+                :system_cpu16_active_percentage
+                :typesense_memory_fragmentation_ratio
+                :system_disk_used_bytes
+                :system_memory_total_bytes
+                :typesense_memory_mapped_bytes
+                :system_cpu2_active_percentage
+                :system_cpu1_active_percentage
+                :typesense_memory_retained_bytes
+                :system_cpu7_active_percentage
+                :typesense_memory_active_bytes}]
+      (= res exp))))
