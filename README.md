@@ -759,6 +759,17 @@ Delete synonym on synonym-name in collection.
 {:id "coat-synonyms"}
 ```
 
+### Health
+
+Get health information about a Typesense node.
+
+```clojure
+(health settings)
+
+;; Example success response =>
+{:ok true}
+```
+
 ## Exceptions
 
 ### Typesense API Errors
