@@ -2,7 +2,7 @@
 
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.runeanielsen/typesense-clj.svg)](https://clojars.org/io.github.runeanielsen/typesense-clj)
 
-Clojure client for [Typesense 0.25.1](https://github.com/typesense/typesense)
+Clojure client for [Typesense 0.25.2](https://github.com/typesense/typesense)
 
 All of the examples uses the `typesense.client` namespace. The examples shows the simplest way to get started using the client, but all parameters described on Typesense API documentation should work, if that is not the case, please make a pull-request or open an issue.
 
