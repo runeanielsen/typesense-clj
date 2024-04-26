@@ -2,9 +2,11 @@
 
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.runeanielsen/typesense-clj.svg)](https://clojars.org/io.github.runeanielsen/typesense-clj)
 
-Clojure client for [Typesense 0.25.2](https://github.com/typesense/typesense)
+Clojure client for [Typesense 26.0](https://github.com/typesense/typesense)
 
 All of the examples uses the `typesense.client` namespace. The examples shows the simplest way to get started using the client, but all parameters described on Typesense API documentation should work, if that is not the case, please make a pull-request or open an issue.
+
+The values shown in the example might not be 100% up to date with the current Typesense version, please go to the Typesense documentation to be sure of the return values.
 
 ## Settings
 
@@ -22,11 +24,11 @@ Example of settings.
 
 ## Collection
 
-This section describes how to use the collection, further information can be found [here.](https://typesense.org/docs/0.25.1/api/collections.html#create-a-collection)
+This section describes how to use the collection, further information can be found [here.](https://typesense.org/docs/26.0/api/collections.html#create-a-collection)
 
 ### Create collection
 
-The different `types` for the schema can be found [here](https://typesense.org/docs/0.25.1/api/collections.html#create-a-collection).
+The different `types` for the schema can be found [here](https://typesense.org/docs/26.0/api/collections.html#create-a-collection).
 
 The examples displays the creation of collection named `companies`.
 
@@ -50,6 +52,7 @@ The examples displays the creation of collection named `companies`.
            :index true
            :name "company_name"
            :optional false
+           :stem false
            :type "string"
            :infix false
            :locale ""
@@ -58,6 +61,7 @@ The examples displays the creation of collection named `companies`.
            :index true
            :name "num_employees"
            :optional false
+           :stem false
            :type "int32"
            :infix false
            :locale ""
@@ -66,6 +70,7 @@ The examples displays the creation of collection named `companies`.
            :index true
            :name "country"
            :optional false
+           :stem false
            :type "string"
            :infix false
            :locale ""
@@ -78,7 +83,7 @@ The examples displays the creation of collection named `companies`.
 
 ### Update collection
 
-The different `types` for the schema can be found [here](https://typesense.org/docs/0.25.1/api/collections.html#update-or-alter-a-collection).
+The different `types` for the schema can be found [here](https://typesense.org/docs/26.0/api/collections.html#update-or-alter-a-collection).
 
 The examples shows updating the collection named named `companies` with a new field `year_founded`.
 
@@ -101,6 +106,7 @@ The examples shows updating the collection named named `companies` with a new fi
              :num_dim 0,
              :optional true,
              :sort true,
+             :stem false
              :type "int32",
              :vec_dist "cosine",
              +:embed nil,
@@ -124,15 +130,18 @@ For large collections, this might have an impact on read latencies.
    :index true
    :name "company_name"
    :optional false
+   :stem false
    :type "string"}
   {:facet false
    :index true
    :name "num_employees"
    :optional false
+   :stem false
    :type "int32"}
   {:facet true
    :index true
    :name "country"
+   :stem false
    :optional false
    :type "string"}]
  :name "companies"
@@ -223,7 +232,7 @@ Retrieves the collection on the `collection-name`.
 
 ## Documents
 
-This section describes how to use the documents, further information can be found [here.](https://typesense.org/docs/0.25.1/api/documents.html)
+This section describes how to use the documents, further information can be found [here.](https://typesense.org/docs/26.0/api/documents.html)
 
 ### Create document
 
@@ -301,7 +310,7 @@ Update document in a collection on id. The update can be partial.
 
 ## Create/Upsert/Update/Delete Documents
 
-Create/upsert/update documents. All of them takes optional parameters, an example is setting the batch size using `:batch_size 20`. Read more [here.](https://typesense.org/docs/0.25.1/api/documents.html#import-documents)
+Create/upsert/update documents. All of them takes optional parameters, an example is setting the batch size using `:batch_size 20`. Read more [here.](https://typesense.org/docs/26.0/api/documents.html#import-documents)
 
 ### Create documents
 
@@ -380,7 +389,7 @@ Export documents in collection.
 
 ## Search
 
-Search for documents in a collection. You can find all the query arguments [here.](https://typesense.org/docs/0.25.1/api/documents.html#arguments)
+Search for documents in a collection. You can find all the query arguments [here.](https://typesense.org/docs/26.0/api/documents.html#arguments)
 
 ```clojure
 (search settings "companies" {:q "Innovation"
@@ -422,7 +431,7 @@ Search for documents in a collection. You can find all the query arguments [here
 
 ## Multi search
 
-You can send multiple search requests in a single HTTP request, using the Multi-Search feature. This is especially useful to avoid round-trip network latencies incurred otherwise if each of these requests are sent in separate HTTP requests. You can read more about multi-search [here.](https://typesense.org/docs/0.25.1/api/documents.html#federated-multi-search)
+You can send multiple search requests in a single HTTP request, using the Multi-Search feature. This is especially useful to avoid round-trip network latencies incurred otherwise if each of these requests are sent in separate HTTP requests. You can read more about multi-search [here.](https://typesense.org/docs/26.0/api/documents.html#federated-multi-search)
 
 ```clojure
 (multi-search
@@ -531,7 +540,7 @@ You can send multiple search requests in a single HTTP request, using the Multi-
 
 ## Api keys
 
-Typesense allows you to create API Keys with fine-grain access control. You can restrict access on both a per-collection and per-action level, [read more here](https://typesense.org/docs/0.25.1/api/api-keys.html#create-an-api-key)
+Typesense allows you to create API Keys with fine-grain access control. You can restrict access on both a per-collection and per-action level, [read more here](https://typesense.org/docs/26.0/api/api-keys.html#create-an-api-key)
 
 ### Create api key
 
@@ -545,6 +554,7 @@ Typesense allows you to create API Keys with fine-grain access control. You can 
  :collections ["companies"]
  :description "Search only companies key."
  :expires_at 64723363199
+ :autodelete false
  :id 0
  :value "sK0jo6CSn1EBoJJ8LKPjRZCtsJ1JCFkt"}
 ```
@@ -561,6 +571,7 @@ Retrieves api key on `id`.
  :collections ["companies"]
  :description "Search only companies key."
  :expires_at 64723363199
+ :autodelete false
  :id 0
  :value_prefix "vLbB"}
 ```
@@ -577,6 +588,7 @@ List all api keys.
          :collections ["companies"]
          :description "Search only companies key."
          :expires_at 64723363199
+         :autodelete false
          :id 0
          :value_prefix "vLbB"}]}
 ```
@@ -594,7 +606,7 @@ Deletes api key on `id`.
 
 ## Curation
 
-Using overrides, you can include or exclude specific documents for a given query, read more [here.](https://typesense.org/docs/0.25.1/api/curation.html)
+Using overrides, you can include or exclude specific documents for a given query, read more [here.](https://typesense.org/docs/26.0/api/curation.html)
 
 ### Create or update an override
 
@@ -665,7 +677,7 @@ Deletes override on name.
 
 ## Collection alias
 
-An alias is a virtual collection name that points to a real collection. Read more [here](https://typesense.org/docs/0.25.1/api/collection-alias.html)
+An alias is a virtual collection name that points to a real collection. Read more [here](https://typesense.org/docs/26.0/api/collection-alias.html)
 
 ### Create or update alias
 
@@ -713,7 +725,7 @@ Delete alias on collection name.
 
 ## Synonyms
 
-The synonyms feature allows you to define search terms that should be considered equivalent, read more [here.](https://typesense.org/docs/0.25.1/api/synonyms.html)
+The synonyms feature allows you to define search terms that should be considered equivalent, read more [here.](https://typesense.org/docs/26.0/api/synonyms.html)
 
 ### Create or update synonym
 
@@ -840,7 +852,7 @@ Returns average requests per second and latencies for all requests in the last 1
 
 ### Typesense API Errors
 
-Typesense API exceptions in the [Typesense-api-errors](https://typesense.org/docs/0.25.1/api/api-errors.html) spec.
+Typesense API exceptions in the [Typesense-api-errors](https://typesense.org/docs/26.0/api/api-errors.html) spec.
 
 | Type                                      | Description                                                                |
 |:------------------------------------------|:---------------------------------------------------------------------------|
@@ -870,7 +882,7 @@ bin/kaocha unit
 To run the integration tests you can run a local docker instance with the following command. This will start a instance of Typesense on `localhost:8108`. The Typesense instance will be cleaned before starting the integration tests.
 
 ```sh
-docker run -p 8108:8108 -v/tmp/data:/data typesense/typesense:0.25.2 --data-dir /data --api-key=key
+docker run -p 8108:8108 -v/tmp/data:/data typesense/typesense:26.0.0 --data-dir /data --api-key=key
 ```
 
 The following command runs only the integration tests.
