@@ -49,6 +49,7 @@
                               :index true
                               :name "company_name"
                               :optional false
+                              :stem false
                               :type "string"
                               :infix false
                               :locale ""
@@ -57,6 +58,7 @@
                               :index true
                               :name "num_employees"
                               :optional false
+                              :stem false
                               :type "int32"
                               :infix false
                               :locale ""
@@ -65,6 +67,7 @@
                               :index true
                               :name "country"
                               :optional false
+                              :stem false
                               :type "string"
                               :infix false
                               :locale ""
@@ -103,6 +106,10 @@
                       :vec_dist "cosine"
                       :sort true
                       :embed nil
+                      :store true
+                      :range_index false
+                      :stem false
+                      :hnsw_params {:M 16, :ef_construction 200}
                       :reference ""}]}
           collection-name "companies_collection_test"
           update-schema {:fields [{:name "year_founded"
@@ -122,6 +129,7 @@
                        :name "company_name"
                        :optional false
                        :sort false
+                       :stem false
                        :type "string"}
                       {:facet false
                        :index true
@@ -130,6 +138,7 @@
                        :name "num_employees"
                        :optional false
                        :sort true
+                       :stem false
                        :type "int32"}
                       {:facet true
                        :index true
@@ -138,6 +147,7 @@
                        :name "country"
                        :optional false
                        :sort false
+                       :stem false
                        :type "string"}
                       {:facet false
                        :index true
@@ -146,6 +156,7 @@
                        :name "year_founded"
                        :optional true
                        :sort true
+                       :stem false
                        :type "int32"}]
                      :name "companies_collection_test"
                      :num_documents 0
@@ -168,6 +179,7 @@
                       :name "company_name"
                       :optional false
                       :sort false
+                      :stem false
                       :type "string"}
                      {:facet false
                       :index true
@@ -176,6 +188,7 @@
                       :name "num_employees"
                       :optional false
                       :sort true
+                      :stem false
                       :type "int32"}
                      {:facet true
                       :index true
@@ -184,6 +197,7 @@
                       :name "country"
                       :optional false
                       :sort false
+                      :stem false
                       :type "string"}
                      {:facet false
                       :index true
@@ -192,6 +206,7 @@
                       :name "year_founded"
                       :optional true
                       :sort true
+                      :stem false
                       :type "int32"}]
                     :name "companies_collection_test"
                     :num_documents 0
@@ -213,6 +228,7 @@
                       :name "company_name"
                       :optional false
                       :sort false
+                      :stem false
                       :type "string"}
                      {:facet false
                       :index true
@@ -221,6 +237,7 @@
                       :name "num_employees"
                       :optional false
                       :sort true
+                      :stem false
                       :type "int32"}
                      {:facet true
                       :index true
@@ -229,6 +246,7 @@
                       :name "country"
                       :optional false
                       :sort false
+                      :stem false
                       :type "string"}
                      {:facet false
                       :index true
@@ -237,6 +255,7 @@
                       :name "year_founded"
                       :optional true
                       :sort true
+                      :stem false
                       :type "int32"}]
                     :name "companies_collection_test"
                     :num_documents 0
@@ -397,6 +416,8 @@
                  :text_match 578730089005449337
                  :text_match_info
                  {:best_field_score "1108074561536"
+                  :num_tokens_dropped 0
+                  :typo_prefix_score 1
                   :best_field_weight 15
                   :fields_matched 1
                   :score "578730089005449337"
@@ -406,6 +427,7 @@
                :request_params
                {:collection_name "companies_documents_test"
                 :per_page 10
+                :first_q "Innovation"
                 :q "Innovation"}
                :search_cutoff false
                :search_time_ms 0}
@@ -413,7 +435,7 @@
                           "companies_documents_test"
                           {:q "Innovation"
                            :query_by "company_name"})]
-      (is (= res exp))))
+      (is (= exp res))))
 
   ;; Creating test setup for multi search
   (let [schema {:name "products_multi_search_test"
@@ -449,6 +471,8 @@
                    :text_match 578730123365711993
                    :text_match_info
                    {:best_field_score "1108091339008"
+                    :num_tokens_dropped 0
+                    :typo_prefix_score 0
                     :best_field_weight 15
                     :fields_matched 1
                     :score "578730123365711993"
@@ -457,6 +481,7 @@
                  :page 1
                  :request_params
                  {:collection_name "products_multi_search_test"
+                  :first_q "shoe"
                   :per_page 10
                   :q "shoe"}
                  :search_cutoff false
@@ -474,6 +499,8 @@
                    :text_match 578730123365711993
                    :text_match_info
                    {:best_field_score "1108091339008"
+                    :num_tokens_dropped 0
+                    :typo_prefix_score 0
                     :best_field_weight 15
                     :fields_matched 1
                     :score "578730123365711993"
@@ -482,6 +509,7 @@
                  :page 1
                  :request_params
                  {:collection_name "brands_multi_search_test"
+                  :first_q "Nike"
                   :per_page 10
                   :q "Nike"}
                  :search_cutoff false
@@ -521,7 +549,10 @@
                  :highlights []}]
                :out_of 1
                :page 1
-               :request_params {:collection_name "places" :per_page 10 :q "*"}
+               :request_params {:collection_name "places"
+                                :per_page 10
+                                :first_q "*"
+                                :q "*"}
                :search_cutoff false}
           res (sut/search settings
                           "places"
@@ -678,6 +709,7 @@
                :description "Search only companies key."
                :expires_at 64723363199
                :id 0
+               :autodelete false
                :value "sK0jo6CSn1EBoJJ8LKPjRZCtsJ1JCFkt"}
           key {:description "Search only companies key."
                :actions ["document:search"]
@@ -697,6 +729,7 @@
                :collections ["companies"]
                :description "Search only companies key."
                :expires_at 64723363199
+               :autodelete false
                :id 49
                :value_prefix "Bx3y"}
           res (sut/retrieve-api-key settings id)]
@@ -711,6 +744,7 @@
     (let [exp {:keys [{:actions ["document:search"]
                        :collections ["companies"]
                        :description "Search only companies key."
+                       :autodelete false
                        :expires_at 64723363199
                        :id 17
                        :value_prefix "vLbB"}]}
