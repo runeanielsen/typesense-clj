@@ -12,6 +12,8 @@
            {:extra-deps {clj-kondo/config {:git/url "https://github.com/clj-kondo/config"
                                            :sha "bd72d749732540e5e18a9eaca92f507bdb981473"}}
             :main-opts ["-m" "clj-kondo.config"]}
-           :build {:deps {io.github.seancorfield/build-clj {:git/tag "v0.8.0"
-                                                            :git/sha "9bd8b8a"}}
+           :build {:extra-deps
+                   {io.github.clojure/tools.build {:git/tag "v0.10.0"
+                                                   :git/sha "3a2c484"}
+                    slipset/deps-deploy {:mvn/version "0.2.2"}}
                    :ns-default build}}}
