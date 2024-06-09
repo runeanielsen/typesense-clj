@@ -34,11 +34,10 @@
         {:keys [exit]} (b/process cmds)]
     (when-not (zero? exit) (throw (ex-info "Task failed" {})))))
 
-(defn clean []
+(defn clean [_]
   (b/delete {:path "target"}))
 
 (defn build [_]
-  (clean)
   (b/write-pom {:pom-data pom-template
                 :class-dir class-dir
                 :lib lib
@@ -51,11 +50,8 @@
           :jar-file jar-file}))
 
 (defn tests [_]
-  (clean)
   (run-task [:test :runner]))
 
 (defn deploy [_]
-  (clean)
-  (build)
   (d/deploy {:installer :remote :artifact (b/resolve-path jar-file)
              :pom-file (b/pom-path {:class-dir class-dir :lib lib})}))
