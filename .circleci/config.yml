@@ -26,7 +26,7 @@ jobs:
       - checkout
       - run:
           name: Run build
-          command: clojure -T:build build
+          command: clojure -T:build clean && clojure -T:build build
 
   test:
     executor: clojure-tools-deps-tests
@@ -45,7 +45,7 @@ jobs:
           command: dockerize -wait tcp://localhost:8108 -timeout 1m
       - run:
           name: Run test
-          command: clojure -T:build tests
+          command: clojure -T:build clean && clojure -T:build tests
 
   deploy-clojars:
     executor: clojure-tools-deps
@@ -53,7 +53,7 @@ jobs:
       - checkout
       - run:
           name: Deploy to Clojars
-          command: clojure -T:build deploy
+          command: clojure -T:build clean && clojure -T:build build && clojure -T:build deploy
 
 workflows:
   primary:
