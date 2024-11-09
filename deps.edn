@@ -1,7 +1,7 @@
 {:paths ["src"]
  :deps {org.clojure/clojure {:mvn/version "1.12.0"}
-        org.clojure/data.json {:mvn/version "2.4.0"}
-        clj-http/clj-http {:mvn/version "3.12.3"}
+        org.clojure/data.json {:mvn/version "2.5.0"}
+        clj-http/clj-http {:mvn/version "3.13.0"}
         slingshot/slingshot {:mvn/version "0.12.2"}}
  :aliases {:cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.27.2"}}
                        :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}
