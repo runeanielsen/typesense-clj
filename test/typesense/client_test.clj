@@ -43,38 +43,42 @@
 ;; If we had decided to split them out listing collections might result in issues.
 (deftest client-primary-workflow-tests
   (testing "Create collection"
-    (let [expected {:default_sorting_field "num_employees"
-                    :enable_nested_fields false
-                    :fields [{:facet false
-                              :index true
-                              :name "company_name"
-                              :optional false
-                              :stem false
-                              :type "string"
-                              :infix false
-                              :locale ""
-                              :sort false}
-                             {:facet false
-                              :index true
-                              :name "num_employees"
-                              :optional false
-                              :stem false
-                              :type "int32"
-                              :infix false
-                              :locale ""
-                              :sort true}
-                             {:facet true
-                              :index true
-                              :name "country"
-                              :optional false
-                              :stem false
-                              :type "string"
-                              :infix false
-                              :locale ""
-                              :sort false}]
-                    :name "companies_collection_test"
-                    :num_documents 0
-                    :symbols_to_index []
+    (let [expected {:default_sorting_field "num_employees",
+                    :enable_nested_fields false,
+                    :fields
+                    [{:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "company_name",
+                      :facet false,
+                      :type "string",
+                      :optional false,
+                      :stem false,
+                      :sort false}
+                     {:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "num_employees",
+                      :facet false,
+                      :type "int32",
+                      :optional false,
+                      :stem false,
+                      :sort true}
+                     {:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "country",
+                      :facet true,
+                      :type "string",
+                      :optional false,
+                      :stem false,
+                      :sort false}],
+                    :name "companies_collection_test",
+                    :num_documents 0,
+                    :symbols_to_index [],
                     :token_separators []}
           schema {:name "companies_collection_test"
                   :fields [{:name "company_name"
@@ -92,25 +96,7 @@
       (is (= expected (dissoc response :created_at)))))
 
   (testing "Update collection"
-    (let [expected {:fields
-                    [{:infix false
-                      :index true
-                      :locale ""
-                      :name "year_founded"
-                      :nested false
-                      :nested_array 0
-                      :facet false
-                      :type "int32"
-                      :num_dim 0
-                      :optional true
-                      :vec_dist "cosine"
-                      :sort true
-                      :embed nil
-                      :store true
-                      :range_index false
-                      :stem false
-                      :hnsw_params {:M 16, :ef_construction 200}
-                      :reference ""}]}
+    (let [expected {:fields [{:name "year_founded", :optional true, :type "int32"}]}
           collection-name "companies_collection_test"
           update-schema {:fields [{:name "year_founded"
                                    :type "int32"
@@ -119,48 +105,52 @@
       (is (= expected response))))
 
   (testing "List collections"
-    (let [expected [{:default_sorting_field "num_employees"
-                     :enable_nested_fields false
+    (let [expected [{:default_sorting_field "num_employees",
+                     :enable_nested_fields false,
                      :fields
-                     [{:facet false
-                       :index true
-                       :infix false
-                       :locale ""
-                       :name "company_name"
-                       :optional false
-                       :sort false
-                       :stem false
-                       :type "string"}
-                      {:facet false
-                       :index true
-                       :infix false
-                       :locale ""
-                       :name "num_employees"
-                       :optional false
-                       :sort true
-                       :stem false
-                       :type "int32"}
-                      {:facet true
-                       :index true
-                       :infix false
-                       :locale ""
-                       :name "country"
-                       :optional false
-                       :sort false
-                       :stem false
-                       :type "string"}
-                      {:facet false
-                       :index true
-                       :infix false
-                       :locale ""
-                       :name "year_founded"
-                       :optional true
-                       :sort true
-                       :stem false
-                       :type "int32"}]
-                     :name "companies_collection_test"
-                     :num_documents 0
-                     :symbols_to_index []
+                     [{:infix false,
+                       :index true,
+                       :store true,
+                       :locale "",
+                       :name "company_name",
+                       :facet false,
+                       :type "string",
+                       :optional false,
+                       :stem false,
+                       :sort false}
+                      {:infix false,
+                       :index true,
+                       :store true,
+                       :locale "",
+                       :name "num_employees",
+                       :facet false,
+                       :type "int32",
+                       :optional false,
+                       :stem false,
+                       :sort true}
+                      {:infix false,
+                       :index true,
+                       :store true,
+                       :locale "",
+                       :name "country",
+                       :facet true,
+                       :type "string",
+                       :optional false,
+                       :stem false,
+                       :sort false}
+                      {:infix false,
+                       :index true,
+                       :store true,
+                       :locale "",
+                       :name "year_founded",
+                       :facet false,
+                       :type "int32",
+                       :optional true,
+                       :stem false,
+                       :sort true}],
+                     :name "companies_collection_test",
+                     :num_documents 0,
+                     :symbols_to_index [],
                      :token_separators []}]
           response (sut/list-collections settings)]
       ;; We make individual test for :created_at since it changes each run.
@@ -169,48 +159,52 @@
       (is (= expected (map #(dissoc % :created_at) response)))))
 
   (testing "Retrieve collection"
-    (let [expected {:default_sorting_field "num_employees"
-                    :enable_nested_fields false
+    (let [expected {:default_sorting_field "num_employees",
+                    :enable_nested_fields false,
                     :fields
-                    [{:facet false
-                      :index true
-                      :infix false
-                      :locale ""
-                      :name "company_name"
-                      :optional false
-                      :sort false
-                      :stem false
-                      :type "string"}
-                     {:facet false
-                      :index true
-                      :infix false
-                      :locale ""
-                      :name "num_employees"
-                      :optional false
-                      :sort true
-                      :stem false
-                      :type "int32"}
-                     {:facet true
-                      :index true
-                      :infix false
-                      :locale ""
-                      :name "country"
-                      :optional false
-                      :sort false
-                      :stem false
-                      :type "string"}
-                     {:facet false
-                      :index true
-                      :infix false
-                      :locale ""
-                      :name "year_founded"
-                      :optional true
-                      :sort true
-                      :stem false
-                      :type "int32"}]
-                    :name "companies_collection_test"
-                    :num_documents 0
-                    :symbols_to_index []
+                    [{:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "company_name",
+                      :facet false,
+                      :type "string",
+                      :optional false,
+                      :stem false,
+                      :sort false}
+                     {:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "num_employees",
+                      :facet false,
+                      :type "int32",
+                      :optional false,
+                      :stem false,
+                      :sort true}
+                     {:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "country",
+                      :facet true,
+                      :type "string",
+                      :optional false,
+                      :stem false,
+                      :sort false}
+                     {:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "year_founded",
+                      :facet false,
+                      :type "int32",
+                      :optional true,
+                      :stem false,
+                      :sort true}],
+                    :name "companies_collection_test",
+                    :num_documents 0,
+                    :symbols_to_index [],
                     :token_separators []}
           response (sut/retrieve-collection settings "companies_collection_test")]
       (is (> (:created_at response) 0))
@@ -218,48 +212,52 @@
       (is (= expected (dissoc response :created_at)))))
 
   (testing "Delete collection"
-    (let [expected {:default_sorting_field "num_employees"
-                    :enable_nested_fields false
+    (let [expected {:default_sorting_field "num_employees",
+                    :enable_nested_fields false,
                     :fields
-                    [{:facet false
-                      :index true
-                      :infix false
-                      :locale ""
-                      :name "company_name"
-                      :optional false
-                      :sort false
-                      :stem false
-                      :type "string"}
-                     {:facet false
-                      :index true
-                      :infix false
-                      :locale ""
-                      :name "num_employees"
-                      :optional false
-                      :sort true
-                      :stem false
-                      :type "int32"}
-                     {:facet true
-                      :index true
-                      :infix false
-                      :locale ""
-                      :name "country"
-                      :optional false
-                      :sort false
-                      :stem false
-                      :type "string"}
-                     {:facet false
-                      :index true
-                      :infix false
-                      :locale ""
-                      :name "year_founded"
-                      :optional true
-                      :sort true
-                      :stem false
-                      :type "int32"}]
-                    :name "companies_collection_test"
-                    :num_documents 0
-                    :symbols_to_index []
+                    [{:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "company_name",
+                      :facet false,
+                      :type "string",
+                      :optional false,
+                      :stem false,
+                      :sort false}
+                     {:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "num_employees",
+                      :facet false,
+                      :type "int32",
+                      :optional false,
+                      :stem false,
+                      :sort true}
+                     {:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "country",
+                      :facet true,
+                      :type "string",
+                      :optional false,
+                      :stem false,
+                      :sort false}
+                     {:infix false,
+                      :index true,
+                      :store true,
+                      :locale "",
+                      :name "year_founded",
+                      :facet false,
+                      :type "int32",
+                      :optional true,
+                      :stem false,
+                      :sort true}],
+                    :name "companies_collection_test",
+                    :num_documents 0,
+                    :symbols_to_index [],
                     :token_separators []}
           response (sut/delete-collection! settings "companies_collection_test")]
       (is (> (:created_at response) 0))
