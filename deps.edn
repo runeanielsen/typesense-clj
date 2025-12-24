@@ -1,19 +1,19 @@
 {:paths ["src"]
- :deps {org.clojure/clojure {:mvn/version "1.12.0"}
-        org.clojure/data.json {:mvn/version "2.5.0"}
-        clj-http/clj-http {:mvn/version "3.13.0"}
+ :deps {org.clojure/clojure {:mvn/version "1.12.4"}
+        org.clojure/data.json {:mvn/version "2.5.1"}
+        clj-http/clj-http {:mvn/version "3.13.1"}
         slingshot/slingshot {:mvn/version "0.12.2"}}
- :aliases {:cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.27.2"}}
+ :aliases {:cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.58.0"}}
                        :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}
            :test {:extra-paths ["test"]
-                  :extra-deps {lambdaisland/kaocha {:mvn/version "1.64.1010"}}
+                  :extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
                   :main-opts ["-m" "kaocha.runner"]}
            :clj-kondo/config
            {:extra-deps {clj-kondo/config {:git/url "https://github.com/clj-kondo/config"
-                                           :sha "bd72d749732540e5e18a9eaca92f507bdb981473"}}
+                                           :sha "ce960d787f9033629502a6a5cbe549ca38a4f6fe"}}
             :main-opts ["-m" "clj-kondo.config"]}
            :build {:extra-deps
-                   {io.github.clojure/tools.build {:git/tag "v0.10.0"
-                                                   :git/sha "3a2c484"}
+                   {io.github.clojure/tools.build {:git/tag "v0.10.11"
+                                                   :git/sha "c6c670a"}
                     slipset/deps-deploy {:mvn/version "0.2.2"}}
                    :ns-default build}}}
